@@ -1,0 +1,64 @@
+### These files should get ignored no matter where they appear.
+
+# Editors leave these lying around
+\#*\#
+.#*
+*~
+*.swp
+
+# C stuff
+*.o
+
+# Windows stuff
+*.obj
+*.exe
+*.lib
+
+# For Visual Studio files on Windows
+*.user
+*.ncb
+*.aps
+*.idb
+*.pdb
+*.dep
+*.obj
+*.ilk
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.rsp
+*.pgc
+*.pgd
+*.meta
+*.manifest
+*.intermediate.manifest
+*.suo
+*.sdf
+*.opensdf
+*.layout
+*.depend
+/Debug
+/Release
+
+# Some files on Windows
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Other files
+/.metadata
+/169.254.0.1
+/tmp
+/ipch
+/cmake
+/Simulator
+/Simulator-Coverage
+/Simulator-Profile
+/Device-Debug
+/Device-Coverage
+/Device-Profile
+/Device-Release
+
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="cDolphin_lib"
+	ProjectGUID="{429EC96B-F74E-4FB7-BDEA-A9C08AA2C427}"
+	VCNestedProjectGUID="{5FA9D1FC-44D6-43D2-BB44-2ACA4E7B1B46}"
+	VCNestedProjectFileName="cDolphin_lib.vcproj">
+	<Configurations/>
+	<Files/>
+</VisualStudioProject>

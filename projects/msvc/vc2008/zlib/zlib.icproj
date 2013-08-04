@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="zlib"
+	ProjectGUID="{8D7E9E29-0B92-4663-8520-F4D2911BCDEF}"
+	VCNestedProjectGUID="{15B4DEB7-6827-43BB-8A09-E8309BDCC78C}"
+	VCNestedProjectFileName="zlib.vcproj">
+	<Configurations/>
+	<Files/>
+</VisualStudioProject>
