@@ -5,7 +5,7 @@
 	Name="cScrDolphin"
 	ProjectGUID="{C730D8B2-6303-494D-AF30-8B171A4FE240}"
 	VCNestedProjectGUID="{9E2FFDB7-7B67-4DBE-B1C6-EC16A6EDB618}"
-	VCNestedProjectFileName="cSrcDolphin.vcproj">
+	VCNestedProjectFileName="cScrDolphin.vcproj">
 	<Configurations/>
 	<Files/>
 </VisualStudioProject>

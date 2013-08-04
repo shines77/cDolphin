@@ -4,7 +4,7 @@
 	Version="9.00"
 	Name="cScrDolphin"
 	ProjectGUID="{9E2FFDB7-7B67-4DBE-B1C6-EC16A6EDB618}"
-	RootNamespace="cSrcDolphin"
+	RootNamespace="cScrDolphin"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>

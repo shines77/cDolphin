@@ -18,6 +18,8 @@
 *.user
 *.ncb
 *.aps
+*.opt
+*.plg
 *.idb
 *.pdb
 *.dep
@@ -60,5 +62,4 @@ Thumbs.db
 /Device-Coverage
 /Device-Profile
 /Device-Release
-
 

@@ -13,7 +13,7 @@ Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "cDolphin", "cDolphin\cDolph
 EndProject
 Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "zlib", "zlib\zlib.icproj", "{8D7E9E29-0B92-4663-8520-F4D2911BCDEF}"
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "cScrDolphin", "cSrcDolphin\cSrcDolphin.icproj", "{C730D8B2-6303-494D-AF30-8B171A4FE240}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "cScrDolphin", "cScrDolphin\cScrDolphin.icproj", "{C730D8B2-6303-494D-AF30-8B171A4FE240}"
 	ProjectSection(ProjectDependencies) = postProject
 		{429EC96B-F74E-4FB7-BDEA-A9C08AA2C427} = {429EC96B-F74E-4FB7-BDEA-A9C08AA2C427}
 	EndProjectSection

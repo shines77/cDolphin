@@ -250,10 +250,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\cDolphin\globals.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\cDolphin\hash.c"
 				>
 			</File>
