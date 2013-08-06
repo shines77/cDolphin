@@ -18,43 +18,44 @@
 #include "bitboard.h"
 #include "bitbtest.h"
 
-__declspec(align(64)) BitBoard bb_flips;
-__declspec(align(16)) BitBoard bb_flip_bits;
+ALIGN_PREFIX(64) BitBoard bb_flips ALIGN_SUFFIX(64);
+ALIGN_PREFIX(16) BitBoard bb_flip_bits ALIGN_SUFFIX(16);
 
-__declspec(align(64)) static unsigned int pop_count[64] = {
+ALIGN_PREFIX(64) static unsigned int pop_count[64] = {
 	0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,    /*  0 -- 15 */
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,    /* 16 -- 31 */
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,    /* 32 -- 47 */
 	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6     /* 48 -- 63 */
-};
+} ALIGN_SUFFIX(64);
 
-__declspec(align(64)) static unsigned int contiguous6[64] = {
+ALIGN_PREFIX(64) static unsigned int contiguous6[64] = {
 	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 	32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
 	48, 48, 48, 48, 48, 48, 48, 48, 56, 56, 56, 56, 60, 60, 62, 63
-};
+} ALIGN_SUFFIX(64);
 
-__declspec(align(64)) static unsigned int contiguous5[32] = {
+ALIGN_PREFIX(64) static unsigned int contiguous5[32] = {
 	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 	16, 16, 16, 16, 16, 16, 16, 16, 24, 24, 24, 24, 28, 28, 30, 31
-};
-__declspec(align(64)) static unsigned int contiguous4[16] = {
+} ALIGN_SUFFIX(64);
+
+ALIGN_PREFIX(64) static unsigned int contiguous4[16] = {
 	0,  0,  0,  0,  0,  0,  0,  0,  8,  8,  8,  8, 12, 12, 14, 15
-};
+} ALIGN_SUFFIX(64);
 
-__declspec(align(16)) static unsigned int contiguous3[8] = {
+ALIGN_PREFIX(16) static unsigned int contiguous3[8] = {
 	0,  0,  0,  0,  4,  4,  6,  7
-};
+} ALIGN_SUFFIX(64);
 
-__declspec(align(16)) static unsigned int contiguous2[4] = {
+ALIGN_PREFIX(16) static unsigned int contiguous2[4] = {
 	0,  0,  2,  3
-};
+} ALIGN_SUFFIX(64);
 
 /*
-__declspec(align(64)) static unsigned int contiguous1[2] = {
+ALIGN_PREFIX(64) static unsigned int contiguous1[2] = {
 	0,  1
-};
+} ALIGN_SUFFIX(64);
 //*/
 
 static int

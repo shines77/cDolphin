@@ -16,14 +16,11 @@
 #define BITBCNT2_H
 
 
-
 #include "utils.h"
 #include "bitboard.h"
 
 
-
 extern int (REGPARM(2) * const CountFlips_bitboard2[64])(unsigned int my_bits_high, unsigned int my_bits_low);
-
 
 
 #endif  /* BITBCNT2_H */

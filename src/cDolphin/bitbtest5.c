@@ -19,34 +19,34 @@
 #include "bitbtest.h"
 #include "bitbtest5.h"
 
-__declspec(align(16)) BitBoard bb_flips5;
+ALIGN_PREFIX(16) BitBoard bb_flips5 ALIGN_SUFFIX(16);
 
-__declspec(align(64)) static unsigned int contiguous4[16] = {
+ALIGN_PREFIX(64) static unsigned int contiguous4[16] ALIGN_SUFFIX(64) = {
 	0,  0,  0,  0,  0,  0,  0,  0,  8,  8,  8,  8, 12, 12, 14, 15
 };
 
-__declspec(align(16)) static unsigned int contiguous3[8] = {
+ALIGN_PREFIX(16) static unsigned int contiguous3[8] ALIGN_SUFFIX(64) = {
 	0,  0,  0,  0,  4,  4,  6,  7
 };
 
-__declspec(align(16)) static unsigned int contiguous2[4] = {
+ALIGN_PREFIX(16) static unsigned int contiguous2[4] ALIGN_SUFFIX(64) = {
 	0,  0,  2,  3
 };
 
 /*
-__declspec(align(64)) static unsigned int contiguous1[2] = {
+ALIGN_PREFIX(64) static unsigned int contiguous1[2] ALIGN_SUFFIX(64) = {
 	0,  1
 };
 //*/
 
-__declspec(align(64)) static unsigned char pop_count[64] = {
+ALIGN_PREFIX(64) static unsigned char pop_count[64] ALIGN_SUFFIX(64) = {
 	0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,    /*  0 -- 15 */
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,    /* 16 -- 31 */
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,    /* 32 -- 47 */
 	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6     /* 48 -- 63 */
 };
 
-__declspec(align(64)) static unsigned char discs_count[64] = {
+ALIGN_PREFIX(64) static unsigned char discs_count[64] ALIGN_SUFFIX(64) = {
 	0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,    /*  0 -- 15 */
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,    /* 16 -- 31 */
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,    /* 32 -- 47 */
@@ -54,11 +54,11 @@ __declspec(align(64)) static unsigned char discs_count[64] = {
 };
 
 /* rank(ÐÐ), file(ÁÐ), diag1, diag2 */
-__declspec(align(64)) static unsigned char opp_mask[8][64];
-__declspec(align(64)) static unsigned char my_mask[8][256];
+ALIGN_PREFIX(64) static unsigned char opp_mask[8][64] ALIGN_SUFFIX(64);
+ALIGN_PREFIX(64) static unsigned char my_mask[8][256] ALIGN_SUFFIX(64);
 
-//__declspec(align(64)) static const unsigned int lsb_mask[8]    = { 0x000000FFul, 0x0000FFFFul, 0x00FFFFFFul, 0xFFFFFFFFul, 0, 0, 0, 0 };
-__declspec(align(64)) static const unsigned int lsb_mask[8]   = { 0x00000000ul, 0x000000FFul, 0x0000FFFFul, 0x00FFFFFFul, 0, 0, 0, 0 };
+//ALIGN_PREFIX(64) static const unsigned int lsb_mask[8] ALIGN_SUFFIX(64)   = { 0x000000FFul, 0x0000FFFFul, 0x00FFFFFFul, 0xFFFFFFFFul, 0, 0, 0, 0 };
+ALIGN_PREFIX(64) static const unsigned int lsb_mask[8] ALIGN_SUFFIX(64)   = { 0x00000000ul, 0x000000FFul, 0x0000FFFFul, 0x00FFFFFFul, 0, 0, 0, 0 };
 //static const unsigned int msb_mask[4]   = { 0xFF000000ul, 0xFFFF0000ul, 0xFFFFFF00ul, 0xFFFFFFFFul };
 
 ///*
@@ -75,17 +75,19 @@ static const unsigned int left_flip[8]  = {
 };
 //*/
 
-__declspec(align(64)) static unsigned char rank_right_mask[128] = {
-    0
-};
-__declspec(align(64)) static unsigned char rank_left_mask[64]   = {
+ALIGN_PREFIX(64) static unsigned char rank_right_mask[128] ALIGN_SUFFIX(64) = {
     0
 };
 
-__declspec(align(64)) static unsigned char file_high_contig[128] = {
+ALIGN_PREFIX(64) static unsigned char rank_left_mask[64] ALIGN_SUFFIX(64)   = {
     0
 };
-__declspec(align(64)) static unsigned char file_low_contig[64]   = {
+
+ALIGN_PREFIX(64) static unsigned char file_high_contig[128] ALIGN_SUFFIX(64) = {
+    0
+};
+
+ALIGN_PREFIX(64) static unsigned char file_low_contig[64] ALIGN_SUFFIX(64)   = {
     0
 };
 

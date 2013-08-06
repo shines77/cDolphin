@@ -1972,7 +1972,7 @@ run_endgame_script( const char *in_file_name,
 	}
 	if ( output_stream ) {
 		fprintf( output_stream, "--------------------------------------------------------------------------------\r\n" );
-		fprintf( output_stream, "No.  Empty Move Value    Time     Total Nodes  Nodes/Sec.  PV Sequence\r\n" );
+		fprintf( output_stream, "No.  Empty  Move  Value    Time     Total Nodes  Nodes/Sec.  PV Sequence\r\n" );
 	}
 	fclose( output_stream );
 
@@ -2302,7 +2302,7 @@ generate_random_endgame(const char *game_file,
     int depth, t;
     int score_end;
 
-    unsigned char hi_mask, lo_mask;
+    unsigned int hi_mask, lo_mask;
 
 	if (game_file == NULL)
 		return;
@@ -2622,12 +2622,12 @@ generate_random_endgame(const char *game_file,
 				hi_mask += ' ';
 				lo_mask = my_bits.low & 0x0F;
 				lo_mask += ' ';
-				fprintf( stream, "%c%c", hi_mask, lo_mask );
+				fprintf( stream, "%c%c", (unsigned char)hi_mask, (unsigned char)lo_mask );
 				hi_mask = (opp_bits.low & 0xF0) >> 4;
 				hi_mask += ' ';
 				lo_mask = opp_bits.low & 0x0F;
 				lo_mask += ' ';
-				fprintf( stream, "%c%c", hi_mask, lo_mask );
+				fprintf( stream, "%c%c", (unsigned char)hi_mask, (unsigned char)lo_mask );
 				my_bits.low >>= 8;
 				opp_bits.low >>= 8;
 			}
@@ -2636,12 +2636,12 @@ generate_random_endgame(const char *game_file,
 				hi_mask += ' ';
 				lo_mask = my_bits.high & 0x0F;
 				lo_mask += ' ';
-				fprintf( stream, "%c%c", hi_mask, lo_mask );
+				fprintf( stream, "%c%c", (unsigned char)hi_mask, (unsigned char)lo_mask );
 				hi_mask = (opp_bits.high & 0xF0) >> 4;
 				hi_mask += ' ';
 				lo_mask = opp_bits.high & 0x0F;
 				lo_mask += ' ';
-				fprintf( stream, "%c%c", hi_mask, lo_mask );
+				fprintf( stream, "%c%c", (unsigned char)hi_mask, (unsigned char)lo_mask );
 				my_bits.high >>= 8;
 				opp_bits.high >>= 8;
 			}
@@ -2667,12 +2667,12 @@ generate_random_endgame(const char *game_file,
 				hi_mask += ' ';
 				lo_mask = my_end_bits.low & 0x0F;
 				lo_mask += ' ';
-				fprintf( stream, "%c%c", hi_mask, lo_mask );
+				fprintf( stream, "%c%c", (unsigned char)hi_mask, (unsigned char)lo_mask );
 				hi_mask = (opp_end_bits.low & 0xF0) >> 4;
 				hi_mask += ' ';
 				lo_mask = opp_end_bits.low & 0x0F;
 				lo_mask += ' ';
-				fprintf( stream, "%c%c", hi_mask, lo_mask );
+				fprintf( stream, "%c%c", (unsigned char)hi_mask, (unsigned char)lo_mask );
 				my_end_bits.low >>= 8;
 				opp_end_bits.low >>= 8;
 			}
@@ -2681,12 +2681,12 @@ generate_random_endgame(const char *game_file,
 				hi_mask += ' ';
 				lo_mask = my_end_bits.high & 0x0F;
 				lo_mask += ' ';
-				fprintf( stream, "%c%c", hi_mask, lo_mask );
+				fprintf( stream, "%c%c", (unsigned char)hi_mask, (unsigned char)lo_mask );
 				hi_mask = (opp_end_bits.high & 0xF0) >> 4;
 				hi_mask += ' ';
 				lo_mask = opp_end_bits.high & 0x0F;
 				lo_mask += ' ';
-				fprintf( stream, "%c%c", hi_mask, lo_mask );
+				fprintf( stream, "%c%c", (unsigned char)hi_mask, (unsigned char)lo_mask );
 				my_end_bits.high >>= 8;
 				opp_end_bits.high >>= 8;
 			}

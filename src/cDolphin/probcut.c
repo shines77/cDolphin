@@ -12,6 +12,7 @@
 
 #include <math.h>
 
+#include "utils.h"
 #include "pcstat.h"
 #include "epcstat.h"
 #include "probcut.h"
@@ -20,7 +21,7 @@
 
 int use_end_cut[61];
 int end_mpc_depth[61][4];
-__declspec(align(64)) DepthInfo mpc_cut[MAX_CUT_DEPTH + 1];
+ALIGN_PREFIX(64) DepthInfo mpc_cut[MAX_CUT_DEPTH + 1] ALIGN_SUFFIX(64);
 
 /*
    SET_PROBCUT

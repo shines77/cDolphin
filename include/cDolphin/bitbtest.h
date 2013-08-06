@@ -19,8 +19,8 @@
 extern "C" {
 #endif
 
-extern __declspec(align(64)) BitBoard bb_flips;
-extern __declspec(align(16)) BitBoard bb_flip_bits;
+extern ALIGN_PREFIX(64) BitBoard bb_flips ALIGN_SUFFIX(64);
+extern ALIGN_PREFIX(16) BitBoard bb_flip_bits ALIGN_SUFFIX(16);
 
 extern int (*TestFlips_bitboard[64])(const BitBoard, const BitBoard);
 

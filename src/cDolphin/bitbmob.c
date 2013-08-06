@@ -32,33 +32,33 @@
 
 #ifdef _WIN32
 
-__declspec(align(8)) static unsigned __int64 dir_mask0;
-__declspec(align(8)) static unsigned __int64 dir_mask1;
-__declspec(align(8)) static unsigned __int64 dir_mask3;
-__declspec(align(8)) static unsigned __int64 c0f;
-__declspec(align(8)) static unsigned __int64 c33;
-__declspec(align(8)) static unsigned __int64 c55;
+static ALIGN_PREFIX(8) unsigned __int64 dir_mask0 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned __int64 dir_mask1 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned __int64 dir_mask3 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned __int64 c0f ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned __int64 c33 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned __int64 c55 ALIGN_SUFFIX(8);
 
-static unsigned __int64 dir_mask2;
-static unsigned __int64 dir_mask4;
-static unsigned __int64 dir_mask5;
-static unsigned __int64 dir_mask6;
-static unsigned __int64 dir_mask7;
+static ALIGN_PREFIX(8) unsigned __int64 dir_mask2 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned __int64 dir_mask4 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned __int64 dir_mask5 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned __int64 dir_mask6 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned __int64 dir_mask7 ALIGN_SUFFIX(8);
 
 #else
 
-static unsigned long long dir_mask0;
-static unsigned long long dir_mask1;
-static unsigned long long dir_mask3;
-static unsigned long long c0f;
-static unsigned long long c33;
-static unsigned long long c55;
+static ALIGN_PREFIX(8) unsigned long long dir_mask0 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned long long dir_mask1 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned long long dir_mask3 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned long long c0f ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned long long c33 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned long long c55 ALIGN_SUFFIX(8);
 
-static unsigned long long dir_mask2;
-static unsigned long long dir_mask4;
-static unsigned long long dir_mask5;
-static unsigned long long dir_mask6;
-static unsigned long long dir_mask7;
+static ALIGN_PREFIX(8) unsigned long long dir_mask2 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned long long dir_mask4 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned long long dir_mask5 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned long long dir_mask6 ALIGN_SUFFIX(8);
+static ALIGN_PREFIX(8) unsigned long long dir_mask7 ALIGN_SUFFIX(8);
 
 #endif
 
@@ -69,9 +69,9 @@ init_mmx( void ) {
 	dir_mask0 = 0x007e7e7e7e7e7e00;
 	dir_mask1 = 0x00ffffffffffff00;
 	dir_mask3 = 0x7e7e7e7e7e7e7e7e;
-	c0f = 0x0f0f0f0f0f0f0f0f;
-	c33 = 0x3333333333333333;
-	c55 = 0x5555555555555555;
+	c0f       = 0x0f0f0f0f0f0f0f0f;
+	c33       = 0x3333333333333333;
+	c55       = 0x5555555555555555;
 	dir_mask2 = 0x007e7e7e7e7e7e00;
 	dir_mask4 = 0x7e7e7e7e7e7e7e7e;
 	dir_mask5 = 0x007e7e7e7e7e7e00;
@@ -82,9 +82,9 @@ init_mmx( void ) {
 	dir_mask0 = 0x007e7e7e7e7e7e00ULL;
 	dir_mask1 = 0x00ffffffffffff00ULL;
 	dir_mask3 = 0x7e7e7e7e7e7e7e7eULL;
-	c0f = 0x0f0f0f0f0f0f0f0fULL;
-	c33 = 0x3333333333333333ULL;
-	c55 = 0x5555555555555555ULL;
+	c0f       = 0x0f0f0f0f0f0f0f0fULL;
+	c33       = 0x3333333333333333ULL;
+	c55       = 0x5555555555555555ULL;
 	dir_mask2 = 0x007e7e7e7e7e7e00ULL;
 	dir_mask4 = 0x7e7e7e7e7e7e7e7eULL;
 	dir_mask5 = 0x007e7e7e7e7e7e00ULL;

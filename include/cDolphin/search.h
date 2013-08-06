@@ -69,26 +69,26 @@ extern int root_eval;
 extern int force_return;
 
 /* Holds the number of leaf nodes searched during the current search. */
-extern __declspec(align(8)) CounterType leaf_nodes;
+extern ALIGN_PREFIX(8) CounterType leaf_nodes ALIGN_SUFFIX(8);
 
 /* Holds the number of tree nodes searched during the current search. */
-extern __declspec(align(8)) CounterType tree_nodes;
+extern ALIGN_PREFIX(8) CounterType tree_nodes ALIGN_SUFFIX(8);
 
 /* The number of positions evaluated during the current search. */
-extern __declspec(align(8)) CounterType evaluations;
+extern ALIGN_PREFIX(8) CounterType evaluations ALIGN_SUFFIX(8);
 
 /* Holds the total number of nodes searched during the entire game. */
-extern __declspec(align(8)) CounterType total_nodes;
+extern ALIGN_PREFIX(8) CounterType total_nodes ALIGN_SUFFIX(8);
 
 /* The number of positions evaluated during the entire game. */
-extern __declspec(align(8)) CounterType total_evaluations;
+extern ALIGN_PREFIX(8) CounterType total_evaluations ALIGN_SUFFIX(8);
 
 /* The last available evaluations for all possible moves at all
    possible game stages. */
-extern __declspec(align(64)) Board evals[61];
+extern ALIGN_PREFIX(64) Board evals[61] ALIGN_SUFFIX(64);
 
 /* Move lists */
-extern __declspec(align(64)) int sorted_move_order[64][64];  /* 61*60 used */
+extern ALIGN_PREFIX(64) int sorted_move_order[64][64] ALIGN_SUFFIX(64);  /* 61*60 used */
 
 /* JCW's move order */
 extern int position_list[64];

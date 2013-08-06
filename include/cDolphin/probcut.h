@@ -13,6 +13,8 @@
 #ifndef __PROBCUT_H_
 #define __PROBCUT_H_
 
+#include "utils.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -31,7 +33,7 @@ typedef struct tagDepthInfo {
 
 extern int use_end_cut[61];
 extern int end_mpc_depth[61][4];
-extern __declspec(align(64)) DepthInfo mpc_cut[MAX_CUT_DEPTH + 1];
+extern ALIGN_PREFIX(64) DepthInfo mpc_cut[MAX_CUT_DEPTH + 1] ALIGN_SUFFIX(64) ALIGN_SUFFIX(64);
 
 void
 init_probcut( void );

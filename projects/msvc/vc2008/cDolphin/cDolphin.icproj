@@ -6,6 +6,13 @@
 	ProjectGUID="{763B083B-5469-47B5-9A24-C39BD7F1580D}"
 	VCNestedProjectGUID="{BB0C49C8-13D2-4939-BD6A-EE4D5D28701C}"
 	VCNestedProjectFileName="cDolphin.vcproj">
-	<Configurations/>
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"/>
+		</Configuration>
+	</Configurations>
 	<Files/>
 </VisualStudioProject>

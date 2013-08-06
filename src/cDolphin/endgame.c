@@ -84,8 +84,8 @@ typedef enum eSearchStatus {
 	EXACT_SCORE
 } SearchStatus;
 
-__declspec(align(64))
-MoveLink end_move_list[64];
+ALIGN_PREFIX(64)
+MoveLink end_move_list[64] ALIGN_SUFFIX(64);
 
 /* The parities of the regions are in the region_parity bit vector. */
 
@@ -119,8 +119,8 @@ static int earliest_wld_solve, earliest_full_solve;
 static int fast_first_threshold[61][64];
 static int ff_mob_factor[61];
 
-__declspec(align(64))
-unsigned int quadrant_mask[64] = {
+ALIGN_PREFIX(64)
+unsigned int quadrant_mask[64] ALIGN_SUFFIX(64) = {
 	1, 1, 1, 1, 2, 2, 2, 2,
 	1, 1, 1, 1, 2, 2, 2, 2,
 	1, 1, 1, 1, 2, 2, 2, 2,

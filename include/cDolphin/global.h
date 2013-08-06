@@ -15,6 +15,8 @@
 
 #include <stdio.h>
 
+#include "utils.h"
+
 #ifdef DOLPHIN_GGS
 #include "..\Dolphin_GGS\ODKStream.h"
 #endif
@@ -31,7 +33,7 @@ extern int score_sheet_row;
 
 /* piece_count[col][n] holds the number of disks of color col after
    n moves have been played. */
-extern __declspec(align(64)) int piece_count[3][MAX_SEARCH_DEPTH];
+extern ALIGN_PREFIX(64) int piece_count[3][MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
 
 /* These variables hold the game score. The meaning is similar
    to how a human would fill out a game score except for that

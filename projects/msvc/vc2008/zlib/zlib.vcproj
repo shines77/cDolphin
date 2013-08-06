@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -106,7 +106,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -196,10 +196,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\deps\zlib\minigzip.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\deps\zlib\trees.c"
 				>
 			</File>
@@ -243,10 +239,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\deps\zlib\infutil.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\deps\zlib\trees.h"
 				>
 			</File>
 			<File

@@ -23,9 +23,9 @@ extern "C" {
    player has any moves available. */
 
 // 12345678
-//#define INFINITE_EVAL           32767
+#define INFINITE_EVAL           32767
 //#define INFINITE_EVAL           32000
-#define INFINITE_EVAL           12345678
+//#define INFINITE_EVAL           12345678
 #define MIDGAME_WIN             29000
 #define SEARCH_ABORT            -27000
 

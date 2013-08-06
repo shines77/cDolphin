@@ -27,8 +27,8 @@
 
 /* Global variables */
 
-__declspec(align(64)) int pv[MAX_SEARCH_DEPTH][MAX_SEARCH_DEPTH];
-__declspec(align(64)) int pv_depth[MAX_SEARCH_DEPTH];
+ALIGN_PREFIX(64) int pv[MAX_SEARCH_DEPTH][MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
+ALIGN_PREFIX(64) int pv_depth[MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
 
 int full_pv_depth;
 int full_pv[120];

@@ -6,6 +6,13 @@
 	ProjectGUID="{8D7E9E29-0B92-4663-8520-F4D2911BCDEF}"
 	VCNestedProjectGUID="{15B4DEB7-6827-43BB-8A09-E8309BDCC78C}"
 	VCNestedProjectFileName="zlib.vcproj">
-	<Configurations/>
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"/>
+		</Configuration>
+	</Configurations>
 	<Files/>
 </VisualStudioProject>

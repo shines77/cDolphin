@@ -10,8 +10,8 @@
    Contents:       Some utility defined.
 */
 
-#ifndef __UTILS_H_
-#define __UTILS_H_
+#ifndef __UTILS_H__
+#define __UTILS_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,6 +37,10 @@ extern "C" {
 #   ifndef DOL_DECLARE_EXPORT
 #       define DOL_DECLARE_EXPORT
 #   endif
+#endif
+
+#ifdef DOL_EXPORT
+#undef DOL_EXPORT
 #endif
 
 /*************************************************************************
@@ -71,18 +75,16 @@ extern "C" {
 
 #if defined( _MSC_VER )
 
-	#if !defined( __cplusplus )
-	    //#define INLINE __inline
-        #define INLINE
+	#if defined( __cplusplus )
+	    #define INLINE __inline
 	#else
 	    #define INLINE
 	#endif
 
 #else
 
-	#if defined( __GNUC__ ) && !defined( __cplusplus )
-	    //#define INLINE __inline__
-        #define INLINE
+	#if defined( __GNUC__ ) && defined( __cplusplus )
+	    #define INLINE __inline__
 	#else
 	    #define INLINE
 	#endif
@@ -111,29 +113,82 @@ extern "C" {
 #define SQR(a)                  ((a) * (a))
 
 /* Convert index to square, e.g. 27 -> g2 */
-#define TO_SQUARE(index)        'A'+(index & 0x07ul),'1'+(index >> 3)
+#define TO_SQUARE(index)        'a'+(index & 0x07ul),'1'+(index >> 3)
 #define TO_SQUARE_L(index)      'a'+(index & 0x07ul),'1'+(index >> 3)
 #define TO_SQUARE_U(index)      'A'+(index & 0x07ul),'1'+(index >> 3)
 
-#if defined(__GNUC__)
-#define DECLARE_ALIGNED(x)    __attribute__((aligned(x)))
-#elif defined(_WIN32) || defined(_MSC_VER)
-#define DECLARE_ALIGNED(x)    __declspec(align(x))
+// Defined whether use memory attribute aligned.
+
+#define USE_ATTR_ALIGNED        1
+
+#if defined(USE_ATTR_ALIGNED) && (USE_ATTR_ALIGNED != 0)
+#   if defined(__GNUC__)
+#       define DECLARE_ALIGNED(x)      __attribute__((aligned(x)))
+#   elif defined(_WIN32) || defined(_MSC_VER)
+#       define DECLARE_ALIGNED(x)      __declspec(align(x))
+#   else
+#       define DECLARE_ALIGNED(x)
+#   endif
 #else
-#define DECLARE_ALIGNED(x)
+#   define DECLARE_ALIGNED(x)
 #endif
 
+// Statement: int __declspec(align(N)) X; support from MS VC++ 7.1 (_MSC_VER >= 1310)
+// or Intel C++ Compile (ICC) Version > 8.1
+
+#ifdef ALIGN_PREFIX
+#undef ALIGN_PREFIX
+#endif
+
+#if defined(USE_ATTR_ALIGNED) && (USE_ATTR_ALIGNED != 0)
+#   if defined(__ICL) && (defined(__VERSION__) || defined(__INTEL_COMPILER_BUILD_DATE))
+#       define ALIGN_PREFIX(N)      __declspec(align(N))
+#   elif defined(_MSC_VER) && (_MSC_VER >= 1310)
+#       define ALIGN_PREFIX(N)      __declspec(align(N))
+#   else
+#       define ALIGN_PREFIX(N)
+#   endif
+#else
+#   define ALIGN_PREFIX(N)
+#endif
+
+// Statement: int X __attribute__((aligned(N))); support by gcc (GNU C)
+
+#ifdef ALIGN_SUFFIX
+#undef ALIGN_SUFFIX
+#endif
+
+#if defined(USE_ATTR_ALIGNED) && (USE_ATTR_ALIGNED != 0)
+#   if defined(__GNUC__)
+#       define ALIGN_SUFFIX(N)      __attribute__((aligned(N)))
+#   else
+#       define ALIGN_SUFFIX(N)
+#   endif
+#else
+#   define ALIGN_SUFFIX(N)
+#endif
+
+#define ALIGN_PREFIX_8          ALIGN_PREFIX(8)
+#define ALIGN_PREFIX_16         ALIGN_PREFIX(16)
+#define ALIGN_PREFIX_32         ALIGN_PREFIX(32)
+#define ALIGN_PREFIX_64         ALIGN_PREFIX(64)
+
+#define ALIGN_SUFFIX_8          ALIGN_SUFFIX(8)
+#define ALIGN_SUFFIX_16         ALIGN_SUFFIX(16)
+#define ALIGN_SUFFIX_32         ALIGN_SUFFIX(32)
+#define ALIGN_SUFFIX_64         ALIGN_SUFFIX(64)
+
 // address align
-#define ADDR_ALGIN8BYTES(p)      (((unsigned)(p) + 7 ) & 0xfffffff8ul)
-#define ADDR_ALGIN16BYTES(p)     (((unsigned)(p) + 15) & 0xfffffff0ul)
-#define ADDR_ALGIN32BYTES(p)     (((unsigned)(p) + 31) & 0xffffffe0ul)
-#define ADDR_ALGIN64BYTES(p)     (((unsigned)(p) + 63) & 0xffffffc0ul)
+#define ADDR_ALGIN_8BYTES(p)    (((unsigned)(p) +  7) & 0xfffffff8ul)
+#define ADDR_ALGIN_16BYTES(p)   (((unsigned)(p) + 15) & 0xfffffff0ul)
+#define ADDR_ALGIN_32BYTES(p)   (((unsigned)(p) + 31) & 0xffffffe0ul)
+#define ADDR_ALGIN_64BYTES(p)   (((unsigned)(p) + 63) & 0xffffffc0ul)
 
 /* Define function attributes directive when available */
 #if __GNUC__ >= 3
 #define	REGPARM(num)	__attribute__((regparm(num)))
 #else
-#if defined (_MSC_VER) || defined(__BORLANDC__)
+#if defined (_MSC_VER) || defined(__BORLANDC__) || defined(__ICL)
 #define	REGPARM(num)	__fastcall
 //#define	REGPARM(num)
 #else
@@ -214,4 +269,4 @@ Boolean Xor(Boolean bArg1, Boolean bArg2);
 }
 #endif
 
-#endif  /* __UTILS_H_ */
+#endif  /* __UTILS_H__ */

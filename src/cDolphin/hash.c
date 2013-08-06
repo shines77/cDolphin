@@ -29,15 +29,15 @@
 #define REPLACEMENT_OFFSET          4
 
 /* An 8-bit mask to isolate the "draft" part of the hash table info. */
-#define DRAFT_MASK                  255
+#define DRAFT_MASK                  0x000000FFul
 
-#define KEY1_MASK                   0xFF000000u
+#define KEY1_MASK                   0xFF000000ul
 
 #define SECONDARY_HASH( a )         ((a) ^ 1)
 
 /* Global variables */
 
-__declspec(align(64)) int g_hash_size = 0;
+ALIGN_PREFIX(64) int g_hash_size = 0 ALIGN_SUFFIX(64);
 int g_hash_mask = 0;
 CompactHashEntry *g_hash_table = NULL;
 unsigned int g_hash1 = 0;
@@ -56,8 +56,8 @@ unsigned int hash_flip1[64];
 unsigned int hash_flip2[64];
 unsigned int hash_color1[3];
 unsigned int hash_color2[3];
-__declspec(align(64)) unsigned int hash_stored1[MAX_SEARCH_DEPTH];
-__declspec(align(64)) unsigned int hash_stored2[MAX_SEARCH_DEPTH];
+ALIGN_PREFIX(64) unsigned int hash_stored1[MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
+ALIGN_PREFIX(64) unsigned int hash_stored2[MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
 unsigned int hash_row_value1[8][256];
 unsigned int hash_row_value2[8][256];
 unsigned int hash_two_row_value1[4][65536];
@@ -93,7 +93,7 @@ hash_init( int in_hash_bits ) {
 	if ( g_org_hash_table == NULL ) {
 		return;
 	}
-	g_hash_table = (CompactHashEntry *)ADDR_ALGIN64BYTES( g_org_hash_table );
+	g_hash_table = (CompactHashEntry *)ADDR_ALGIN_64BYTES( g_org_hash_table );
 	g_rehash_count = 0;
 }
 
@@ -531,14 +531,12 @@ hash_add( int reverse_mode,
 
 	index1 = code1 & g_hash_mask;
 	index2 = SECONDARY_HASH( index1 );
-	if ( (g_hash_table[index1].key2 == code2) /*&&
-		((g_hash_table[index1].key1_selectivity_flags_draft & KEY1_MASK) ==
-			(code1 & KEY1_MASK))*/ )
+	if ( (g_hash_table[index1].key2 == code2) &&
+		(((g_hash_table[index1].key1_selectivity_flags_draft ^ code1) & KEY1_MASK) == 0) )
 		index = index1;
 	else {
-		if ( (g_hash_table[index2].key2 == code2) /*&&
-			((g_hash_table[index2].key1_selectivity_flags_draft & KEY1_MASK) ==
-			(code1 & KEY1_MASK))*/ )
+		if ( (g_hash_table[index2].key2 == code2) &&
+			(((g_hash_table[index2].key1_selectivity_flags_draft ^code1) & KEY1_MASK) == 0) )
 			index = index2;
 		else {
 			if ( (g_hash_table[index1].key1_selectivity_flags_draft & DRAFT_MASK) <=
@@ -571,7 +569,7 @@ hash_add( int reverse_mode,
 	entry.move[3] = D4;
 	entry.flags = (short) flags;
 	entry.draft = (short) draft;
-	entry.selectivity = selectivity;
+	entry.selectivity = (short) selectivity;
 	g_hash_table[index] = wide_to_compact( entry );
 }
 
@@ -606,14 +604,12 @@ hash_add_extended( int reverse_mode, int score, int *best, int flags,
 
 	index1 = code1 & g_hash_mask;
 	index2 = SECONDARY_HASH( index1 );
-	if ( (g_hash_table[index1].key2 == code2) /*&&
-		((g_hash_table[index1].key1_selectivity_flags_draft & KEY1_MASK) ==
-			(code1 & KEY1_MASK))*/ )
+	if ( (g_hash_table[index1].key2 == code2) &&
+		(((g_hash_table[index1].key1_selectivity_flags_draft ^ code1) & KEY1_MASK) == 0) )
 		index = index1;
 	else {
-		if ( (g_hash_table[index2].key2 == code2) /*&&
-			((g_hash_table[index2].key1_selectivity_flags_draft & KEY1_MASK) ==
-			(code1 & KEY1_MASK))*/ )
+		if ( (g_hash_table[index2].key2 == code2) &&
+			(((g_hash_table[index2].key1_selectivity_flags_draft ^ code1) & KEY1_MASK) == 0) )
 			index = index2;
 		else {
 			if ( (g_hash_table[index1].key1_selectivity_flags_draft & DRAFT_MASK) <=
@@ -644,7 +640,7 @@ hash_add_extended( int reverse_mode, int score, int *best, int flags,
 		entry.move[i] = best[i];
 	entry.flags = (short) flags;
 	entry.draft = (short) draft;
-	entry.selectivity = selectivity;
+	entry.selectivity = (short) selectivity;
 	g_hash_table[index] = wide_to_compact( entry );
 }
 
@@ -663,14 +659,10 @@ hash_find( int reverse_mode ) {
 	if ( reverse_mode ) {
 		code1 = g_hash2 ^ g_hash_trans2;
 		code2 = g_hash1 ^ g_hash_trans1;
-		//code1 = g_hash2;
-		//code2 = g_hash1;
 	}
 	else {
 		code1 = g_hash1 ^ g_hash_trans1;
 		code2 = g_hash2 ^ g_hash_trans2;
-		//code1 = g_hash1;
-		//code2 = g_hash2;
 	}
 
 	index1 = code1 & g_hash_mask;

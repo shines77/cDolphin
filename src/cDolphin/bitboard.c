@@ -14,7 +14,7 @@
 #include "colour.h"
 #include "bitboard.h"
 
-__declspec(align(64)) BitBoard square_mask[64];
+ALIGN_PREFIX(64) BitBoard square_mask[64] ALIGN_SUFFIX(64);
 
 /*
   NON_ITERATIVE_POPCOUNT

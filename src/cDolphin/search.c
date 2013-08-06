@@ -30,11 +30,11 @@ double total_time;
 int root_eval = 0;
 int force_return = FALSE;
 int list_inherited[61];
-__declspec(align(64)) int sorted_move_order[64][64];  /* 61*60 used */
-__declspec(align(64)) Board evals[61];
+ALIGN_PREFIX(64) int sorted_move_order[64][64] ALIGN_SUFFIX(64);  /* 61*60 used */
+ALIGN_PREFIX(64) Board evals[61] ALIGN_SUFFIX(64);
 
-__declspec(align(8)) CounterType leaf_nodes, tree_nodes, total_nodes;
-__declspec(align(8)) CounterType evaluations, total_evaluations;
+ALIGN_PREFIX(8) CounterType leaf_nodes, tree_nodes, total_nodes ALIGN_SUFFIX(8);
+ALIGN_PREFIX(8) CounterType evaluations, total_evaluations ALIGN_SUFFIX(8);
 
 /* When no other information is available, JCW's endgame
    priority order is used also in the midgame. */

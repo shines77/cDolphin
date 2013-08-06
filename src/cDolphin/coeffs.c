@@ -80,14 +80,14 @@
 //#define USE_BYTE_BOARD
 
 #ifndef USE_BYTE_BOARD
-    __declspec(align(64)) static unsigned int wBoard[64];
+    ALIGN_PREFIX(64) static unsigned int wBoard[64] ALIGN_SUFFIX(64);
     #ifdef _DEBUG
-    __declspec(align(64)) static unsigned int wBoard2[64];
+        ALIGN_PREFIX(64) static unsigned int wBoard2[64] ALIGN_SUFFIX(64);
     #endif
 #else
-    __declspec(align(64)) static unsigned char wBoard[64];
+    ALIGN_PREFIX(64) static unsigned char wBoard[64] ALIGN_SUFFIX(64);
     #ifdef _DEBUG
-    __declspec(align(64)) static unsigned char wBoard2[64];
+        ALIGN_PREFIX(64) static unsigned char wBoard2[64] ALIGN_SUFFIX(64);
     #endif
 #endif
 
@@ -138,20 +138,20 @@ static int block_allocated[MAX_BLOCKS], block_set[MAX_BLOCKS];
 static int eval_map[61];
 static AllocationBlock *block_list[MAX_BLOCKS];
 
-__declspec(align(64)) static CoeffSet coeffs[61];
+ALIGN_PREFIX(64) static CoeffSet coeffs[61] ALIGN_SUFFIX(64);
 
-__declspec(align(64)) static unsigned int disc_set_tableb[16];
-__declspec(align(64)) static unsigned int disc_set_tablew[16];
+ALIGN_PREFIX(64) static unsigned int disc_set_tableb[16] ALIGN_SUFFIX(64);
+ALIGN_PREFIX(64) static unsigned int disc_set_tablew[16] ALIGN_SUFFIX(64);
 
-__declspec(align(64))
-static unsigned int disc_set_table_bw[256];
+ALIGN_PREFIX(64)
+static unsigned int disc_set_table_bw[256] ALIGN_SUFFIX(64);
 
-__declspec(align(64))
-static unsigned int disc_set_table_bw32[256*4];
+ALIGN_PREFIX(64)
+static unsigned int disc_set_table_bw32[256*4] ALIGN_SUFFIX(64);
 
-__declspec(align(64)) static unsigned short pattern_mask[512];
-__declspec(align(64)) static unsigned int pattern_mask2[4];
-//__declspec(align(64)) static unsigned int pattern_mask3[16];
+ALIGN_PREFIX(64) static unsigned short pattern_mask[512] ALIGN_SUFFIX(64);
+ALIGN_PREFIX(64) static unsigned int pattern_mask2[4] ALIGN_SUFFIX(64);
+//ALIGN_PREFIX(64) static unsigned int pattern_mask3[16] ALIGN_SUFFIX(64);
 
 int min_coffe, max_coffe;
 
@@ -2192,7 +2192,11 @@ gen_board_from_bb1( const BitBoard my_bits,
 	memcpy((void *)pb, (const void *)&disc_set_table_bw32[mask * 4], sizeof(unsigned int) * 4);
 }
 
+#if defined(_MSC_VER) && (_MSC_VER <= 1200)
+
 //#define GEN_BOARD_USE_MMX_REG
+
+#endif
 
 /*
    GEN_BOARD_FROM_BB2
@@ -2206,17 +2210,35 @@ gen_board_from_bb2( const BitBoard my_bits,
 	BitBoard empty_bits;
 	BitBoard *black_bits, *white_bits;
 
+#if defined(_MSC_VER) && (_MSC_VER <= 1200)
+
 #ifdef GEN_BOARD_USE_MMX_REG
-    __declspec(align(16)) static const unsigned __int64 s_shift_bits = 0x0000000080000001ULL;
-    __declspec(align(16)) static const unsigned __int64 s_discs_mask = 0x0000000100000001ULL;
+    static ALIGN_PREFIX(16) const unsigned __int64 s_shift_bits ALIGN_SUFFIX(16) = 0x0000000080000001UI64;
+    static ALIGN_PREFIX(16) const unsigned __int64 s_discs_mask ALIGN_SUFFIX(16) = 0x0000000100000001UI64;
 #else
-    __declspec(align(16)) static const unsigned __int64 s_shift_bits_128[] = {
+    static ALIGN_PREFIX(16) const unsigned __int64 s_shift_bits_128[] ALIGN_SUFFIX(16) = {
+        0x0000000080000001UI64, 0x0000000080000001UI64
+    };
+    static ALIGN_PREFIX(16) const unsigned __int64 s_discs_mask_128[] ALIGN_SUFFIX(16) = {
+        0x0000000100000001UI64, 0x0000000100000001UI64
+    };
+#endif
+
+#else
+
+#ifdef GEN_BOARD_USE_MMX_REG
+    static ALIGN_PREFIX(16) const unsigned __int64 s_shift_bits ALIGN_SUFFIX(16) = 0x0000000080000001ULL;
+    static ALIGN_PREFIX(16) const unsigned __int64 s_discs_mask ALIGN_SUFFIX(16) = 0x0000000100000001ULL;
+#else
+    static ALIGN_PREFIX(16) const unsigned __int64 s_shift_bits_128[] ALIGN_SUFFIX(16) = {
         0x0000000080000001ULL, 0x0000000080000001ULL
     };
-    __declspec(align(16)) static const unsigned __int64 s_discs_mask_128[] = {
+    static ALIGN_PREFIX(16) const unsigned __int64 s_discs_mask_128[] ALIGN_SUFFIX(16) = {
         0x0000000100000001ULL, 0x0000000100000001ULL
     };
 #endif
+
+#endif  /* defined(_MSC_VER) && (_MSC_VER <= 1200) */
 
 	BITBOARD_FULL_NOTOR( empty_bits, my_bits, opp_bits );
 
@@ -2240,8 +2262,8 @@ gen_board_from_bb2( const BitBoard my_bits,
         movq2dq     xmm0, xmm0
         movq2dq     xmm1, xmm1
 #else
-        movdqa       xmm0, s_shift_bits_128
-        movdqa       xmm1, s_discs_mask_128
+        movdqa      xmm0, s_shift_bits_128
+        movdqa      xmm1, s_discs_mask_128
 #endif
         add         esi, 64
 

@@ -15,7 +15,7 @@
 /* Global variables */
 
 int score_sheet_row;
-__declspec(align(64)) int piece_count[3][MAX_SEARCH_DEPTH];
+ALIGN_PREFIX(64) int piece_count[3][MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
 int black_moves[60+4];
 int white_moves[60+4];
 

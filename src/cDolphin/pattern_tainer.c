@@ -33,8 +33,8 @@ InfoItem corner33[19683];
 InfoItem afile2x[59049];
 int global_parity;
 
-__declspec(align(64)) static unsigned short pattern_mask[512];
-__declspec(align(64)) static unsigned int pattern_mask2[4];
+ALIGN_PREFIX(64) static unsigned short pattern_mask[512] ALIGN_SUFFIX(64);
+ALIGN_PREFIX(64) static unsigned int pattern_mask2[4] ALIGN_SUFFIX(64);
 
 void
 init_pattern_mask2( void ) {

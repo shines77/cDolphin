@@ -33,8 +33,8 @@
 /* Global variables */
 
 int disks_played = 0;
-__declspec(align(64)) int move_count[MAX_SEARCH_DEPTH];
-__declspec(align(64)) int move_list[MAX_SEARCH_DEPTH][64];
+ALIGN_PREFIX(64) int move_count[MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
+ALIGN_PREFIX(64) int move_list[MAX_SEARCH_DEPTH][64] ALIGN_SUFFIX(64);
 int *first_flip_direction[100];
 int flip_direction[100][16];   /* 100 * 9 used */
 int **first_flipped_disc[100];
@@ -51,7 +51,7 @@ const int dir_mask[64] = {
 };
 const int move_offset[8] = { 1, -1, 7, -7, 8, -8, 9, -9 };
 
-__declspec(align(64)) BitBoard neighborhood_mask[64];
+ALIGN_PREFIX(64) BitBoard neighborhood_mask[64];
 
 /* Local variables */
 
@@ -160,7 +160,7 @@ generate_all( const BitBoard my_bits,
 	int count, pos;
 	BitPosition movelist_pos;
 	BitBoard *movelist_bits;
-	movelist_bits = (BitBoard *)ADDR_ALGIN8BYTES(&movelist_pos);
+	movelist_bits = (BitBoard *)ADDR_ALGIN_8BYTES(&movelist_pos);
 
 	reset_generation( color );
 	count = 0;
@@ -708,7 +708,7 @@ prepare_movelist_pv( const BitBoard my_bits,
 
 	BitPosition movelist_pos;
 	BitBoard *movelist_bits;
-	movelist_bits = (BitBoard *)ADDR_ALGIN8BYTES(&movelist_pos);
+	movelist_bits = (BitBoard *)ADDR_ALGIN_8BYTES(&movelist_pos);
 
 	bitboard_gen_movelist(my_bits, opp_bits, movelist_bits);
 

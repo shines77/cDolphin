@@ -101,7 +101,7 @@ typedef union tagUBitPosition {
 	uint64 u64;
 } uBitPosition;
 
-extern __declspec(align(64)) BitBoard square_mask[64];
+extern ALIGN_PREFIX(64) BitBoard square_mask[64] ALIGN_SUFFIX(64);
 
 void
 bitboard_set_bit(BitBoard *b, unsigned long pos);

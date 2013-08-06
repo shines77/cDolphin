@@ -77,10 +77,10 @@ static int do_check_midgame_abort = TRUE;
 static int counter_phase;
 static int apply_perturbation = TRUE;
 static int perturbation_amplitude = 0;
-//__declspec(align(64)) static int stage_reached[61], stage_score[61];
-__declspec(align(64)) static int stage_reached[64], stage_score[64];
-__declspec(align(64)) static int score_perturbation[64];
-__declspec(align(64)) static int feas_index_list[64][64];
+//ALIGN_PREFIX(64) static int stage_reached[61], stage_score[61] ALIGN_SUFFIX(64);
+ALIGN_PREFIX(64) static int stage_reached[64], stage_score[64] ALIGN_SUFFIX(64);
+ALIGN_PREFIX(64) static int score_perturbation[64] ALIGN_SUFFIX(64);
+ALIGN_PREFIX(64) static int feas_index_list[64][64] ALIGN_SUFFIX(64);
 
 /*
    SETUP_MIDGAME
@@ -387,7 +387,7 @@ fast_tree_search( BitBoard my_bits, BitBoard opp_bits,
 	save_my_bits = my_bits;
 	save_opp_bits = opp_bits;
 
-	movelist_bits = (BitBoard *)ADDR_ALGIN8BYTES(&movelist_pos);
+	movelist_bits = (BitBoard *)ADDR_ALGIN_8BYTES(&movelist_pos);
 	//BITBOARD_CLEAR(movelist_bits);
 
 	first = TRUE;
@@ -605,7 +605,7 @@ tree_search( BitBoard my_bits, BitBoard opp_bits, int depth, int max_depth,
 	save_my_bits = my_bits;
 	save_opp_bits = opp_bits;
 
-	movelist_bits = (BitBoard *)ADDR_ALGIN8BYTES(&movelist_pos);
+	movelist_bits = (BitBoard *)ADDR_ALGIN_8BYTES(&movelist_pos);
 	//BITBOARD_CLEAR(movelist_bits);
 
 	pre_search_done = FALSE;
@@ -967,7 +967,7 @@ tree_search( BitBoard my_bits, BitBoard opp_bits, int depth, int max_depth,
 		searched++;
 	}
 
-  /* Post-processing */
+    /* Post-processing */
 
 #if CHECK_HASH_CODES && defined( TEXT_BASED )
 	if ( use_hash ) {
@@ -1101,7 +1101,7 @@ root_tree_search( BitBoard my_bits, BitBoard opp_bits, int depth, int max_depth,
 	save_my_bits = my_bits;
 	save_opp_bits = opp_bits;
 
-	movelist_bits = (BitBoard *)ADDR_ALGIN8BYTES(&movelist_pos);
+	movelist_bits = (BitBoard *)ADDR_ALGIN_8BYTES(&movelist_pos);
 	//BITBOARD_CLEAR(movelist_bits);
 
 	/* Full negascout search */
@@ -1373,7 +1373,7 @@ protected_one_ply_search( BitBoard my_bits, BitBoard opp_bits, int color ) {
 	save_my_bits = my_bits;
 	save_opp_bits = opp_bits;
 
-	movelist_bits = (BitBoard *)ADDR_ALGIN8BYTES(&movelist_pos);
+	movelist_bits = (BitBoard *)ADDR_ALGIN_8BYTES(&movelist_pos);
 	//BITBOARD_CLEAR(movelist_bits);
 
 	best_score_restricted = -INFINITE_EVAL;

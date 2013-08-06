@@ -20,12 +20,12 @@
 extern "C" {
 #endif
 
-#define LOWER_BOUND               1
-#define UPPER_BOUND               2
-#define EXACT_VALUE               4
-#define MIDGAME_SCORE             8
-#define ENDGAME_SCORE             16
-#define SELECTIVE                 32
+#define LOWER_BOUND               0x01u     //  1
+#define UPPER_BOUND               0x02u     //  2
+#define EXACT_VALUE               0x04u     //  4
+#define MIDGAME_SCORE             0x08u     //  8
+#define ENDGAME_SCORE             0x10u     // 16
+#define SELECTIVE                 0x20u     // 32
 
 #define ENDGAME_MODE              TRUE
 #define MIDGAME_MODE              FALSE
@@ -94,8 +94,8 @@ extern unsigned int hash_color2[3];
 
 /* Stored 64-bit hash mask which hold the hash codes at different nodes
    in the search tree. */
-extern __declspec(align(64)) unsigned int hash_stored1[MAX_SEARCH_DEPTH];
-extern __declspec(align(64)) unsigned int hash_stored2[MAX_SEARCH_DEPTH];
+extern ALIGN_PREFIX(64) unsigned int hash_stored1[MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
+extern ALIGN_PREFIX(64) unsigned int hash_stored2[MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
 
 extern unsigned int hash_row_value1[8][256];
 extern unsigned int hash_row_value2[8][256];

@@ -25,13 +25,13 @@ extern "C" {
    node on recursion depth n on the current recursive call sequence.
    After the search, pv[0][0..<depth>] contains the principal
    variation from the root position. */
-extern __declspec(align(64)) int pv[MAX_SEARCH_DEPTH][MAX_SEARCH_DEPTH];
+extern ALIGN_PREFIX(64) int pv[MAX_SEARCH_DEPTH][MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
 
 /* pv_depth[n] contains the depth of the principal variation
    starting at level n in the call sequence.
    After the search, pv[0] holds the depth of the principal variation
    from the root position. */
-extern __declspec(align(64)) int pv_depth[MAX_SEARCH_DEPTH];
+extern ALIGN_PREFIX(64) int pv_depth[MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
 
 /* The principal variation including passes */
 extern int full_pv_depth;

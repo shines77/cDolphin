@@ -30,11 +30,11 @@ extern int disks_played;
 
 /* The number of moves available after a certain number
    of disks played. */
-extern __declspec(align(64)) int move_count[MAX_SEARCH_DEPTH];
+extern ALIGN_PREFIX(64) int move_count[MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
 
 /* The actual moves available after a certain number of
    disks played. */
-extern __declspec(align(64)) int move_list[MAX_SEARCH_DEPTH][64];
+extern ALIGN_PREFIX(64) int move_list[MAX_SEARCH_DEPTH][64] ALIGN_SUFFIX(64);
 
 /* Directional flip masks for all board positions. */
 extern const int dir_mask[64];
@@ -49,7 +49,7 @@ extern int flip_direction[100][16];
 /* Pointers to FLIPDIRECTION[][0]. */
 extern int *first_flip_direction[100];
 
-extern __declspec(align(64)) BitBoard neighborhood_mask[64];
+extern ALIGN_PREFIX(64) BitBoard neighborhood_mask[64] ALIGN_SUFFIX(64);
 
 void
 init_moves( void );
