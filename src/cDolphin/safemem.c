@@ -1,5 +1,5 @@
 /*
-   File:            safemem.cpp
+   File:            safemem.c
 
    Created:         August 30, 1998
 

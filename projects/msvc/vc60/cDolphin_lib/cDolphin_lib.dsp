@@ -41,7 +41,8 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\..\..\..\tmp\windows\x86\vc60\Release\cDolphin_lib"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /I "..\..\..\..\include" /I "..\..\..\..\include\cDolphin" /I "..\..\..\..\src" /I "..\..\..\..\src\cDolphin" /I "..\..\..\..\deps" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /O3 /G7 /QxP /Qipo /Qprec-div- /c
+# ADD CPP /nologo /W3 /GX /O2 /I "..\..\..\..\include" /I "..\..\..\..\include\cDolphin" /I "..\..\..\..\src" /I "..\..\..\..\src\cDolphin" /I "..\..\..\..\deps" /I "..\..\..\..\lib\windows\x86\vc60" /D "WIN32" /D "NDEBUG" /D "_LIB" /D "_WINDOWS" /D "_MBCS" /D "ZLIB_WINAPI" /D "_CRT_NONSTDC_NO_DEPRECATE" /D "_CRT_SECURE_NO_DEPRECATE" /D "_CRT_NONSTDC_NO_WARNINGS" /FD /O3 /G7 /QxP /Qipo /Qprec-div- /c
+# SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x804 /d "NDEBUG"
 # ADD RSC /l 0x804 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -64,7 +65,7 @@ LIB32=xilink6.exe -lib
 # PROP Intermediate_Dir "..\..\..\..\tmp\windows\x86\vc60\Debug\cDolphin_lib"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /GZ /c
-# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /I "..\..\..\..\include" /I "..\..\..\..\include\cDolphin" /I "..\..\..\..\src" /I "..\..\..\..\src\cDolphin" /I "..\..\..\..\deps" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /GZ
+# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /I "..\..\..\..\include" /I "..\..\..\..\include\cDolphin" /I "..\..\..\..\src" /I "..\..\..\..\src\cDolphin" /I "..\..\..\..\deps" /I "..\..\..\..\lib\windows\x86\vc60" /D "WIN32" /D "_DEBUG" /D "_LIB" /D "_WINDOWS" /D "_MBCS" /D "ZLIB_WINAPI" /D "_CRT_NONSTDC_NO_DEPRECATE" /D "_CRT_SECURE_NO_DEPRECATE" /D "_CRT_NONSTDC_NO_WARNINGS" /FD /GZ /c
 # ADD BASE RSC /l 0x804 /d "_DEBUG"
 # ADD RSC /l 0x804 /d "_DEBUG"
 BSC32=bscmake.exe

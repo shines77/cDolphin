@@ -36,8 +36,6 @@ extern "C" {
 #define INFINIT_TIME              10000000.0
 #define DEFAULT_DISPLAY_LINE      FALSE
 
-extern int g_rand_terminal;
-
 /* Administrative routines */
 
 void

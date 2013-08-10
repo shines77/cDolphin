@@ -1,5 +1,5 @@
 /*
-   File:           timer.cpp
+   File:           timer.c
 
    Created:        2007-07-10
 

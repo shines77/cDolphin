@@ -1,5 +1,5 @@
 /*
-   File:           counter.cpp
+   File:           counter.c
 
    Created:        2007-07-10
 

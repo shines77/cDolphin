@@ -1,9 +1,9 @@
 /*
-   File:           midgame.cpp
+   File:           midgame.c
 
    Created:        2007-07-10
 
-   Modified:       none
+   Modified:       2013-08-10
 
    Author:         GuoXiongHui (wokss@163.com)
 
@@ -68,6 +68,8 @@
 #define BETA_WINDOW              2048
 
 #define WIPEOUT_THRESHOLD        60
+
+int g_rand_terminal = FALSE;
 
 static int allow_midgame_hash_probe;
 static int allow_midgame_hash_update;

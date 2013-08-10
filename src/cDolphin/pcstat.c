@@ -1,5 +1,5 @@
 /*
-   File:           pcstat.cpp
+   File:           pcstat.c
 
    Created:        2007-07-10
 

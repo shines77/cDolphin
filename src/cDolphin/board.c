@@ -1,5 +1,5 @@
 /*
-   File:           board.cpp
+   File:           board.c
 
    Created:        2007-07-10
 
@@ -13,5 +13,5 @@
 #include "utils.h"
 #include "board.h"
 
-Board board;
-Board10 board10;
+Board board = { 0 };
+Board10 board10 = { 0 };

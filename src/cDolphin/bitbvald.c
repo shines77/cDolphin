@@ -1,5 +1,5 @@
 /*
-   File:           bitbvald.cpp
+   File:           bitbvald.c
 
    Created:        2007-07-10
 

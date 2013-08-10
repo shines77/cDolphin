@@ -41,7 +41,8 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\..\..\..\tmp\windows\x86\vc60\Release\zlib"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /O2 /I "..\..\..\..\deps\zlib" /I "..\..\..\..\deps\zlib\contrib\masmx86" /D "WIN32" /D "NDEBUG" /D "_LIB" /D "_WINDOWS" /D "_MBCS" /D "ZLIB_WINAPI" /D "_CRT_NONSTDC_NO_DEPRECATE" /D "_CRT_SECURE_NO_DEPRECATE" /D "_CRT_NONSTDC_NO_WARNINGS" /FD /c
+# SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x804 /d "NDEBUG"
 # ADD RSC /l 0x804 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -64,7 +65,7 @@ LIB32=xilink6.exe -lib
 # PROP Intermediate_Dir "..\..\..\..\tmp\windows\x86\vc60\Debug\zlib"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /GZ /c
-# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /GZ /c
+# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /I "..\..\..\..\deps\zlib" /I "..\..\..\..\deps\zlib\contrib\masmx86" /D "WIN32" /D "_DEBUG" /D "_LIB" /D "_WINDOWS" /D "_MBCS" /D "ZLIB_WINAPI" /D "_CRT_NONSTDC_NO_DEPRECATE" /D "_CRT_SECURE_NO_DEPRECATE" /D "_CRT_NONSTDC_NO_WARNINGS" /FD /GZ /c
 # ADD BASE RSC /l 0x804 /d "_DEBUG"
 # ADD RSC /l 0x804 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -101,15 +102,23 @@ SOURCE=..\..\..\..\deps\zlib\deflate.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\deps\zlib\gzio.c
+SOURCE=..\..\..\..\deps\zlib\gzclose.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\deps\zlib\infblock.c
+SOURCE=..\..\..\..\deps\zlib\gzlib.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\deps\zlib\infcodes.c
+SOURCE=..\..\..\..\deps\zlib\gzread.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\deps\zlib\gzwrite.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\deps\zlib\infback.c
 # End Source File
 # Begin Source File
 
@@ -125,11 +134,7 @@ SOURCE=..\..\..\..\deps\zlib\inftrees.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\deps\zlib\infutil.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\deps\zlib\maketree.c
+SOURCE=..\..\..\..\deps\zlib\contrib\minizip\ioapi.c
 # End Source File
 # Begin Source File
 
@@ -141,6 +146,10 @@ SOURCE=..\..\..\..\deps\zlib\uncompr.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\deps\zlib\contrib\vstudio\vc9\zlibvc.def
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\deps\zlib\zutil.c
 # End Source File
 # End Group
@@ -149,15 +158,15 @@ SOURCE=..\..\..\..\deps\zlib\zutil.c
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\..\..\..\deps\zlib\crc32.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\deps\zlib\deflate.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\deps\zlib\infblock.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\deps\zlib\infcodes.h
+SOURCE=..\..\..\..\deps\zlib\gzguts.h
 # End Source File
 # Begin Source File
 
@@ -169,11 +178,23 @@ SOURCE=..\..\..\..\deps\zlib\inffixed.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\deps\zlib\inflate.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\deps\zlib\inftrees.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\deps\zlib\infutil.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\deps\zlib\contrib\minizip\ioapi.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\deps\zlib\contrib\minizip\iowin32.h
 # End Source File
 # Begin Source File
 
@@ -190,6 +211,14 @@ SOURCE=..\..\..\..\deps\zlib\zlib.h
 # Begin Source File
 
 SOURCE=..\..\..\..\deps\zlib\zutil.h
+# End Source File
+# End Group
+# Begin Group "Resource Files"
+
+# PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=..\..\..\..\deps\zlib\win32\zlib1.rc
 # End Source File
 # End Group
 # End Target

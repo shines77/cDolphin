@@ -1,5 +1,5 @@
 /*
-   File:           display.cpp
+   File:           display.c
 
    Created:        2007-07-10
 
@@ -32,6 +32,8 @@ int echo = DEFAULT_ECHO;
 int display_pv = DEFAULT_DISPLAY_PV;
 
 /* Local variables */
+
+FILE *g_stdout = NULL;
 
 static char *black_player = NULL;
 static char *white_player = NULL;

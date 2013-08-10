@@ -41,8 +41,6 @@ extern ALIGN_PREFIX(64) int piece_count[3][MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
 extern int black_moves[60+4];
 extern int white_moves[60+4];
 
-extern FILE *g_stdout;
-
 #ifdef __cplusplus
 }
 #endif

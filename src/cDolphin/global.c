@@ -1,9 +1,9 @@
 /*
-   File:           global.cpp
+   File:           global.c
 
    Created:        2007-07-10
 
-   Modified:       none
+   Modified:       2013-08-10
 
    Author:         GuoXiongHui (wokss@163.com)
 
@@ -18,8 +18,6 @@ int score_sheet_row;
 ALIGN_PREFIX(64) int piece_count[3][MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
 int black_moves[60+4];
 int white_moves[60+4];
-
-FILE *g_stdout = NULL;
 
 #ifdef DOLPHIN_GGS
 

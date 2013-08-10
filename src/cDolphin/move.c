@@ -1,5 +1,5 @@
 /*
-   File:           move.cpp
+   File:           move.c
 
    Created:        2007-07-10
 
@@ -33,6 +33,7 @@
 /* Global variables */
 
 int disks_played = 0;
+
 ALIGN_PREFIX(64) int move_count[MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
 ALIGN_PREFIX(64) int move_list[MAX_SEARCH_DEPTH][64] ALIGN_SUFFIX(64);
 int *first_flip_direction[100];

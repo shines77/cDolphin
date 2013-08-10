@@ -1,9 +1,9 @@
 /*
-   File:           pattern.cpp
+   File:           pattern.c
 
    Created:        2007-07-10
 
-   Modified:       none
+   Modified:       2013-08-10
 
    Author:         GuoXiongHui (wokss@163.com)
 
@@ -58,6 +58,7 @@ static void
 transformation_setup( void ) {
 	int i, j;
 	int row[10];
+    int mirror_pattern;
 
 	/* Build the pattern tables for 8*1-patterns */
 
@@ -66,9 +67,11 @@ transformation_setup( void ) {
 
 	for ( i = 0; i < 6561; i++ ) {
 		/* Create the symmetry map */
-		flip8[i] = 0;
+        mirror_pattern = 0;
 		for ( j = 0; j < 8; j++ )
-			flip8[i] += row[j] * pow3[7 - j];
+			mirror_pattern += row[j] * pow3[7 - j];
+
+        flip8[i] = mirror_pattern;
 
 		/* Next configuration */
 		j = 0;
@@ -79,6 +82,9 @@ transformation_setup( void ) {
 			j++;
 		} while ( (row[j - 1] == 0) && (j < 8) );
 	}
+
+    /* output map mirror data for test */
+    //output_mirror_data(&flip8[0], 6561, "flip8_org");
 }
 
 /*
@@ -88,6 +94,12 @@ transformation_setup( void ) {
 
 static void
 add_single( int mask, int pos ) {
+#if _DEBUG
+    if (mask < 0 || mask >= 64)
+        printf("ERROR: add_single(): mask < 0 || mask >= 64, mask = %d\n", mask);
+    if (pos < 0 || pos >= 64)
+        printf("ERROR: add_single(): pos < 0 || pos >= 64, pos = %d\n", pos);
+#endif
 	if ( mask < 32 )
 		depend_lo[pos] |= 1 << mask;
 	else
@@ -209,11 +221,11 @@ pattern_dependency( void ) {
 
 	/* Diag7: a7-g1 */
 
-	add_multiple( DIAG7_3, A7, 7, 7 );
+	add_multiple( DIAG7_3, A7, 7, -7 );     /* fixed bug by shines, 2013/08/09 */
 
 	/* Diag7: b8-h2 */
 
-	add_multiple( DIAG7_4, B8, 7, 7 );
+	add_multiple( DIAG7_4, B8, 7, -7 );     /* fixed bug by shines, 2013/08/09 */
 
 	/* Diag6: c1-h6 */
 
@@ -225,11 +237,11 @@ pattern_dependency( void ) {
 
 	/* Diag6: a6-f1 */
 
-	add_multiple( DIAG6_3, A6, 6, 7 );
+	add_multiple( DIAG6_3, A6, 6, -7 );     /* fixed bug by shines, 2013/08/09 */
 
 	/* Diag6: c8-h3 */
 
-	add_multiple( DIAG6_4, C8, 6, 7 );
+	add_multiple( DIAG6_4, C8, 6, -7 );     /* fixed bug by shines, 2013/08/09 */
 
 	/* Diag5: d1-h5 */
 
@@ -241,11 +253,11 @@ pattern_dependency( void ) {
 
 	/* Diag5: a5-e1 */
 
-	add_multiple( DIAG5_3, A5, 5, 7 );
+	add_multiple( DIAG5_3, A5, 5, -7 );     /* fixed bug by shines, 2013/08/09 */
 
 	/* Diag5: d8-h4 */
 
-	add_multiple( DIAG5_4, D8, 5, 7 );
+	add_multiple( DIAG5_4, D8, 5, -7 );     /* fixed bug by shines, 2013/08/09 */
 
 	/* Diag4: e1-h4 */
 
@@ -257,11 +269,11 @@ pattern_dependency( void ) {
 
 	/* Diag4: a4-d1 */
 
-	add_multiple( DIAG4_3, A4, 4, 7 );
+	add_multiple( DIAG4_3, A4, 4, -7 );     /* fixed bug by shines, 2013/08/09 */
 
 	/* Diag4: e8-h5 */
 
-	add_multiple( DIAG4_4, E8, 4, 7 );
+	add_multiple( DIAG4_4, E8, 4, -7 );     /* fixed bug by shines, 2013/08/09 */
 
 	/* Corner3x3: a1-c1 + a2-c2 + a3-c3 */
 
@@ -354,6 +366,7 @@ init_patterns( void ) {
 
 	/* These values needed for compatibility with the old book format */
 
+    color_pattern[CHESS_EMPTY] = EMPTY_PATTERN;
 	color_pattern[CHESS_BLACK] = BLACK_PATTERN;
 	color_pattern[CHESS_WHITE] = WHITE_PATTERN;
 }

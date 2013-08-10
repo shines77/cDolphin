@@ -1,5 +1,5 @@
 /*
-   File:           probcut.cpp
+   File:           probcut.c
 
    Created:        2007-07-10
 

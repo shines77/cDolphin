@@ -3,7 +3,7 @@
 
    Created:        2007-07-10
 
-   Modified:       none
+   Modified:       2013-08-10
 
    Author:         GuoXiongHui (wokss@163.com)
 
@@ -120,6 +120,10 @@ init_patterns( void );
 
 void
 compute_line_patterns( int *in_board );
+
+extern
+int
+output_mirror_data(int *map_mirror, int count, const char *name);
 
 #ifdef __cplusplus
 }

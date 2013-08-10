@@ -1,5 +1,5 @@
 /*
-   File:           currency.cpp
+   File:           currency.c
 
    Created:        2007-07-10
 

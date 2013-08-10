@@ -1,9 +1,9 @@
 /*
-   File:           coeffs.cpp
+   File:           coeffs.c
 
    Created:        2007-07-10
 
-   Modified:       none
+   Modified:       2013-08-10
 
    Author:         GuoXiongHui (wokss@163.com)
 
@@ -14,6 +14,8 @@
 
 //#define __linux__
 
+#define USE_ZIP_COEFFS_FILE     1
+
 #ifdef _MSC_VER
 #pragma warning( disable : 4244 )
 #endif
@@ -22,13 +24,30 @@
 #include <dir.h>
 #endif
 
+#if defined(USE_ZIP_COEFFS_FILE) && (USE_ZIP_COEFFS_FILE != 0)
+
 #ifdef _WIN32_WCE
-#include "../zlib113/zlib.h"
+#include "zlib/zlib.h"
 #elif defined (_MSC_VER)
 #include "zlib/zlib.h"
 #else
 #include <assert.h>
 #include <zlib.h>
+#endif
+
+/*
+#ifdef _DEBUG
+#pragma comment (lib, "..\\..\\..\\..\\lib\\windows\\x86\\vc60\\zlib_debug.lib")
+#else
+#pragma comment (lib, "..\\..\\..\\..\\lib\\windows\\x86\\vc60\\zlib.lib")
+#endif
+//*/
+
+#else
+
+#include <stdio.h>
+typedef FILE *gzFile;
+
 #endif
 
 #if defined( _WIN32 ) || defined( _WIN32_WCE )
@@ -80,14 +99,14 @@
 //#define USE_BYTE_BOARD
 
 #ifndef USE_BYTE_BOARD
-    ALIGN_PREFIX(64) static unsigned int wBoard[64] ALIGN_SUFFIX(64);
+    static ALIGN_PREFIX(64) unsigned int wBoard[64] ALIGN_SUFFIX(64);
     #ifdef _DEBUG
-        ALIGN_PREFIX(64) static unsigned int wBoard2[64] ALIGN_SUFFIX(64);
+        static ALIGN_PREFIX(64) unsigned int wBoard2[64] ALIGN_SUFFIX(64);
     #endif
 #else
-    ALIGN_PREFIX(64) static unsigned char wBoard[64] ALIGN_SUFFIX(64);
+    static ALIGN_PREFIX(64) unsigned char wBoard[64] ALIGN_SUFFIX(64);
     #ifdef _DEBUG
-        ALIGN_PREFIX(64) static unsigned char wBoard2[64] ALIGN_SUFFIX(64);
+        static ALIGN_PREFIX(64) unsigned char wBoard2[64] ALIGN_SUFFIX(64);
     #endif
 #endif
 
@@ -95,10 +114,56 @@
 #define MAX_BLOCKS            200
 
 /* The file containing the feature values (really shouldn't be #define'd) */
-#define PATTERN_FILE          "coeffs2.bin"
+#if defined(USE_ZIP_COEFFS_FILE) && (USE_ZIP_COEFFS_FILE != 0)
+#   define PATTERN_FILE          "coeffs2.bin"
+#else
+#   define PATTERN_FILE          "coeffs2.dat"
+#endif
 
 /* Calculate cycle counts for the eval function? */
 #define TIME_EVAL             0
+
+#if defined(_MSC_VER) || defined(__ICL)
+
+#pragma pack(push, 1)
+typedef struct tagCoeffSet {
+	int permanent;
+	int loaded;
+	int prev, next;
+	int block;
+	short parity_constant[2];
+	short parity;
+	short constant;
+	short *afile2x, *bfile, *cfile, *dfile;
+	short *diag8, *diag7, *diag6, *diag5, *diag4;
+	short *corner33, *corner52;
+	short *afile2x_last, *bfile_last, *cfile_last, *dfile_last;
+	short *diag8_last, *diag7_last, *diag6_last, *diag5_last, *diag4_last;
+	short *corner33_last, *corner52_last;
+	char alignment_padding[12];  /* In order to achieve 128-byte alignment */
+} CoeffSet;
+#pragma pack(pop)
+
+#elif defined(__GNUC__)
+
+typedef struct tagCoeffSet {
+	int permanent;
+	int loaded;
+	int prev, next;
+	int block;
+	short parity_constant[2];
+	short parity;
+	short constant;
+	short *afile2x, *bfile, *cfile, *dfile;
+	short *diag8, *diag7, *diag6, *diag5, *diag4;
+	short *corner33, *corner52;
+	short *afile2x_last, *bfile_last, *cfile_last, *dfile_last;
+	short *diag8_last, *diag7_last, *diag6_last, *diag5_last, *diag4_last;
+	short *corner33_last, *corner52_last;
+	char alignment_padding[12];  /* In order to achieve 128-byte alignment */
+} __attribute__ ((packed)) CoeffSet;
+
+#else
 
 typedef struct tagCoeffSet {
 	int permanent;
@@ -117,6 +182,8 @@ typedef struct tagCoeffSet {
 	char alignment_padding[12];  /* In order to achieve 128-byte alignment */
 } CoeffSet;
 
+#endif
+
 typedef struct tagAllocationBlock {
 	short afile2x_block[59049];
 	short bfile_block[6561];
@@ -131,26 +198,27 @@ typedef struct tagAllocationBlock {
 	short corner52_block[59049];
 } AllocationBlock;
 
-static int stage_count;
-static int block_count;
-static int stage[61];
+static FILE *g_save_stream = NULL;
+static int g_getword_cnt = 0;
+
+static int stage_count = 0;
+static int block_count = 0;
+static int stage[64];
 static int block_allocated[MAX_BLOCKS], block_set[MAX_BLOCKS];
-static int eval_map[61];
+static int eval_map[64];
 static AllocationBlock *block_list[MAX_BLOCKS];
 
-ALIGN_PREFIX(64) static CoeffSet coeffs[61] ALIGN_SUFFIX(64);
+static ALIGN_PREFIX(64) CoeffSet coeffs[64] ALIGN_SUFFIX(64);
 
-ALIGN_PREFIX(64) static unsigned int disc_set_tableb[16] ALIGN_SUFFIX(64);
-ALIGN_PREFIX(64) static unsigned int disc_set_tablew[16] ALIGN_SUFFIX(64);
+static ALIGN_PREFIX(64) unsigned int disc_set_tableb[16] ALIGN_SUFFIX(64);
+static ALIGN_PREFIX(64) unsigned int disc_set_tablew[16] ALIGN_SUFFIX(64);
 
-ALIGN_PREFIX(64)
-static unsigned int disc_set_table_bw[256] ALIGN_SUFFIX(64);
+static ALIGN_PREFIX(64) unsigned int disc_set_table_bw[256] ALIGN_SUFFIX(64);
 
-ALIGN_PREFIX(64)
-static unsigned int disc_set_table_bw32[256*4] ALIGN_SUFFIX(64);
+static ALIGN_PREFIX(64) unsigned int disc_set_table_bw32[256 * 4] ALIGN_SUFFIX(64);
 
-ALIGN_PREFIX(64) static unsigned short pattern_mask[512] ALIGN_SUFFIX(64);
-ALIGN_PREFIX(64) static unsigned int pattern_mask2[4] ALIGN_SUFFIX(64);
+static ALIGN_PREFIX(64) unsigned short pattern_mask[512] ALIGN_SUFFIX(64);
+static ALIGN_PREFIX(64) unsigned int pattern_mask2[4] ALIGN_SUFFIX(64);
 //ALIGN_PREFIX(64) static unsigned int pattern_mask3[16] ALIGN_SUFFIX(64);
 
 int min_coffe, max_coffe;
@@ -442,6 +510,9 @@ terminal_patterns( void ) {
 	}
 }
 
+#define READ_ERROR_HI       "READ_ERROR_HIGH"
+#define READ_ERROR_LO       "READ_ERROR_LOW"
+
 /*
    GET_WORD
    Reads a 16-bit signed integer from a file.
@@ -454,38 +525,63 @@ get_word( gzFile stream ) {
 		unsigned short unsigned_val;
 	} val;
 
-#if 0
-	int received;
-	unsigned char hi, lo;
-
-	received = fread( &hi, sizeof( unsigned char ), 1, stream );
-	if ( received != 1 )
-		puts( READ_ERROR_HI );
-	received = fread( &lo, sizeof( unsigned char ), 1, stream );
-	if ( received != 1 )
-		puts( READ_ERROR_LO );
-#else
+#if defined(USE_ZIP_COEFFS_FILE) && (USE_ZIP_COEFFS_FILE != 0)
 	int hi, lo;
 
 	hi = gzgetc( stream );
 	//if (hi < 0 || hi > 256)
 	//	hi = hi;
 	//assert( hi != -1 );
-	//TRACE("assert( hi != -1 );\n");
-	if (hi == -1) hi = 0;
+    //if (hi == -1)
+	//    TRACE("assert( hi != -1 );\n");
+	//if (hi == -1) hi = 0;
+#ifdef _DEBUG
+    if (hi == -1)
+        val.signed_val = -1;
+#endif
 
 	lo = gzgetc( stream );
 	//if (lo < 0 || lo > 256)
 	//	lo = lo;
 	//assert( lo != -1 );
-	//TRACE("assert( lo != -1 );\n");
-	if (lo == -1) lo = 0;
+    //if (lo == -1)
+	//    TRACE("assert( lo != -1 );\n");
+#ifdef _DEBUG
+    if (lo == -1)
+        val.signed_val = -1;
+#endif
+
+#else
+
+	int received;
+	unsigned char hi, lo;
+    hi = 0; lo = 0;
+
+	received = fread( &hi, sizeof( unsigned char ), 1, (FILE *)stream );
+    if ( received != 1 ) {
+		//puts( READ_ERROR_HI );
+    }
+	received = fread( &lo, sizeof( unsigned char ), 1, (FILE *)stream );
+    if ( received != 1 ) {
+		//puts( READ_ERROR_LO );
+    }
+
 #endif
 
 	val.unsigned_val = (hi << 8) + lo;
 
+#if 0
+    if (g_save_stream != NULL) {
+        fwrite(&hi, sizeof(unsigned char), 1, g_save_stream);
+        fwrite(&lo, sizeof(unsigned char), 1, g_save_stream);
+        //fwrite(&val.unsigned_val, sizeof(val), 1, g_save_stream);
+    }
+#endif
+
 	//assert( (lo != -1) || (hi != -1) );
 	//TRACE("val.unsigned_val\n");
+
+   //g_getword_cnt++;
 
 	return val.signed_val;
 }
@@ -501,11 +597,14 @@ unpack_batch( short *item, int *mirror, int count, gzFile stream ) {
 	int i;
 	short *buffer;
 
+    //g_getword_cnt = 0;
+
 	buffer = (short *) malloc( count * sizeof( short ) );
 	if (buffer == NULL) {
 		exit( EXIT_FAILURE );
 		return;
 	}
+    memset(buffer, 0, count * sizeof( short ));
 
 	/* Unpack the coefficient block where the score is scaled
 	so that 512 units corresponds to one disk. */
@@ -513,7 +612,7 @@ unpack_batch( short *item, int *mirror, int count, gzFile stream ) {
 	for ( i = 0; i < count; i++ ) {
 		if ( (mirror == NULL) || (mirror[i] == i) )
 			buffer[i] = get_word( stream ) / 4;
-		else
+        else
 			buffer[i] = buffer[mirror[i]];
 	}
 
@@ -531,6 +630,7 @@ unpack_batch( short *item, int *mirror, int count, gzFile stream ) {
 		}
 	}
 
+    //printf("getword_cnt = %5d\n", g_getword_cnt);
 	free( buffer );
 }
 
@@ -612,6 +712,38 @@ unpack_batch2( short *item, int *mirror, int count, char *base, gzFile stream ) 
 
 #endif
 
+/* for test only */
+
+int output_mirror_data(int *map_mirror, int count, const char *name) {
+    int ret = 0;
+    int i;
+    FILE *output_stream;
+    char sMapMirrorFile[260];
+
+	_getcwd(sMapMirrorFile, sizeof(sMapMirrorFile));
+	strcat(sMapMirrorFile, "\\");
+	strcat(sMapMirrorFile, name);
+    strcat(sMapMirrorFile, ".mirror.txt");
+
+    output_stream = fopen( sMapMirrorFile, "wb" );
+    if ( output_stream == NULL ) {
+		//fatal_error( "%s '%s'\n", FILE_ERROR, sSavePatternFile );
+		printf( "%s '%s'\n", "Unable to open output map_mirror file", sMapMirrorFile );
+        system( "pause" );
+		exit( EXIT_FAILURE );
+	}
+
+    fprintf(output_stream, "name = %s\r\n\r\n", name);
+    for (i = 0; i < count; i++) {
+        fprintf(output_stream, "%d\r\n", map_mirror[i]);
+    }
+
+    if (output_stream != NULL)
+        fclose( output_stream );
+
+    return ret;
+}
+
 /*
    UNPACK_COEFFS
    Reads all feature values for a certain stage. To take care of
@@ -636,29 +768,45 @@ unpack_coeffs( gzFile stream ) {
 	heap rather than the stack to reduce memory requirements. */
 
 	map_mirror3 = (int *) malloc( 27 * sizeof( int ) );
-	if (map_mirror3 == NULL)
+    if (map_mirror3 == NULL) {
+        puts( "map_mirror3 malloc error!\n" );
 		return;
+    }
 	map_mirror4 = (int *) malloc( 81 * sizeof( int ) );
-	if (map_mirror4 == NULL)
+    if (map_mirror4 == NULL) {
+        puts( "map_mirror4 malloc error!\n" );
 		return;
+    }
 	map_mirror5 = (int *) malloc( 243 * sizeof( int ) );
-	if (map_mirror5 == NULL)
+    if (map_mirror5 == NULL) {
+        puts( "map_mirror5 malloc error!\n" );
 		return;
+    }
 	map_mirror6 = (int *) malloc( 729 * sizeof( int ) );
-	if (map_mirror6 == NULL)
+    if (map_mirror6 == NULL) {
+        puts( "map_mirror6 malloc error!\n" );
 		return;
+    }
 	map_mirror7 = (int *) malloc( 2187 * sizeof( int ) );
-	if (map_mirror7 == NULL)
+    if (map_mirror7 == NULL) {
+        puts( "map_mirror7 malloc error!\n" );
 		return;
+    }
 	map_mirror8 = (int *) malloc( 6561 * sizeof( int ) );
-	if (map_mirror8 == NULL)
+    if (map_mirror8 == NULL) {
+        puts( "map_mirror8 malloc error!\n" );
 		return;
+    }
 	map_mirror33 = (int *) malloc( 19683 * sizeof( int ) );
-	if (map_mirror33 == NULL)
+    if (map_mirror33 == NULL) {
+        puts( "map_mirror33 malloc error!\n" );
 		return;
+    }
 	map_mirror8x2 = (int *) malloc( 59049 * sizeof( int ) );
-	if (map_mirror8x2 == NULL)
+    if (map_mirror8x2 == NULL) {
+        puts( "map_mirror8x2 malloc error!\n" );
 		return;
+    }
 
 	/* Build the pattern tables for 8*1-patterns */
 
@@ -707,6 +855,7 @@ unpack_coeffs( gzFile stream ) {
 
 	for ( i = 0; i < 6; i++ )
 		row[i] = 0;
+
 	for ( i = 0; i < 729; i++ ) {
 		mirror_pattern = 0;
 		for ( j = 0; j < 6; j++ )
@@ -792,14 +941,36 @@ unpack_coeffs( gzFile stream ) {
 
 	/* Build the tables for edge2X-patterns */
 
+    //memset( map_mirror8x2, 0, 59049 * sizeof( int ) );
+    /*
+    for (i = 0; i < 59049; i++) {   
+        map_mirror8x2[i] = -1;
+    }
+    //*/
+
 	for ( i = 0; i < 6561; i++ ) {
 		for ( j = 0; j < 3; j++ ) {
 			for ( k = 0; k < 3; k++ ) {
 				map_mirror8x2[i + 6561 * j + 19683 * k] =
-					MIN( flip8[i] + 6561 * k + 19683 * j, i + 6561 * j + 19683 * k );
+					MIN( (flip8[i] + 6561 * k + 19683 * j), (i + 6561 * j + 19683 * k) );
 			}
 		}
 	}
+
+#if 0
+    g_getword_cnt = 0;
+    for (i = 0; i < 59049; i++) {
+        if (i == map_mirror8x2[i])
+            g_getword_cnt++;
+    }
+    printf("getword_cnt = %d\n", g_getword_cnt);
+
+    /* output map mirror data for test */
+    output_mirror_data(&flip8[0], 6561, "flip8");
+
+    /* output map mirror data for test */
+    output_mirror_data(map_mirror8x2, 59049, "map_mirror8x2");
+#endif
 
 	/* Build the tables for 3*3-patterns */
 
@@ -827,21 +998,44 @@ unpack_coeffs( gzFile stream ) {
 
 	for ( i = 0; i < stage_count - 1; i++ ) {
 #if 1
+        //printf("i = %d, stage[i] = %d\n", i, stage[i]);
 		coeffs[stage[i]].constant = get_word( stream ) / 4;
 		coeffs[stage[i]].parity = get_word( stream ) / 4;
 		coeffs[stage[i]].parity_constant[0] = coeffs[stage[i]].constant;
 		coeffs[stage[i]].parity_constant[1] =
 			coeffs[stage[i]].constant + coeffs[stage[i]].parity;
+
+        //printf("%8s - %13s : count = %5d, ", "afile2x", "map_mirror8x2", 59049);
 		unpack_batch( coeffs[stage[i]].afile2x, map_mirror8x2, 59049, stream );
+
+        //printf("%8s - %13s : count = %5d, ", "bfile", "map_mirror8", 6561);
 		unpack_batch( coeffs[stage[i]].bfile, map_mirror8, 6561, stream );
+
+        //printf("%8s - %13s : count = %5d, ", "cfile", "map_mirror8", 6561);
 		unpack_batch( coeffs[stage[i]].cfile, map_mirror8, 6561, stream );
+
+        //printf("%8s - %13s : count = %5d, ", "dfile", "map_mirror8", 6561);
 		unpack_batch( coeffs[stage[i]].dfile, map_mirror8, 6561, stream );
+
+        //printf("%8s - %13s : count = %5d, ", "diag8", "map_mirror8", 6561);
 		unpack_batch( coeffs[stage[i]].diag8, map_mirror8, 6561, stream );
+
+        //printf("%8s - %13s : count = %5d, ", "diag7", "map_mirror6", 2187);
 		unpack_batch( coeffs[stage[i]].diag7, map_mirror7, 2187, stream );
+
+        //printf("%8s - %13s : count = %5d, ", "diag6", "map_mirror6", 729);
 		unpack_batch( coeffs[stage[i]].diag6, map_mirror6, 729, stream );
+
+        //printf("%8s - %13s : count = %5d, ", "diag5", "map_mirror5", 243);
 		unpack_batch( coeffs[stage[i]].diag5, map_mirror5, 243, stream );
+
+        //printf("%8s - %13s : count = %5d, ", "diag4", "map_mirror4", 81);
 		unpack_batch( coeffs[stage[i]].diag4, map_mirror4, 81, stream );
+
+        //printf("%8s - %13s : count = %5d, ", "corner33", "map_mirror33", 19683);
 		unpack_batch( coeffs[stage[i]].corner33, map_mirror33, 19683, stream );
+
+        //printf("%8s - %13s : count = %5d, ", "corner52", "NULL", 59049);
 		unpack_batch( coeffs[stage[i]].corner52, NULL, 59049, stream );
 #else
 		if (stage[i] == 40) {
@@ -1228,6 +1422,7 @@ init_coeffs( void ) {
 	gzFile coeff_stream;
 	FILE *adjust_stream;
 	char sPatternFile[260];
+    char sSavePatternFile[260];
 
 	init_memory_handler();
 
@@ -1240,6 +1435,10 @@ init_coeffs( void ) {
 	_getcwd(sPatternFile, sizeof(sPatternFile));
 	strcat(sPatternFile, "\\");
 	strcat(sPatternFile, PATTERN_FILE);
+
+	_getcwd(sSavePatternFile, sizeof(sSavePatternFile));
+	strcat(sSavePatternFile, "\\");
+	strcat(sSavePatternFile, "coeffs2.sav");
 #elif defined( __linux__ )
 	/* Linux don't support current directory. */
 	strcpy( sPatternFile, PATTERN_FILE );
@@ -1248,12 +1447,27 @@ init_coeffs( void ) {
 	strcat(sPatternFile, "/" PATTERN_FILE);
 #endif
 
+#if defined(USE_ZIP_COEFFS_FILE) && (USE_ZIP_COEFFS_FILE != 0)
 	coeff_stream = gzopen( sPatternFile, "rb" );
+#else
+    coeff_stream = fopen( sPatternFile, "rb" );
+#endif
 	if ( coeff_stream == NULL ) {
 		//fatal_error( "%s '%s'\n", FILE_ERROR, sPatternFile );
 		printf( "%s '%s'\n", "Unable to open coefficient file", sPatternFile );
+        system( "pause" );
 		exit( EXIT_FAILURE );
 	}
+
+#if 0
+    g_save_stream = fopen( sSavePatternFile, "wb" );
+    if ( g_save_stream == NULL ) {
+		//fatal_error( "%s '%s'\n", FILE_ERROR, sSavePatternFile );
+		printf( "%s '%s'\n", "Unable to open coefficient save file", sSavePatternFile );
+        system( "pause" );
+		exit( EXIT_FAILURE );
+	}
+#endif
 
 	/* Check the magic values in the beginning of the file to make sure
 	the file format is right */
@@ -1270,6 +1484,17 @@ init_coeffs( void ) {
 	/* Read the different stages for which the evaluation function
 	was tuned and mark the other stages with pointers to the previous
 	and next stages. */
+
+    /*
+    i = sizeof(coeffs);
+    j = sizeof(CoeffSet);
+    memset((void *)&coeffs[0], 0, sizeof(coeffs));
+    coeffs[0].block = 1;
+    coeffs[0].parity_constant[0] = 2;
+    coeffs[0].parity_constant[1] = 3;
+    coeffs[0].parity = 4;
+    coeffs[0].constant = 5;
+    //*/
 
 	for ( i = 0; i <= 60; i++ ) {
 		coeffs[i].permanent = 0;
@@ -1307,7 +1532,19 @@ init_coeffs( void ) {
 	/* Read the pattern values */
 
 	unpack_coeffs( coeff_stream );
+
+#if defined(USE_ZIP_COEFFS_FILE) && (USE_ZIP_COEFFS_FILE != 0)
 	gzclose( coeff_stream );
+#else
+    fclose( coeff_stream );
+#endif
+
+#if 0
+    if (g_save_stream != NULL) {
+        fclose( g_save_stream );
+        g_save_stream = NULL;
+    }
+#endif
 
 	/* Calculate the patterns which correspond to the board being filled */
 
@@ -1358,6 +1595,8 @@ init_coeffs( void ) {
 		else
 			eval_map[i] = subsequent_stage;
 	}
+
+    //system( "pause" );
 }
 
 /*

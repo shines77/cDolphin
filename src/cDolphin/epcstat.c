@@ -1,5 +1,5 @@
 /*
-   File:           epcstat.cpp
+   File:           epcstat.c
 
    Created:        2007-07-10
 

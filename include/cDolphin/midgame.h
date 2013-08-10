@@ -70,6 +70,8 @@ int
 generate_random_game( BitBoard my_bits, BitBoard opp_bits,
 					 int color, int depth, int max_depth );
 
+extern int g_rand_terminal;
+
 #ifdef __cplusplus
 }
 #endif

@@ -1,5 +1,5 @@
 /*
-   File:          stable.cpp
+   File:          stable.c
 
    Created:       March 20, 1999
 

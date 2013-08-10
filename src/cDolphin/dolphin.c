@@ -1,9 +1,9 @@
 /*
-   File:           dolphin.cpp
+   File:           dolphin.c
 
    Created:        2007-07-10
 
-   Modified:       none
+   Modified:       2013-08-10
 
    Author:         GuoXiongHui (wokss@163.com)
 
@@ -104,8 +104,6 @@ static int use_book = DEFAULT_USE_BOOK;
 static int wld_only = DEFAULT_WLD_ONLY;
 static int use_learning;
 static int use_thor;
-
-int g_rand_terminal;
 
 /* ------------------- Function prototypes ---------------------- */
 
@@ -415,7 +413,7 @@ int main( int argc, char *argv[] )
 #endif
 
 #if SCRIPT_ONLY
-  #ifdef _DEBUG
+  #ifdef _DEBUG_0
 	if ( 1 || !help ) {
   #else
 	if ( help || (argc <= 1) ) {

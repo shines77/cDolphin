@@ -1,9 +1,9 @@
 /*
-   File:           endgame.cpp
+   File:           endgame.c
 
    Created:        2007-07-10
 
-   Modified:       none
+   Modified:       2013-08-10
 
    Author:         GuoXiongHui (wokss@163.com)
 

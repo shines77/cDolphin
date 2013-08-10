@@ -1,9 +1,9 @@
 /*
-   File:           utils.cpp
+   File:           utils.c
 
    Created:        2007-07-10
 
-   Modified:       none
+   Modified:       2013-08-10
 
    Author:         GuoXiongHui (wokss@163.com)
 
@@ -23,3 +23,11 @@ INLINE Boolean Eqv(Boolean bArg1, Boolean bArg2) {
 INLINE Boolean Xor(Boolean bArg1, Boolean bArg2) {
 	return bArg1 ? !bArg2 : bArg2;
 }
+
+/*
+int main(int argc, char **argv)
+{
+	//
+	return 0;
+}
+//*/

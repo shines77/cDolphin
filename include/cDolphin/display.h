@@ -97,6 +97,8 @@ display_buffers( void );
 char *
 produce_eval_text( EvaluationType eval_info, int short_output );
 
+extern FILE *g_stdout;
+
 #ifdef __cplusplus
 }
 #endif

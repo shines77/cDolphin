@@ -1,5 +1,5 @@
 /*
-   File:          autop.cpp
+   File:          autoplay.c
 
    Created:       May 23, 1998
 

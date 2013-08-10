@@ -1,5 +1,5 @@
 /*
-   File:           error.cpp
+   File:           error.c
 
    Created:        2007-07-10
 

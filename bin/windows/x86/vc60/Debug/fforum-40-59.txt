@@ -1,0 +1,4 @@
+--------------------------------------------------------------------------------
+No.  Empty  Move  Value    Time     Total Nodes  Nodes/Sec.  PV Sequence
+ 0  51 - 13    a2 b1 c1 -- b6 c7 a7 b7 b8 d7 f8 c6 f7 g7
+ 1  32 - 32    h4 a3 a2 g6 g5 h5 f8 e8 h6 g7 h2 a5 a7 h3 h1 g1

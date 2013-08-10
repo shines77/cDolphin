@@ -1,5 +1,5 @@
 /*
-   File:       learn.cpp
+   File:       learn.c
 
    Created:    November 29, 1999
 

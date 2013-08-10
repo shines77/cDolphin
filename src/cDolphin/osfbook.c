@@ -1,5 +1,5 @@
 /*
-   File:           osfbook.cpp
+   File:           osfbook.c
 
    Created:        December 31, 1997
 
