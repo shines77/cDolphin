@@ -6,8 +6,19 @@
 *~
 *.swp
 
-# C stuff
+# Compiled Object files
+*.slo
+*.lo
 *.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
 
 # Windows stuff
 *.obj
@@ -62,4 +73,4 @@ Thumbs.db
 /Device-Coverage
 /Device-Profile
 /Device-Release
-
+*/test.pos
