@@ -29,9 +29,9 @@
 #define REPLACEMENT_OFFSET          4
 
 /* An 8-bit mask to isolate the "draft" part of the hash table info. */
-#define DRAFT_MASK                  0x000000FFul
+#define DRAFT_MASK                  0x000000FFUL
 
-#define KEY1_MASK                   0xFF000000ul
+#define KEY1_MASK                   0xFF000000UL
 
 #define SECONDARY_HASH( a )         ((a) ^ 1)
 
@@ -212,8 +212,13 @@ hash_setup( int clear, int bsrand ) {
 	rand_index = 0;
 	while ( rand_index < 130 ) {
 TRY_AGAIN2:
-		random_pair[rand_index][0] = (my_random() << 3) + (my_random() >> 2);
-		random_pair[rand_index][1] = (my_random() << 3) + (my_random() >> 2);
+		//random_pair[rand_index][0] = (((unsigned int)my_random()) << 3) + (((unsigned int)my_random()) >> 2);
+		//random_pair[rand_index][1] = (((unsigned int)my_random()) << 3) + (((unsigned int)my_random()) >> 2);
+
+        random_pair[rand_index][0] = ((((unsigned int)my_random()) << 16) & 0xFFFF0000UL)
+            | ((((unsigned int)my_random()) >> 15) & 0x0000FFFFUL);
+        random_pair[rand_index][1] = ((((unsigned int)my_random()) << 16) & 0xFFFF0000UL)
+            | ((((unsigned int)my_random()) >> 15) & 0x0000FFFFUL);
 
 		//count++;
 		//printf("\x08\x08\x08\x08\x08\x08\x08\x08\x08%d", count);
@@ -221,8 +226,7 @@ TRY_AGAIN2:
 		//Sleep(200);
 
 		closeness =
-			get_closeness( random_pair[rand_index][0], random_pair[rand_index][1],
-			0, 0 );
+			get_closeness( random_pair[rand_index][0], random_pair[rand_index][1], 0, 0 );
 		if ( closeness > max_zero_closeness )
 			goto TRY_AGAIN2;
 		for ( i = 0; i < rand_index; i++ ) {

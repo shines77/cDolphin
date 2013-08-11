@@ -105,13 +105,13 @@
 #define		DEG_4		63
 #define		SEP_4		1
 
-
 /*
  * Array versions of the above information to make code run faster -- relies
  * on fact that TYPE_i == i.
  */
 
-#define MAX_TYPES 5 /* max number of types above */
+#define MAX_TYPES       5       /* max number of types above */
+
 static int my_degrees[MAX_TYPES]= { DEG_0, DEG_1, DEG_2, DEG_3, DEG_4 };
 static int my_seps[MAX_TYPES] = { SEP_0, SEP_1, SEP_2, SEP_3, SEP_4 };
 
@@ -123,10 +123,11 @@ static int my_seps[MAX_TYPES] = { SEP_0, SEP_1, SEP_2, SEP_3, SEP_4 };
  * rear pointer which starts at 0 will also end up at zero; thus the zeroeth
  * element of the state information, which contains info about the current
  * position of the rear pointer is just
- *	MAX_TYPES*(rptr - state) + TYPE_3 == TYPE_3.
+ *	MAX_TYPES * (rptr - state) + TYPE_3 == TYPE_3.
  */
 
-static unsigned long my_randtbl[DEG_3 + 1] = { TYPE_3,
+static unsigned long my_randtbl[DEG_3 + 1] = {
+    TYPE_3,
 	0x9a319039U, 0x32d9c024U, 0x9b663182U, 0x5da1f342U,
 	0xde3b81e0U, 0xdf0a6fb5U, 0xf103bc02U, 0x48f340fbU,
 	0x7449e56bU, 0xbeb1dbb0U, 0xab5c5918U, 0x946554fdU,
@@ -149,8 +150,8 @@ static unsigned long my_randtbl[DEG_3 + 1] = { TYPE_3,
  * to point to randtbl[1] (as explained below).
  */
 
-static  long	*my_fptr		= (long *) &my_randtbl[ SEP_3 + 1 ];
-static  long	*my_rptr		= (long *) &my_randtbl[ 1 ];
+static  long   *my_fptr         = (long *) &my_randtbl[SEP_3 + 1];
+static  long   *my_rptr         = (long *) &my_randtbl[1];
 
 /*
  * The following things are the pointer to the state information table,
@@ -164,11 +165,11 @@ static  long	*my_rptr		= (long *) &my_randtbl[ 1 ];
  * the front and rear pointers have wrapped.
  */
 
-static  long	*my_state		= (long *) &my_randtbl[ 1 ];
+static  long   *my_state		= (long *) &my_randtbl[1];
 static  int		my_rand_type	= TYPE_3;
 static  int		my_rand_deg		= DEG_3;
 static  int		my_rand_sep		= SEP_3;
-static  long	*my_end_ptr		= (long *) &my_randtbl[ DEG_3 + 1 ];
+static  long   *my_end_ptr		= (long *) &my_randtbl[DEG_3 + 1];
 
 /*
  * srandom:
@@ -183,29 +184,26 @@ static  long	*my_end_ptr		= (long *) &my_randtbl[ DEG_3 + 1 ];
  * values produced by this routine.
  */
 
-int
+long
 my_srandom(int x)
 {
-	int i, j;
+	int i;
+    long s;
 
-	if (my_rand_type == TYPE_0)
-	{
-		my_state[ 0 ] = x;
+	if (my_rand_type == TYPE_0) {
+		my_state[0] = x;
 	}
-	else
-	{
-		j = 1;
-		my_state[ 0 ] = x;
-		for (i = 1; i < my_rand_deg; i++)
-		{
-			my_state[i] = 1103515245*my_state[i - 1] + 12345;
+	else {
+		my_state[0] = x;
+		for (i = 1; i < my_rand_deg; i++) {
+			my_state[i] = 1103515245 * my_state[i - 1] + 12345;
 		}
 		my_fptr = &my_state[my_rand_sep];
 		my_rptr = &my_state[0];
-		for( i = 0; i < 10*my_rand_deg; i++ )
-			my_random();
+		for (i = 0; i < (10 * my_rand_deg); i++)
+			s = my_random();
 	}
-	return 0;
+	return s;
 }
 
 /*
@@ -224,49 +222,41 @@ my_srandom(int x)
  * Returns a pointer to the old state.
  */
 
-char  *
+char *
 my_initstate (unsigned seed, char *arg_state, int n)
 {
-	char *ostate = (char *)(&my_state[ -1 ]);
+	char *ostate = (char *)(&my_state[-1]);
 
 	if (my_rand_type == TYPE_0)
 		my_state[-1] = my_rand_type;
 	else
 		my_state[-1] = MAX_TYPES * (my_rptr - my_state) + my_rand_type;
-	if (n  <  BREAK_1)
-	{
+	if (n  <  BREAK_1) {
 		if (n  <  BREAK_0)
-			return 0;
+			return NULL;
 		my_rand_type = TYPE_0;
 		my_rand_deg = DEG_0;
 		my_rand_sep = SEP_0;
 	}
-	else
-	{
-		if (n < BREAK_2)
-		{
+	else {
+		if (n < BREAK_2) {
 			my_rand_type = TYPE_1;
 			my_rand_deg = DEG_1;
 			my_rand_sep = SEP_1;
 		}
-		else
-		{
-			if (n < BREAK_3)
-			{
+		else {
+			if (n < BREAK_3) {
 				my_rand_type = TYPE_2;
 				my_rand_deg = DEG_2;
 				my_rand_sep = SEP_2;
 			}
-			else
-			{
-				if (n < BREAK_4)
-				{
+			else {
+				if (n < BREAK_4) {
 					my_rand_type = TYPE_3;
 					my_rand_deg = DEG_3;
 					my_rand_sep = SEP_3;
 				}
-				else
-				{
+				else {
 					my_rand_type = TYPE_4;
 					my_rand_deg = DEG_4;
 					my_rand_sep = SEP_4;
@@ -276,11 +266,14 @@ my_initstate (unsigned seed, char *arg_state, int n)
 	}
 	my_state = &(((long *)arg_state)[1]);	/* first location */
 	my_end_ptr = &my_state[my_rand_deg];	/* must set end_ptr before srandom */
+
 	my_srandom(seed);
+
 	if (my_rand_type == TYPE_0)
 		my_state[-1] = my_rand_type;
 	else
 		my_state[-1] = MAX_TYPES * (my_rptr - my_state) + my_rand_type;
+
 	return ostate;
 }
 
@@ -296,37 +289,36 @@ my_initstate (unsigned seed, char *arg_state, int n)
  * Returns a pointer to the old state information.
  */
 
-char  *
+char *
 my_setstate(char *arg_state)
 {
 	long *new_state = (long *)arg_state;
 	int type = new_state[0] % MAX_TYPES;
 	int rear = new_state[0] / MAX_TYPES;
-	char *ostate = (char *)( &my_state[ -1 ] );
+	char *ostate = (char *)(&my_state[-1]);
 
 	if (my_rand_type == TYPE_0)
 		my_state[-1] = my_rand_type;
 	else
 		my_state[-1] = MAX_TYPES * (my_rptr - my_state) + my_rand_type;
-	switch (type)
-	{
+
+	switch (type) {
 	case TYPE_0:
 	case TYPE_1:
 	case TYPE_2:
 	case TYPE_3:
 	case TYPE_4:
 		my_rand_type = type;
-		my_rand_deg = my_degrees[ type ];
-		my_rand_sep = my_seps[ type ];
+		my_rand_deg = my_degrees[type];
+		my_rand_sep = my_seps[type];
 		break;
 	}
-	my_state = &new_state[ 1 ];
-	if (my_rand_type != TYPE_0)
-	{
+	my_state = &new_state[1];
+	if (my_rand_type != TYPE_0) {
 		my_rptr = &my_state[rear];
-		my_fptr = &my_state[(rear + my_rand_sep)%my_rand_deg];
+		my_fptr = &my_state[(rear + my_rand_sep) % my_rand_deg];
 	}
-	my_end_ptr = &my_state[my_rand_deg]; /* set end_ptr too */
+	my_end_ptr = &my_state[my_rand_deg];    /* set end_ptr too */
 	return ostate;
 }
 
@@ -350,21 +342,17 @@ my_random(void)
 {
 	long i;
 
-	if (my_rand_type == TYPE_0)
-	{
-		i = my_state[0] = ( my_state[0]*1103515245 + 12345 )&0x7fffffff;
+	if (my_rand_type == TYPE_0) {
+		i = my_state[0] = (my_state[0] * 1103515245 + 12345) & 0x7FFFFFFFUL;
 	}
-	else
-	{
+	else {
 		*my_fptr += *my_rptr;
-		i = (*my_fptr >> 1)&0x7fffffff; /* chucking least random bit */
-		if (++my_fptr >= my_end_ptr )
-		{
+		i = (*my_fptr >> 1) & 0x7FFFFFFFUL; /* chucking least random bit */
+		if (++my_fptr >= my_end_ptr ) {
 			my_fptr = my_state;
 			++my_rptr;
 		}
-		else
-		{
+		else {
 			if (++my_rptr >= my_end_ptr)
 				my_rptr = my_state;
 		}
