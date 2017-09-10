@@ -40,11 +40,12 @@ static short game_move[61];
 */
 
 void
-clear_stored_game( void ) {
-	int i;
+clear_stored_game(void) {
+    int i;
 
-	for ( i = 0; i <= 60; i++ )
-		game_move[i] = CHESS_ILLEGAL;
+    for (i = 0; i <= 60; i++) {
+        game_move[i] = CHESS_ILLEGAL;
+    }
 }
 
 /*
@@ -54,8 +55,8 @@ clear_stored_game( void ) {
 */
 
 void
-store_move( int disks_played, int move ) {
-	game_move[disks_played] = move;
+store_move(int disks_played, int move) {
+    game_move[disks_played] = move;
 }
 
 /*
@@ -65,9 +66,9 @@ store_move( int disks_played, int move ) {
 */
 
 void
-set_learning_parameters( int depth, int cutoff ) {
-	learn_depth = depth;
-	cutoff_empty = cutoff;
+set_learning_parameters(int depth, int cutoff) {
+    learn_depth = depth;
+    cutoff_empty = cutoff;
 }
 
 /*
@@ -78,16 +79,17 @@ set_learning_parameters( int depth, int cutoff ) {
 */
 
 int
-game_learnable( int finished, int move_count ) {
-	int i;
-	int moves_available;
+game_learnable(int finished, int move_count) {
+    int i;
+    int moves_available;
 
-	moves_available = TRUE;
-	for ( i = 0; (i < move_count) && (i < 60 - cutoff_empty); i++ )
-		if ( game_move[i] == CHESS_ILLEGAL )
-			moves_available = FALSE;
+    moves_available = TRUE;
+    for (i = 0; (i < move_count) && (i < 60 - cutoff_empty); i++) {
+        if (game_move[i] == CHESS_ILLEGAL)
+            moves_available = FALSE;
+    }
 
-	return moves_available && (finished || (move_count >= 60 - cutoff_empty));
+    return moves_available && (finished || (move_count >= 60 - cutoff_empty));
 }
 
 /*
@@ -96,14 +98,14 @@ game_learnable( int finished, int move_count ) {
 */
 
 void
-init_learn( const char *file_name, int is_binary ) {
-	init_osf( FALSE );
-	if ( is_binary )
-		read_binary_database( file_name );
-	else
-		read_text_database( file_name );
-	strcpy( database_name, file_name );
-	binary_database = is_binary;
+init_learn(const char *file_name, int is_binary) {
+    init_osf(FALSE);
+    if (is_binary)
+        read_binary_database(file_name);
+    else
+        read_text_database(file_name);
+    strcpy(database_name, file_name);
+    binary_database = is_binary;
 }
 
 /*
@@ -114,45 +116,45 @@ init_learn( const char *file_name, int is_binary ) {
 */
 
 void
-learn_game( int game_length, int private_game, int save_database ) {
+learn_game(int game_length, int private_game, int save_database) {
 #if 0
-	int i;
-	int dummy;
-	int color;
-	int full_solve, wld_solve;
+    int i;
+    int dummy;
+    int color;
+    int full_solve, wld_solve;
 
-	clear_panic_abort();
-	toggle_abort_check( FALSE );
+    clear_panic_abort();
+    toggle_abort_check(FALSE);
 
-	full_solve = get_earliest_full_solve();
-	wld_solve = get_earliest_wld_solve();
+    full_solve = get_earliest_full_solve();
+    wld_solve = get_earliest_wld_solve();
 
-	game_init( NULL, &dummy );
-	color = CHESS_BLACK;
-	for ( i = 0; i < game_length; i++ ) {
-		generate_all( color );
-		if ( move_count[disks_played] == 0 ) {
-			color = OPP_COLOR( color );
-			generate_all( color );
-		}
-		(void) make_move( color, game_move[i], TRUE );
-		if ( color == CHESS_WHITE )
-			game_move[i] = -game_move[i];
-		color = OPP_COLOR( color );
-	}
+    game_init(NULL, &dummy);
+    color = CHESS_BLACK;
+    for (i = 0; i < game_length; i++) {
+        generate_all(color);
+        if (move_count[disks_played] == 0) {
+            color = OPP_COLOR(color);
+            generate_all(color);
+        }
+        (void)make_move(color, game_move[i], TRUE);
+        if (color == CHESS_WHITE)
+            game_move[i] = -game_move[i];
+        color = OPP_COLOR(color);
+    }
 
-	set_search_depth( learn_depth );
-	add_new_game( game_length, game_move, cutoff_empty, full_solve,
-		wld_solve, TRUE, private_game );
+    set_search_depth(learn_depth);
+    add_new_game(game_length, game_move, cutoff_empty, full_solve,
+        wld_solve, TRUE, private_game);
 
-	if ( save_database ) {
-		if ( binary_database )
-			write_binary_database( database_name );
-		else
-			write_text_database( database_name );
-	}
+    if (save_database) {
+        if (binary_database)
+            write_binary_database(database_name);
+        else
+            write_text_database(database_name);
+    }
 
-	toggle_abort_check( TRUE );
+    toggle_abort_check(TRUE);
 #endif
 }
 
@@ -164,56 +166,57 @@ learn_game( int game_length, int private_game, int save_database ) {
 */
 
 void
-full_learn_public_game( int length, int *moves, int cutoff,
-			int deviation_depth, int exact, int wld ) {
+full_learn_public_game(int length, int *moves, int cutoff,
+    int deviation_depth, int exact, int wld) {
 #if 0
-	int i;
-	int dummy;
-	int color;
-	FILE *stream;
+    int i;
+    int dummy;
+    int color;
+    FILE *stream;
 
-	stream = fopen( LEARN_LOG_FILE_NAME, "a" );
-	if ( stream != NULL ) {  /* Write the game learned to a log file. */
-		for ( i = 0; i < length; i++ )
-			fprintf( stream, "%c%c", TO_SQUARE( moves[i] ) );
-		fputs( "\n", stream );
-		fclose( stream );
-	}
+    stream = fopen(LEARN_LOG_FILE_NAME, "a");
+    if (stream != NULL) {  /* Write the game learned to a log file. */
+        for (i = 0; i < length; i++) {
+            fprintf(stream, "%c%c", TO_SQUARE(moves[i]));
+        }
+        fputs("\n", stream);
+        fclose(stream);
+    }
 
-	clear_panic_abort();
-	toggle_abort_check( FALSE );
+    clear_panic_abort();
+    toggle_abort_check(FALSE);
 
-	/* Copy the move list from the caller as it is modified below. */
+    /* Copy the move list from the caller as it is modified below. */
 
-	for ( i = 0; i < length; i++ )
-		game_move[i] = moves[i];
+    for (i = 0; i < length; i++)
+        game_move[i] = moves[i];
 
-	/* Determine side to move for all positions */
+    /* Determine side to move for all positions */
 
-	game_init( NULL, &dummy );
-	color = CHESS_BLACK;
-	for ( i = 0; i < length; i++ ) {
-		generate_all( color );
-		if ( move_count[disks_played] == 0 ) {
-			color = OPP_COLOR( color );
-			generate_all( color );
-		}
-		(void) make_move( color, game_move[i], TRUE );
-		if ( color == CHESS_WHITE )
-			game_move[i] = -game_move[i];
-		color = OPP_COLOR( color );
-	}
+    game_init(NULL, &dummy);
+    color = CHESS_BLACK;
+    for (i = 0; i < length; i++) {
+        generate_all(color);
+        if (move_count[disks_played] == 0) {
+            color = OPP_COLOR(color);
+            generate_all(color);
+        }
+        (void)make_move(color, game_move[i], TRUE);
+        if (color == CHESS_WHITE)
+            game_move[i] = -game_move[i];
+        color = OPP_COLOR(color);
+    }
 
-	/* Let the learning sub-routine in osfbook update the opening
-	   book and the dump it to file. */
+    /* Let the learning sub-routine in osfbook update the opening
+       book and the dump it to file. */
 
-	set_search_depth( deviation_depth );
-	add_new_game( length, game_move, cutoff, exact, wld, TRUE, FALSE );
-	if ( binary_database )
-		write_binary_database( database_name );
-	else
-		write_text_database( database_name );
+    set_search_depth(deviation_depth);
+    add_new_game(length, game_move, cutoff, exact, wld, TRUE, FALSE);
+    if (binary_database)
+        write_binary_database(database_name);
+    else
+        write_text_database(database_name);
 
-	toggle_abort_check( TRUE );
+    toggle_abort_check(TRUE);
 #endif
 }
