@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5FA9D1FC-44D6-43D2-BB44-2ACA4E7B1B46}</ProjectGuid>
+    <RootNamespace>cDolphin_vc2008</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\..\lib\vc2015\x86\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\..\obj\vc2015\x86-$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\..\lib\vc2015\x86\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\..\obj\vc2015\x86-$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)..\..\..\lib\vc2015\x64\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)..\..\..\obj\vc2015\x64-$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\..\..\lib\vc2015\x64\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\..\..\obj\vc2015\x64-$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;..\..\..\..\include;..\..\..\..\include\cDolphin;..\..\..\..\src;..\..\..\..\src\cDolphin;..\..\..\..\deps;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;ZLIB_WINAPI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(ProjectName)_debug.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;..\..\..\..\include;..\..\..\..\include\cDolphin;..\..\..\..\src;..\..\..\..\src\cDolphin;..\..\..\..\deps;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;ZLIB_WINAPI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;..\..\..\..\include;..\..\..\..\include\cDolphin;..\..\..\..\src;..\..\..\..\src\cDolphin;..\..\..\..\deps;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(ProjectName)_debug.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;..\..\..\..\include;..\..\..\..\include\cDolphin;..\..\..\..\src;..\..\..\..\src\cDolphin;..\..\..\..\deps;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\src\cDolphin\autoplay.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\bitbchk.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\bitbcnt.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\bitbcnt2.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\bitbmob.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\bitboard.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\bitbtest.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\bitbtest1.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\bitbtest2.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\bitbtest4.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\bitbtest5.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\bitbtest6.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\bitbvald.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\board.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\coeffs.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\counter.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\currency.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\display.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\endgame.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\epcstat.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\error.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\eval.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\game.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\global.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\hash.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\learn.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\midgame.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\move.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\myrandom.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\opname.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\osfbook.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\pattern.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\pattern_tainer.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\pcstat.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\probcut.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\pv.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\safemem.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\search.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\stable.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\timer.c" />
+    <ClCompile Include="..\..\..\..\src\cDolphin\utils.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\include\cDolphin\autoplay.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\bitbchk.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\bitbcnt.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\bitbcnt2.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\bitbmob.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\bitboard.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\bitbtest.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\bitbtest1.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\bitbtest2.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\bitbtest4.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\bitbtest5.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\bitbtest6.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\bitbvald.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\board.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\coeffs.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\colour.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\counter.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\currency.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\display.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\dolphin.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\endgame.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\epcstat.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\error.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\eval.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\game.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\global.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\hash.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\learn.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\magic.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\midgame.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\move.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\myrandom.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\opname.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\osfbook.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\pattern.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\pattern_tainer.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\pcstat.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\probcut.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\pv.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\safemem.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\search.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\stable.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\stable1.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\texts.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\timer.h" />
+    <ClInclude Include="..\..\..\..\include\cDolphin\utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{15b4deb7-6827-43bb-8a09-e8309bdcc78c}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
