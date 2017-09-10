@@ -26,49 +26,49 @@ extern "C" {
 #define MIN_MPC_DEPTH          9
 
 void
-setup_midgame( void );
+setup_midgame(void);
 
 void
-toggle_midgame_hash_usage( int allow_read, int allow_write );
+toggle_midgame_hash_usage(int allow_read, int allow_write);
 
 void
-clear_midgame_abort( void );
+clear_midgame_abort(void);
 
 int
-is_midgame_abort( void );
+is_midgame_abort(void);
 
 void
-set_midgame_abort( void );
+set_midgame_abort(void);
 
 void
-toggle_midgame_abort_check( int toggle );
+toggle_midgame_abort_check(int toggle);
 
 void
-calculate_perturbation( void );
+calculate_perturbation(void);
 
 void
-set_perturbation( int amplitude );
+set_perturbation(int amplitude);
 
 void
-toggle_perturbation_usage( int toggle );
+toggle_perturbation_usage(int toggle);
 
 int
-tree_search( BitBoard my_bits, BitBoard opp_bits, int depth, int max_depth,
-			int alpha, int beta, int color, int allow_hash,
-			int allow_mpc, int void_legal );
+tree_search(BitBoard my_bits, BitBoard opp_bits, int depth, int max_depth,
+            int alpha, int beta, int color, int allow_hash,
+            int allow_mpc, int void_legal);
 
 int
-root_tree_search( BitBoard my_bits, BitBoard opp_bits, int depth, int max_depth,
-				 int alpha, int beta, int color,
-				 int allow_hash, int allow_mpc, int void_legal );
+root_tree_search(BitBoard my_bits, BitBoard opp_bits, int depth, int max_depth,
+                 int alpha, int beta, int color,
+                 int allow_hash, int allow_mpc, int void_legal);
 
 int
-middle_game( BitBoard my_bits, BitBoard opp_bits, int max_depth, int color,
-			int update_evals, EvaluationType *eval_info );
+middle_game(BitBoard my_bits, BitBoard opp_bits, int max_depth, int color,
+            int update_evals, EvaluationType *eval_info);
 
 int
-generate_random_game( BitBoard my_bits, BitBoard opp_bits,
-					 int color, int depth, int max_depth );
+generate_random_game(BitBoard my_bits, BitBoard opp_bits,
+                     int color, int depth, int max_depth);
 
 extern int g_rand_terminal;
 

@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 void
-fatal_error( const char *format, ... );
+fatal_error(const char *format, ...);
 
 #ifdef __cplusplus
 }

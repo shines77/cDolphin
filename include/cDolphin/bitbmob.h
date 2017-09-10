@@ -20,39 +20,39 @@ extern "C" {
 #endif
 
 void
-init_mmx( void );
+init_mmx(void);
 
 int
-bitboard_mobility( const BitBoard my_bits,
-				  const BitBoard opp_bits );
+bitboard_mobility(const BitBoard my_bits,
+                  const BitBoard opp_bits);
 
 int
-bitboard_mobility1( const BitBoard my_bits,
-				  const BitBoard opp_bits );
+bitboard_mobility1(const BitBoard my_bits,
+                   const BitBoard opp_bits);
 
 int
-bitboard_mobility2( const BitBoard my_bits,
-				  const BitBoard opp_bits );
+bitboard_mobility2(const BitBoard my_bits,
+                   const BitBoard opp_bits);
 
 int
-weighted_mobility( const BitBoard my_bits,
-				  const BitBoard opp_bits );
+weighted_mobility(const BitBoard my_bits,
+                  const BitBoard opp_bits);
 
 int
-weighted_mobility1( const BitBoard my_bits,
-				  const BitBoard opp_bits );
+weighted_mobility1(const BitBoard my_bits,
+                   const BitBoard opp_bits);
 
 int
-weighted_mobility2( const BitBoard my_bits,
-				  const BitBoard opp_bits );
+weighted_mobility2(const BitBoard my_bits,
+                   const BitBoard opp_bits);
 
 void
-bitboard_gen_movelist( const BitBoard my_bits,
-					  const BitBoard opp_bits, BitBoard *movelist_bits );
+bitboard_gen_movelist(const BitBoard my_bits,
+                      const BitBoard opp_bits, BitBoard *movelist_bits);
 
 void
-bitboard_gen_movelist2( const BitBoard my_bits,
-					  const BitBoard opp_bits, BitBoard *movelist_bits );
+bitboard_gen_movelist2(const BitBoard my_bits,
+                      const BitBoard opp_bits, BitBoard *movelist_bits);
 
 #ifdef __cplusplus
 }

@@ -17,17 +17,17 @@
 extern "C" {
 #endif
 
-int
-my_srandom( int x );
+long
+my_srandom(int x);
 
 char *
-my_initstate( unsigned seed, char *arg_state, int n );
+my_initstate(unsigned seed, char *arg_state, int n);
 
 char *
-my_setstate( char *arg_state );
+my_setstate(char *arg_state);
 
 long
-my_random( void );
+my_random(void);
 
 void
 randomize(unsigned int seed);

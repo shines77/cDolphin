@@ -22,10 +22,10 @@ extern "C" {
 #define MAX_SHALLOW_DEPTH    8
 
 typedef struct tagCorrelation {
-	float const_base;
-	float const_slope;
-	float sigma_base;
-	float sigma_slope;
+    float const_base;
+    float const_slope;
+    float sigma_base;
+    float sigma_slope;
 } Correlation;
 
 extern Correlation mid_corr[61][MAX_SHALLOW_DEPTH + 1];

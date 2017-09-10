@@ -40,29 +40,29 @@ extern char wBoard[64];
 //*/
 
 void
-init_coeffs( void );
+init_coeffs(void);
 
 void
-remove_coeffs( int phase );
+remove_coeffs(int phase);
 
 void
-clear_coeffs( void );
+clear_coeffs(void);
 
 int
-pattern_evaluation( int color,
-				   const BitBoard my_bits,
-				   const BitBoard opp_bits );
+pattern_evaluation(int color,
+                   const BitBoard my_bits,
+                   const BitBoard opp_bits);
 
 int
-pattern_evaluation2( int color,
-				   const BitBoard my_bits,
-				   const BitBoard opp_bits );
+pattern_evaluation2(int color,
+                    const BitBoard my_bits,
+                    const BitBoard opp_bits);
 
 void
-init_disc_set_table( void );
+init_disc_set_table(void);
 
 void
-init_pattern_mask( void );
+init_pattern_mask(void);
 
 #ifdef __cplusplus
 }

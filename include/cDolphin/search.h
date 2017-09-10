@@ -29,32 +29,32 @@ extern "C" {
 #define MOVE_ORDER_SIZE         60
 
 typedef enum eEvalType {
-	MIDGAME_EVAL,
-	EXACT_EVAL,
-	WLD_EVAL,
-	SELECTIVE_EVAL,
-	FORCED_EVAL,
-	PASS_EVAL,
-	UNDEFINED_EVAL,
-	INTERRUPTED_EVAL,
-	UNINITIALIZED_EVAL
+    MIDGAME_EVAL,
+    EXACT_EVAL,
+    WLD_EVAL,
+    SELECTIVE_EVAL,
+    FORCED_EVAL,
+    PASS_EVAL,
+    UNDEFINED_EVAL,
+    INTERRUPTED_EVAL,
+    UNINITIALIZED_EVAL
 } EvalType;
 
 typedef enum eEvalResult {
-	WON_POSITION,
-	DRAWN_POSITION,
-	LOST_POSITION,
-	UNSOLVED_POSITION
+    WON_POSITION,
+    DRAWN_POSITION,
+    LOST_POSITION,
+    UNSOLVED_POSITION
 } EvalResult;
 
 /* All information available about a move decision. */
 typedef struct tagEvaluationType {
-	EvalType type;
-	EvalResult res;
-	int score;              /* For BOOK, MIDGAME and EXACT */
-	double confidence;      /* For SELECTIVE */
-	int search_depth;       /* For MIDGAME */
-	int is_book;
+    EvalType type;
+    EvalResult res;
+    int score;              /* For BOOK, MIDGAME and EXACT */
+    double confidence;      /* For SELECTIVE */
+    int search_depth;       /* For MIDGAME */
+    int is_book;
 } EvaluationType;
 
 /* The time spent searching during the game. */
@@ -94,54 +94,54 @@ extern ALIGN_PREFIX(64) int sorted_move_order[64][64] ALIGN_SUFFIX(64);  /* 61*6
 extern int position_list[64];
 
 void
-inherit_move_lists( int stage );
+inherit_move_lists(int stage);
 
 void
-reorder_move_list( const BitBoard my_bits,
-				  const BitBoard opp_bits,
-				  int stage );
+reorder_move_list(const BitBoard my_bits,
+                  const BitBoard opp_bits,
+                  int stage);
 
 void
-setup_search( void );
+setup_search(void);
 
 int
-disc_count( BitBoard my_bits,
-		   BitBoard opp_bits,
-		   int is_my_color);
+disc_count(BitBoard my_bits,
+           BitBoard opp_bits,
+           int is_my_color);
 
 int
-disc_count2( int color );
+disc_count2(int color);
 
 void
-set_ponder_move( int move );
+set_ponder_move(int move);
 
 void
-clear_ponder_move( void );
+clear_ponder_move(void);
 
 int
-get_ponder_move( void );
+get_ponder_move(void);
 
 EvaluationType
-create_eval_info( EvalType in_type, EvalResult in_res, int in_score,
-		  double in_conf, int in_depth, int in_book );
+create_eval_info(EvalType in_type, EvalResult in_res, int in_score,
+          double in_conf, int in_depth, int in_book);
 
 void
-adjust_wld_eval( EvaluationType *eval_info );
+adjust_wld_eval(EvaluationType *eval_info);
 
 double
-produce_compact_eval( EvaluationType eval_info );
+produce_compact_eval(EvaluationType eval_info);
 
 int
-select_move( int first, int list_size );
+select_move(int first, int list_size);
 
 void
-set_current_eval( EvaluationType eval );
+set_current_eval(EvaluationType eval);
 
 EvaluationType
-get_current_eval( void );
+get_current_eval(void);
 
 void
-negate_current_eval( int negate );
+negate_current_eval(int negate);
 
 #ifdef __cplusplus
 }

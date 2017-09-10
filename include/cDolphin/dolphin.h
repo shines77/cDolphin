@@ -39,48 +39,48 @@ extern "C" {
 /* Administrative routines */
 
 void
-play_game( const char *file_name,
-		  const char *move_string,
-		  const char *move_file_name,
-		  int repeat );
+play_game(const char *file_name,
+          const char *move_string,
+          const char *move_file_name,
+          int repeat);
 
 void
-run_endgame_script( const char *in_file_name,
-				   const char *out_file_name,
-				   int display_line );
+run_endgame_script(const char *in_file_name,
+                   const char *out_file_name,
+                   int display_line);
 
 void
-special_test( const char *file_name );
+special_test(const char *file_name);
 
-void dump_position( int color );
-void dump_game_score( int color );
+void dump_position(int color);
+void dump_game_score(int color);
 
 void
 generate_random_endgame(const char *game_file,
-						int rnd_discs,
-						int empties_disc,
-						int mid_depth,
-						int max_position,
-						int hash_bits);
+                        int rnd_discs,
+                        int empties_disc,
+                        int mid_depth,
+                        int max_position,
+                        int hash_bits);
 
 #ifdef DOLPHIN_GGS
 
 void
-global_setup_ggs( int use_random,
-				 int hash_bits );
+global_setup_ggs(int use_random,
+                 int hash_bits);
 
 int
-play_game_ggs( int color,
-			  int my_time,
-			  int my_incr,
-			  int opp_time,
-			  int opp_incr,
-			  int book,
-			  int mid,
-			  int exact,
-			  int wld,
-			  const char *idgame,
-			  EvaluationType &eval_info );
+play_game_ggs(int color,
+              int my_time,
+              int my_incr,
+              int opp_time,
+              int opp_incr,
+              int book,
+              int mid,
+              int exact,
+              int wld,
+              const char *idgame,
+              EvaluationType &eval_info);
 #endif
 
 #ifdef __cplusplus

@@ -1744,7 +1744,7 @@ play_game_ggs(int color,
     if (color == CHESS_BLACK) {
         score_sheet_row++;
     }
-    //dump_game_score( color );
+    //dump_game_score(color);
 
     if (echo && !one_position_only) {
         set_move_list(black_moves, white_moves, score_sheet_row);

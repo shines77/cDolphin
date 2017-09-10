@@ -17,13 +17,13 @@
 extern "C" {
 #endif
 
-int Int32ToCurrency( unsigned int nValue, char * );
-int Int64ToCurrency( unsigned __int64 nValue, char * );
-int DecimalToCurrency( double fValue, char * );
+int Int32ToCurrency(unsigned int nValue, char *);
+int Int64ToCurrency(unsigned __int64 nValue, char *);
+int DecimalToCurrency(double fValue, char *);
 
-char *Int32ToCurrency2( unsigned int nValue );
-char *Int64ToCurrency2( unsigned __int64 nValue );
-char *DecimalToCurrency2( double fValue );
+char *Int32ToCurrency2(unsigned int nValue);
+char *Int64ToCurrency2(unsigned __int64 nValue);
+char *DecimalToCurrency2(double fValue);
 
 #ifdef __cplusplus
 }

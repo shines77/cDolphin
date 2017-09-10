@@ -24,11 +24,11 @@ extern "C" {
 #define MAX_CUT_DEPTH              22
 
 typedef struct tagDepthInfo {
-	int cut_tries;
-	int cut_depth[2];
-	int bias[2][61];
-	int window[2][61];
-	//char alignment_padding[36];  /* In order to achieve 1024-byte alignment */
+    int cut_tries;
+    int cut_depth[2];
+    int bias[2][61];
+    int window[2][61];
+    //char alignment_padding[36];  /* In order to achieve 1024-byte alignment */
 } DepthInfo;
 
 extern int use_end_cut[61];
@@ -36,7 +36,7 @@ extern int end_mpc_depth[61][4];
 extern ALIGN_PREFIX(64) DepthInfo mpc_cut[MAX_CUT_DEPTH + 1] ALIGN_SUFFIX(64) ALIGN_SUFFIX(64);
 
 void
-init_probcut( void );
+init_probcut(void);
 
 #ifdef __cplusplus
 }

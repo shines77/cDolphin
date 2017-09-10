@@ -10,11 +10,11 @@
 #define OPENING_COUNT       76
 
 typedef struct tagOpeningDescriptor {
-	const char *name;
-	const char *sequence;
-	int hash_val1;
-	int hash_val2;
-	int level;
+    const char *name;
+    const char *sequence;
+    int hash_val1;
+    int hash_val2;
+    int level;
 } OpeningDescriptor;
 
 extern OpeningDescriptor opening_list[OPENING_COUNT];

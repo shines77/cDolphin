@@ -38,32 +38,32 @@ extern int full_pv_depth;
 extern int full_pv[120];
 
 int
-get_pv( int *destin );
+get_pv(int *destin);
 
 void
-store_pv( int *pv_buffer, int *depth_buffer );
+store_pv(int *pv_buffer, int *depth_buffer);
 
 void
-restore_pv( int *pv_buffer, int depth_buffer );
+restore_pv(int *pv_buffer, int depth_buffer);
 
 void
-clear_pv( void );
+clear_pv(void);
 
 void
-complete_pv( BitBoard my_bits,
-			BitBoard opp_bits, int color );
+complete_pv(BitBoard my_bits,
+            BitBoard opp_bits, int color);
 
 void
-hash_expand_pv( BitBoard my_bits,
-			   BitBoard opp_bits,
-			   int color, int mode,
-			   int flags, int max_selectivity );
+hash_expand_pv(BitBoard my_bits,
+               BitBoard opp_bits,
+               int color, int mode,
+               int flags, int max_selectivity);
 
 void
-full_expand_pv( BitBoard my_bits,
-			   BitBoard opp_bits,
-			   int color,
-			   int selectivity );
+full_expand_pv(BitBoard my_bits,
+               BitBoard opp_bits,
+               int color,
+               int selectivity);
 
 #ifdef __cplusplus
 }

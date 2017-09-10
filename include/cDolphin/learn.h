@@ -2,7 +2,7 @@
    File:          learn.h
 
    Created:       November 29, 1997
-   
+
    Modified:      November 18, 2001
 
    Author:        Gunnar Andersson (gunnar@radagast.se)
@@ -18,26 +18,26 @@ extern "C" {
 #endif
 
 void
-clear_stored_game( void );
+clear_stored_game(void);
 
 void
-store_move( int disks_played, int move );
+store_move(int disks_played, int move);
 
 void
-set_learning_parameters( int depth, int cutoff );
+set_learning_parameters(int depth, int cutoff);
 
 int
-game_learnable( int finished, int move_count );
+game_learnable(int finished, int move_count);
 
 void
-init_learn( const char *file_name, int is_binary );
+init_learn(const char *file_name, int is_binary);
 
 void
-learn_game( int move_count, int private_game, int save_database );
+learn_game(int move_count, int private_game, int save_database);
 
 void
-full_learn_public_game( int length, int *moves, int cutoff,
-					   int deviation_depth, int exact, int wld );
+full_learn_public_game(int length, int *moves, int cutoff,
+                       int deviation_depth, int exact, int wld);
 
 #ifdef __cplusplus
 }

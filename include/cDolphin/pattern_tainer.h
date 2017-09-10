@@ -12,17 +12,17 @@ extern "C" {
 #include "bitboard.h"
 
 typedef struct tagInfoItem {
-	double solution;
-	int pattern;
+    double solution;
+    int pattern;
 } InfoItem;
 
 void
-initialize_pattern_coffes( void );
+initialize_pattern_coffes(void);
 
 double
-calc_pattern_score( int color,
-				   const BitBoard my_bits,
-				   const BitBoard opp_bits );
+calc_pattern_score(int color,
+                   const BitBoard my_bits,
+                   const BitBoard opp_bits);
 
 #ifdef __cplusplus
 }

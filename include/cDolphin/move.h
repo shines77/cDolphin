@@ -52,92 +52,92 @@ extern int *first_flip_direction[100];
 extern ALIGN_PREFIX(64) BitBoard neighborhood_mask[64] ALIGN_SUFFIX(64);
 
 void
-init_moves( void );
+init_moves(void);
 
 void
-init_neighborhood( void );
+init_neighborhood(void);
 
 int
-game_in_progress( BitBoard my_bits,
-				 BitBoard opp_bits,
-				 int color);
+game_in_progress(BitBoard my_bits,
+                 BitBoard opp_bits,
+                 int color);
 
 void
-generate_all( const BitBoard my_bits,
-			 const BitBoard opp_bits, int color );
+generate_all(const BitBoard my_bits,
+             const BitBoard opp_bits, int color);
 
 int
-get_move( int color );
+get_move(int color);
 
 int
-move_is_valid( const BitBoard my_bits,
-			  const BitBoard opp_bits,
-			  int move );
+move_is_valid(const BitBoard my_bits,
+              const BitBoard opp_bits,
+              int move);
 
 int
-move_is_valid2( int move, int color );
+move_is_valid2(int move, int color);
 
 int
-CheckFlips_wrapper( int sq,
-				   BitBoard my_bits,
-				   BitBoard opp_bits );
+CheckFlips_wrapper(int sq,
+                   BitBoard my_bits,
+                   BitBoard opp_bits);
 
 int
-TestFlips_wrapper( int sq,
-				  BitBoard my_bits,
-				  BitBoard opp_bits );
+TestFlips_wrapper(int sq,
+                  BitBoard my_bits,
+                  BitBoard opp_bits);
 
 int
-GetFlipLists_wrapper( int sq,
-					 BitBoard my_bits,
-					 BitBoard opp_bits );
+GetFlipLists_wrapper(int sq,
+                     BitBoard my_bits,
+                     BitBoard opp_bits);
 
 int
-prepare_movelist( const BitBoard my_bits,
-				 const BitBoard opp_bits,
-				 BitBoard *movelist_bits,
-				 int move,
-				 int *need_gen_movelist );
+prepare_movelist(const BitBoard my_bits,
+                 const BitBoard opp_bits,
+                 BitBoard *movelist_bits,
+                 int move,
+                 int *need_gen_movelist);
 
 int
-prepare_movelist_adv( const BitBoard my_bits,
-				 const BitBoard opp_bits,
-				 BitBoard *movelist_bits,
-				 int move,
-				 int *need_gen_movelist,
-				 int is_best_move );
+prepare_movelist_adv(const BitBoard my_bits,
+                     const BitBoard opp_bits,
+                     BitBoard *movelist_bits,
+                     int move,
+                     int *need_gen_movelist,
+                     int is_best_move);
 
 int
-prepare_movelist_pv( const BitBoard my_bits,
-				 const BitBoard opp_bits,
-				 int move );
+prepare_movelist_pv(const BitBoard my_bits,
+                    const BitBoard opp_bits,
+                    int move);
 
 int
-make_move( BitBoard *my_bits, BitBoard *opp_bits,
-		  int color, int move, int update_hash );
+make_move(BitBoard *my_bits, BitBoard *opp_bits,
+          int color, int move, int update_hash);
 
 void
-unmake_move( int color, int move );
+unmake_move(int color, int move);
 
 int
-make_move_no_hash( BitBoard *my_bits, BitBoard *opp_bits,
-				  int color, int move );
+make_move_no_hash(BitBoard *my_bits, BitBoard *opp_bits,
+                  int color, int move);
 
 void
-unmake_move_no_hash( int color, int move );
+unmake_move_no_hash(int color, int move);
 
 void
-make_move_end( int color, int move,
-			  //int flipped,
-			  int update_hash );
+make_move_end(int color, int move,
+              //int flipped,
+              int update_hash);
 
 void
-make_move_end2( int color, int move,
-			  int flipped,
-			  int update_hash );
+make_move_end2(int color, int move,
+               int flipped,
+               int update_hash);
 
 void
-unmake_move_end( int color, int move );
+unmake_move_end(int color, int move);
 
 #ifdef __cplusplus
 }

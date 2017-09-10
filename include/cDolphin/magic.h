@@ -11,12 +11,8 @@
                  of the opening book and coefficient files.
 */
 
-
-
 #ifndef MAGIC_H
 #define MAGIC_H
-
-
 
 /* Magic numbers for the file with evaluation coefficients.
    Name convention: Decimals of Pi. */
@@ -29,7 +25,5 @@
 
 #define BOOK_MAGIC1                2718
 #define BOOK_MAGIC2                2818
-
-
 
 #endif  /* MAGIC_H */

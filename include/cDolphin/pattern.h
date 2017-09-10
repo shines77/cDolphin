@@ -116,10 +116,10 @@ extern unsigned int modified_lo;
 extern unsigned int modified_hi;
 
 void
-init_patterns( void );
+init_patterns(void);
 
 void
-compute_line_patterns( int *in_board );
+compute_line_patterns(int *in_board);
 
 extern
 int

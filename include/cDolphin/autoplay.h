@@ -18,12 +18,12 @@ extern "C" {
 #endif
 
 void
-handle_event( int only_passive_events,
-	      int allow_delay,
-	      int passive_mode );
+handle_event(int only_passive_events,
+             int allow_delay,
+             int passive_mode);
 
 void
-toggle_event_status( int allow_event_handling );
+toggle_event_status(int allow_event_handling);
 
 #ifdef __cplusplus
 }

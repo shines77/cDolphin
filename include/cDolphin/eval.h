@@ -34,24 +34,24 @@ extern "C" {
 #define ALMOST_MIDGAME_WIN    (MIDGAME_WIN - 4000)
 
 void
-toggle_experimental( int use );
+toggle_experimental(int use);
 
 int
-experimental_eval( void );
+experimental_eval(void);
 
 void
-init_eval( void );
+init_eval(void);
 
 int
-evaluate_position( int color,
-				  const BitBoard my_bits,
-				  const BitBoard opp_bits );
+evaluate_position(int color,
+                  const BitBoard my_bits,
+                  const BitBoard opp_bits);
 
 int
 evaluate_position2(int color);
 
 int
-terminal_evaluation( int color );
+terminal_evaluation(int color);
 
 #ifdef __cplusplus
 }

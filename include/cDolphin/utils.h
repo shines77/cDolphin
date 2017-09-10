@@ -75,19 +75,19 @@ extern "C" {
 
 #if defined( _MSC_VER )
 
-	#if defined( __cplusplus )
-	    #define INLINE __inline
-	#else
-	    #define INLINE
-	#endif
+    #if defined( __cplusplus )
+        #define INLINE __inline
+    #else
+        #define INLINE
+    #endif
 
 #else
 
-	#if defined( __GNUC__ ) && defined( __cplusplus )
-	    #define INLINE __inline__
-	#else
-	    #define INLINE
-	#endif
+    #if defined( __GNUC__ ) && defined( __cplusplus )
+        #define INLINE __inline__
+    #else
+        #define INLINE
+    #endif
 
 #endif
 
@@ -186,13 +186,13 @@ extern "C" {
 
 /* Define function attributes directive when available */
 #if __GNUC__ >= 3
-#define	REGPARM(num)	__attribute__((regparm(num)))
+#define REGPARM(num)    __attribute__((regparm(num)))
 #else
 #if defined (_MSC_VER) || defined(__BORLANDC__) || defined(__ICL)
-#define	REGPARM(num)	__fastcall
-//#define	REGPARM(num)
+#define REGPARM(num)    __fastcall
+//#define   REGPARM(num)
 #else
-#define	REGPARM(num)
+#define REGPARM(num)
 #endif
 #endif
 

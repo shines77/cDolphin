@@ -45,7 +45,6 @@ extern int white_moves[60+4];
 }
 #endif
 
-
 #ifdef DOLPHIN_GGS
 
 extern CODKStream *g_odk_stream;
@@ -54,7 +53,7 @@ extern CODKStream *odk_stream_init(CODKStream *gs);
 
 extern void odk_stream_release(void);
 
-#endif  // DOLPHIN_GGS
+#endif // DOLPHIN_GGS
 
 
 #endif  /* __GLOBAL_H_ */

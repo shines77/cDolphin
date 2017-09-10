@@ -28,7 +28,7 @@ extern BitBoard last_black_stable, last_white_stable;
 */
 
 int
-count_edge_stable( int color, BitBoard col_bits, BitBoard opp_bits );
+count_edge_stable(int color, BitBoard col_bits, BitBoard opp_bits);
 
 /*
   COUNT_STABLE
@@ -38,7 +38,7 @@ count_edge_stable( int color, BitBoard col_bits, BitBoard opp_bits );
 */
 
 int
-count_stable( int color, BitBoard col_bits, BitBoard opp_bits );
+count_stable(int color, BitBoard col_bits, BitBoard opp_bits);
 
 /*
   GET_STABLE
@@ -48,16 +48,16 @@ count_stable( int color, BitBoard col_bits, BitBoard opp_bits );
 */
 
 void
-get_stable( int *in_board,
-	    int color,
-	    int *is_stable );
+get_stable(int *in_board,
+           int color,
+           int *is_stable);
 
 void
-init_stable( void );
+init_stable(void);
 
 /*
 void
-finalize_stable( void );
+finalize_stable(void);
 //*/
 
 #ifdef __cplusplus

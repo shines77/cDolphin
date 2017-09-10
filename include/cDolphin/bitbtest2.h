@@ -24,7 +24,7 @@ extern BitBoard bb_flips2;
 extern int (*TestFlips_bitboard2[64])(const BitBoard, const BitBoard);
 
 void
-init_disc_mask( void );
+init_disc_mask(void);
 
 #ifdef __cplusplus
 }

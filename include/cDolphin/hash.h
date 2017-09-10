@@ -32,24 +32,23 @@ extern "C" {
 
 #define NO_HASH_MOVE              0
 
-
 /* The structure returned when a hash probe resulted in a hit.
    DRAFT is the depth of the subtree beneath the node and FLAGS
    contains a flag mask (see the flag bits above). */
 typedef struct tagHashEntry {
-	unsigned int key1, key2;
-	int eval;
-	int move[4];
-	short draft;
-	short selectivity;
-	short flags;
+    unsigned int key1, key2;
+    int eval;
+    int move[4];
+    short draft;
+    short selectivity;
+    short flags;
 } HashEntry;
 
 typedef struct tagCompactHashEntry {
-	unsigned int key2;
-	int eval;
-	unsigned int moves;
-	unsigned int key1_selectivity_flags_draft;
+    unsigned int key2;
+    int eval;
+    unsigned int moves;
+    unsigned int key1_selectivity_flags_draft;
 } CompactHashEntry;
 
 /* The number of entries in the hash table. Always a power of 2. */
@@ -106,57 +105,57 @@ extern unsigned int hash_two_row_value2[4][65536];
 extern unsigned int g_save_hash1, g_save_hash2;
 
 void
-hash_init( int in_hash_bits );
+hash_init(int in_hash_bits);
 
 void
-hash_resize( int new_hash_bits );
+hash_resize(int new_hash_bits);
 
 void
-hash_setup( int clear, int bsrand );
+hash_setup(int clear, int bsrand);
 
 #ifdef DOLPHIN_GGS
 
 void
-hash_setup_ggs( int clear, int bsrand = TRUE );
+hash_setup_ggs(int clear, int bsrand = TRUE);
 
 #endif
 
 void
-hash_clear_drafts( void );
+hash_clear_drafts(void);
 
 void
-hash_free( void );
+hash_free(void);
 
 void
-hash_set_transformation( unsigned int trans1,
-			 unsigned int trans2 );
+hash_set_transformation(unsigned int trans1,
+                        unsigned int trans2);
 
 void
-hash_add( int reverse_mode,
-	  int score,
-	  int best,
-	  int flags,
-	  int draft,
-	  int selectivity );
+hash_add(int reverse_mode,
+      int score,
+      int best,
+      int flags,
+      int draft,
+      int selectivity);
 
 void
-hash_add_extended( int reverse_mode,
-		   int score,
-		   int *best,
-		   int flags,
-		   int draft,
-		   int selectivity );
+hash_add_extended(int reverse_mode,
+           int score,
+           int *best,
+           int flags,
+           int draft,
+           int selectivity);
 
 HashEntry
-hash_find( int reverse_mode );
+hash_find(int reverse_mode);
 
 void
-hash_determine_values( const BitBoard my_bits,
-					  const BitBoard opp_bits,
-					  int color );
+hash_determine_values(const BitBoard my_bits,
+                      const BitBoard opp_bits,
+                      int color);
 
 void
-hash_determine_values2( const int *board, int color );
+hash_determine_values2(const int *board, int color);
 
 #ifdef __cplusplus
 }
