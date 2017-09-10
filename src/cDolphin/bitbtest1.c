@@ -4,7 +4,7 @@
    Modified:      November 24, 2005
 
    Authors:       Gunnar Andersson (gunnar@radagast.se)
-	          Toshihiko Okuhara
+              Toshihiko Okuhara
 
    Contents:      Count flips and returns new_my_bits in bb_flips.
 
@@ -19,29 +19,28 @@
 #include "bitbtest.h"
 #include "bitbtest1.h"
 
-
 BitBoard bb_flips1;
 
 static const unsigned char right_contiguous[64] = {
-  0, 1, 0, 2, 0, 1, 0, 3,
-  0, 1, 0, 2, 0, 1, 0, 4,
-  0, 1, 0, 2, 0, 1, 0, 3,
-  0, 1, 0, 2, 0, 1, 0, 5,
-  0, 1, 0, 2, 0, 1, 0, 3,
-  0, 1, 0, 2, 0, 1, 0, 4,
-  0, 1, 0, 2, 0, 1, 0, 3,
-  0, 1, 0, 2, 0, 1, 0, 6
+    0, 1, 0, 2, 0, 1, 0, 3,
+    0, 1, 0, 2, 0, 1, 0, 4,
+    0, 1, 0, 2, 0, 1, 0, 3,
+    0, 1, 0, 2, 0, 1, 0, 5,
+    0, 1, 0, 2, 0, 1, 0, 3,
+    0, 1, 0, 2, 0, 1, 0, 4,
+    0, 1, 0, 2, 0, 1, 0, 3,
+    0, 1, 0, 2, 0, 1, 0, 6
 };
 
 static const unsigned char left_contiguous[64] = {
-  0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0,
-  1, 1, 1, 1, 1, 1, 1, 1,
-  1, 1, 1, 1, 1, 1, 1, 1,
-  2, 2, 2, 2, 2, 2, 2, 2,
-  3, 3, 3, 3, 4, 4, 5, 6
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    2, 2, 2, 2, 2, 2, 2, 2,
+    3, 3, 3, 3, 4, 4, 5, 6
 };
 
 static const unsigned int right_flip[8] = { 0x00000001u, 0x00000003u, 0x00000007u, 0x0000000Fu, 0x0000001Fu, 0x0000003Fu, 0x0000007Fu, 0 };
@@ -50,782 +49,784 @@ static const unsigned int lsb_mask[4]   = { 0x000000FFu, 0x0000FFFFu, 0x00FFFFFF
 static const unsigned int msb_mask[4]   = { 0xFF000000u, 0xFFFF0000u, 0xFFFFFF00u, 0xFFFFFFFFu };
 
 static const unsigned char pop_count[64] = {
-  0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,	/*  0 -- 15 */
-  1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,	/* 16 -- 31 */
-  1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,	/* 32 -- 47 */
-  2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6	/* 48 -- 63 */
+    0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, /*  0 -- 15 */
+    1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, /* 16 -- 31 */
+    1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, /* 32 -- 47 */
+    2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6  /* 48 -- 63 */
 };
 
 static const unsigned char c_frontier[62] = {
-  0x00, 0x01, /* -0000-x- */  0, 0,
-  0x10, 0x11, /* -0001-x- */  0, 0,
-  0x00, 0x01, /* -0010-x- */  0, 0,
-  0x20, 0x21, /* -0011-x- */  0, 0,
-  0x00, 0x01, /* -0100-x- */  0, 0,
-  0x10, 0x11, /* -0101-x- */  0, 0,
-  0x00, 0x01, /* -0110-x- */  0, 0,
-  0x40, 0x41, /* -0111-x- */  0, 0,
-  0x00, 0x01, /* -1000-x- */  0, 0,
-  0x10, 0x11, /* -1001-x- */  0, 0,
-  0x00, 0x01, /* -1010-x- */  0, 0,
-  0x20, 0x21, /* -1011-x- */  0, 0,
-  0x00, 0x01, /* -1100-x- */  0, 0,
-  0x10, 0x11, /* -1101-x- */  0, 0,
-  0x00, 0x01, /* -1110-x- */  0, 0,
-  0x80, 0x81  /* -1111-x- */
+    0x00, 0x01, /* -0000-x- */  0, 0,
+    0x10, 0x11, /* -0001-x- */  0, 0,
+    0x00, 0x01, /* -0010-x- */  0, 0,
+    0x20, 0x21, /* -0011-x- */  0, 0,
+    0x00, 0x01, /* -0100-x- */  0, 0,
+    0x10, 0x11, /* -0101-x- */  0, 0,
+    0x00, 0x01, /* -0110-x- */  0, 0,
+    0x40, 0x41, /* -0111-x- */  0, 0,
+    0x00, 0x01, /* -1000-x- */  0, 0,
+    0x10, 0x11, /* -1001-x- */  0, 0,
+    0x00, 0x01, /* -1010-x- */  0, 0,
+    0x20, 0x21, /* -1011-x- */  0, 0,
+    0x00, 0x01, /* -1100-x- */  0, 0,
+    0x10, 0x11, /* -1101-x- */  0, 0,
+    0x00, 0x01, /* -1110-x- */  0, 0,
+    0x80, 0x81  /* -1111-x- */
 };
 
 static const unsigned char d_frontier[60] = {
-  0x00, 0x00, 0x02, 0x01, /* -000-xx- */  0, 0, 0, 0,
-  0x20, 0x20, 0x22, 0x21, /* -001-xx- */  0, 0, 0, 0,
-  0x00, 0x00, 0x02, 0x01, /* -010-xx- */  0, 0, 0, 0,
-  0x40, 0x40, 0x42, 0x41, /* -011-xx- */  0, 0, 0, 0,
-  0x00, 0x00, 0x02, 0x01, /* -100-xx- */  0, 0, 0, 0,
-  0x20, 0x20, 0x22, 0x21, /* -101-xx- */  0, 0, 0, 0,
-  0x00, 0x00, 0x02, 0x01, /* -110-xx- */  0, 0, 0, 0,
-  0x80, 0x80, 0x82, 0x81  /* -111-xx- */
+    0x00, 0x00, 0x02, 0x01, /* -000-xx- */  0, 0, 0, 0,
+    0x20, 0x20, 0x22, 0x21, /* -001-xx- */  0, 0, 0, 0,
+    0x00, 0x00, 0x02, 0x01, /* -010-xx- */  0, 0, 0, 0,
+    0x40, 0x40, 0x42, 0x41, /* -011-xx- */  0, 0, 0, 0,
+    0x00, 0x00, 0x02, 0x01, /* -100-xx- */  0, 0, 0, 0,
+    0x20, 0x20, 0x22, 0x21, /* -101-xx- */  0, 0, 0, 0,
+    0x00, 0x00, 0x02, 0x01, /* -110-xx- */  0, 0, 0, 0,
+    0x80, 0x80, 0x82, 0x81  /* -111-xx- */
 };
 
 static const unsigned char e_frontier[56] = {
-  0x00, 0x00, 0x00, 0x00, 0x04, 0x04, 0x02, 0x01, /* -00-xxx- */  0, 0, 0, 0, 0, 0, 0, 0,
-  0x40, 0x40, 0x40, 0x40, 0x44, 0x44, 0x42, 0x41, /* -01-xxx- */  0, 0, 0, 0, 0, 0, 0, 0,
-  0x00, 0x00, 0x00, 0x00, 0x04, 0x04, 0x02, 0x01, /* -10-xxx- */  0, 0, 0, 0, 0, 0, 0, 0,
-  0x80, 0x80, 0x80, 0x80, 0x84, 0x84, 0x82, 0x81  /* -11-xxx- */
+    0x00, 0x00, 0x00, 0x00, 0x04, 0x04, 0x02, 0x01, /* -00-xxx- */  0, 0, 0, 0, 0, 0, 0, 0,
+    0x40, 0x40, 0x40, 0x40, 0x44, 0x44, 0x42, 0x41, /* -01-xxx- */  0, 0, 0, 0, 0, 0, 0, 0,
+    0x00, 0x00, 0x00, 0x00, 0x04, 0x04, 0x02, 0x01, /* -10-xxx- */  0, 0, 0, 0, 0, 0, 0, 0,
+    0x80, 0x80, 0x80, 0x80, 0x84, 0x84, 0x82, 0x81  /* -11-xxx- */
 };
 
 #if 0
 
 static const unsigned char f_frontier[48] = {
-  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x08, 0x08, 0x08, 0x04, 0x04, 0x02, 0x01, /* -0-xxxx- */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x88, 0x88, 0x88, 0x88, 0x84, 0x84, 0x82, 0x81  /* -1-xxxx- */
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x08, 0x08, 0x08, 0x04, 0x04, 0x02, 0x01, /* -0-xxxx- */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x88, 0x88, 0x88, 0x88, 0x84, 0x84, 0x82, 0x81  /* -1-xxxx- */
 };
 
 static const unsigned char c_flip[130] = {
-  0x00, 0x01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0x04, 0x05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0x0C, 0x0D, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0x1C, 0x1D, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0x3C, 0x3D
+    0x00, 0x01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x04, 0x05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x0C, 0x0D, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x1C, 0x1D, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x3C, 0x3D
 };
 
 static const unsigned char d_flip[132] = {
-  0x00, 0x03, 0x02, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0x08, 0x0B, 0x0A, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0x18, 0x1B, 0x1A, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0x38, 0x3B, 0x3A, 0
+    0x00, 0x03, 0x02, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x08, 0x0B, 0x0A, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x18, 0x1B, 0x1A, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x38, 0x3B, 0x3A, 0
 };
 
 static const unsigned char e_flip[136] = {
-  0x00, 0x07, 0x06, 0, 0x04, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0x10, 0x17, 0x16, 0, 0x14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0x30, 0x37, 0x36, 0, 0x34, 0, 0, 0
+    0x00, 0x07, 0x06, 0, 0x04, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x10, 0x17, 0x16, 0, 0x14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x30, 0x37, 0x36, 0, 0x34, 0, 0, 0
 };
 
 static const unsigned char f_flip[140] = {
-  0x00, 0x0F, 0x0E, 0, 0x0C, 0, 0, 0, 0x08, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0x20, 0x2F, 0x2E, 0, 0x2C, 0, 0, 0, 0x28, 0, 0, 0
+    0x00, 0x0F, 0x0E, 0, 0x0C, 0, 0, 0, 0x08, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x20, 0x2F, 0x2E, 0, 0x2C, 0, 0, 0, 0x28, 0, 0, 0
 };
 
 #else
 
 static const unsigned char f_flip[160] = {
-  0x00, 0x0F, 0x0E, 0, 0x0C, 0, 0, 0, 0x08, 0, 0, 0, 0, 0, 0, 0,
-		0x00, 0x07, 0x06, 0, 0x04, 0, 0, 0,   0x00, 0x03, 0x02, 0,   0x00, 0x01, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   		                     0x04, 0x05, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0,       		      0x08, 0x0B, 0x0A, 0,   0x0C, 0x0D, 0, 0,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x08, 0x08, 0x08, 0x04, 0x04, 0x02, 0x01, /* -0-xxxx- */
-		0x10, 0x17, 0x16, 0, 0x14, 0, 0, 0,   0x18, 0x1B, 0x1A, 0,   0x1C, 0x1D, 0, 0,
-	0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x88, 0x88, 0x88, 0x88, 0x84, 0x84, 0x82, 0x81, /* -1-xxxx- */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0x20, 0x2F, 0x2E, 0, 0x2C, 0, 0, 0, 0x28, 0, 0, 0, 0, 0, 0, 0,
-		0x30, 0x37, 0x36, 0, 0x34, 0, 0, 0,   0x38, 0x3B, 0x3A, 0,   0x3C, 0x3D, 0, 0
+    0x00, 0x0F, 0x0E, 0, 0x0C, 0, 0, 0, 0x08, 0, 0, 0, 0, 0, 0, 0,
+        0x00, 0x07, 0x06, 0, 0x04, 0, 0, 0,   0x00, 0x03, 0x02, 0,   0x00, 0x01, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                              0x04, 0x05, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,                   0x08, 0x0B, 0x0A, 0,   0x0C, 0x0D, 0, 0,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x08, 0x08, 0x08, 0x04, 0x04, 0x02, 0x01, /* -0-xxxx- */
+        0x10, 0x17, 0x16, 0, 0x14, 0, 0, 0,   0x18, 0x1B, 0x1A, 0,   0x1C, 0x1D, 0, 0,
+    0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x88, 0x88, 0x88, 0x88, 0x84, 0x84, 0x82, 0x81, /* -1-xxxx- */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x20, 0x2F, 0x2E, 0, 0x2C, 0, 0, 0, 0x28, 0, 0, 0, 0, 0, 0, 0,
+        0x30, 0x37, 0x36, 0, 0x34, 0, 0, 0,   0x38, 0x3B, 0x3A, 0,   0x3C, 0x3D, 0, 0
 };
 
-#define	e_flip(x)	f_flip[(x) + 16]
-#define	d_flip(x)	f_flip[(x) + 24]
-#define	c_flip(x)	f_flip[(x) + 28]
-#define f_frontier(x)	f_flip[(x) + 64]
+#define e_flip(x)   f_flip[(x) + 16]
+#define d_flip(x)   f_flip[(x) + 24]
+#define c_flip(x)   f_flip[(x) + 28]
+#define f_frontier(x)   f_flip[(x) + 64]
 
 #endif
 
 #if 0
 static const BitBoard top_flip[8] = {
-  {           0, 0x000000FFu },
-  {           0, 0x0000FFFFu },
-  {           0, 0x00FFFFFFu },
-  {           0, 0xFFFFFFFFu },
-  { 0x000000FFu, 0xFFFFFFFFu },
-  { 0x0000FFFFu, 0xFFFFFFFFu },
-  { 0x00FFFFFFu, 0xFFFFFFFFu },
-  { 0xFFFFFFFFu, 0xFFFFFFFFu } };
+    {           0, 0x000000FFu },
+    {           0, 0x0000FFFFu },
+    {           0, 0x00FFFFFFu },
+    {           0, 0xFFFFFFFFu },
+    { 0x000000FFu, 0xFFFFFFFFu },
+    { 0x0000FFFFu, 0xFFFFFFFFu },
+    { 0x00FFFFFFu, 0xFFFFFFFFu },
+    { 0xFFFFFFFFu, 0xFFFFFFFFu }
+};
 static const BitBoard bot_flip[8] = {
-  { 0xFF000000u,           0 },
-  { 0xFFFF0000u,           0 },
-  { 0xFFFFFF00u,           0 },
-  { 0xFFFFFFFFu,           0 },
-  { 0xFFFFFFFFu, 0xFF000000u },
-  { 0xFFFFFFFFu, 0xFFFF0000u },
-  { 0xFFFFFFFFu, 0xFFFFFF00u },
-  { 0xFFFFFFFFu, 0xFFFFFFFFu } };
-#endif
-
-#if 0
-static const unsigned int high_flip[56] = {
-/*                      m            o           m            m m          m o           o            o m          o o */
-  0x00000000u, 0xFF000000u, 0x00000000u,  0x00000000u, 0xFF000000u, 0xFE0000FFu,  0x00000000u, 0xFF000000u, 0x00000000u,
-  0x00000000u, 0xFF000000u, 0x00000000u,  0x00000000u, 0xFF000000u, 0xFE0000FFu,  0x00000000u, 0xFF000000u, 0xFD00FFFFu,
-  0x00000000u, 0xFF000000u, 0x00000000u,  0x00000000u, 0xFF000000u, 0xFE0000FFu,  0x00000000u, 0xFF000000u, 0x00000000u,
-  0,
-  0x00000000u, 0xFF000000u, 0x00000000u,  0x00000000u, 0xFF000000u, 0xFE0000FFu,  0x00000000u, 0xFF000000u, 0x00000000u,
-  0x00000000u, 0xFF000000u, 0x00000000u,  0x00000000u, 0xFF000000u, 0xFE0000FFu,  0x00000000u, 0xFF000000u, 0xFD00FFFFu,
-  0x00000000u, 0xFF000000u, 0x00000000u,  0x00000000u, 0xFF000000u, 0xFE0000FFu,  0x00000000u, 0xFF000000u, 0xFCFFFFFFu,
-  0
+    { 0xFF000000u,           0 },
+    { 0xFFFF0000u,           0 },
+    { 0xFFFFFF00u,           0 },
+    { 0xFFFFFFFFu,           0 },
+    { 0xFFFFFFFFu, 0xFF000000u },
+    { 0xFFFFFFFFu, 0xFFFF0000u },
+    { 0xFFFFFFFFu, 0xFFFFFF00u },
+    { 0xFFFFFFFFu, 0xFFFFFFFFu }
 };
 #endif
 
 #if 0
-#define bbFlips_Right_low(pos, mask)	\
-  contig = right_contiguous[(opp_bits_low >> (pos + 1)) & mask];	\
-  fl = 0x7F >> (6 - contig) << (pos + 1);				\
-  t = -(int)(my_bits_low & fl) >> 31;					\
-  my_bits_low |= fl & t;						\
+static const unsigned int high_flip[56] = {
+    /*                   m            o           m            m m          m o           o            o m          o o */
+    0x00000000u, 0xFF000000u, 0x00000000u,  0x00000000u, 0xFF000000u, 0xFE0000FFu,  0x00000000u, 0xFF000000u, 0x00000000u,
+    0x00000000u, 0xFF000000u, 0x00000000u,  0x00000000u, 0xFF000000u, 0xFE0000FFu,  0x00000000u, 0xFF000000u, 0xFD00FFFFu,
+    0x00000000u, 0xFF000000u, 0x00000000u,  0x00000000u, 0xFF000000u, 0xFE0000FFu,  0x00000000u, 0xFF000000u, 0x00000000u,
+    0,
+    0x00000000u, 0xFF000000u, 0x00000000u,  0x00000000u, 0xFF000000u, 0xFE0000FFu,  0x00000000u, 0xFF000000u, 0x00000000u,
+    0x00000000u, 0xFF000000u, 0x00000000u,  0x00000000u, 0xFF000000u, 0xFE0000FFu,  0x00000000u, 0xFF000000u, 0xFD00FFFFu,
+    0x00000000u, 0xFF000000u, 0x00000000u,  0x00000000u, 0xFF000000u, 0xFE0000FFu,  0x00000000u, 0xFF000000u, 0xFCFFFFFFu,
+    0
+};
+#endif
+
+#if 0
+#define bbFlips_Right_low(pos, mask)    \
+  contig = right_contiguous[(opp_bits_low >> (pos + 1)) & mask];    \
+  fl = 0x7F >> (6 - contig) << (pos + 1);               \
+  t = -(int)(my_bits_low & fl) >> 31;                   \
+  my_bits_low |= fl & t;                        \
   flipped = contig & t
 #else
-#define bbFlips_Right_low(pos, mask)	\
-  contig = right_contiguous[(opp_bits_low >> (pos + 1)) & mask];	\
-  fl = right_flip[contig] << (pos + 1);					\
-  t = -(int)(my_bits_low & fl) >> 31;					\
-  my_bits_low |= fl & t;						\
+#define bbFlips_Right_low(pos, mask)    \
+  contig = right_contiguous[(opp_bits_low >> (pos + 1)) & mask];    \
+  fl = right_flip[contig] << (pos + 1);                 \
+  t = -(int)(my_bits_low & fl) >> 31;                   \
+  my_bits_low |= fl & t;                        \
   flipped = contig & t
 #endif
 
-#define bbFlips_Right_high(pos, mask)	\
-  contig = right_contiguous[(opp_bits_high >> (pos + 1)) & mask];	\
-  fl = right_flip[contig] << (pos + 1);					\
-  t = -(int)(my_bits_high & fl) >> 31;					\
-  my_bits_high |= fl & t;						\
+#define bbFlips_Right_high(pos, mask)   \
+  contig = right_contiguous[(opp_bits_high >> (pos + 1)) & mask];   \
+  fl = right_flip[contig] << (pos + 1);                 \
+  t = -(int)(my_bits_high & fl) >> 31;                  \
+  my_bits_high |= fl & t;                       \
   flipped = contig & t
 
 #if 1
-#define bbFlips_Left_low(pos, mask)	\
-  contig = left_contiguous[(opp_bits_low >> (pos - 6)) & mask];		\
-  fl = (unsigned int)((int)0x80000000 >> contig) >> (32 - pos);		\
-  t = -(int)(my_bits_low & fl) >> 31;					\
-  my_bits_low |= fl & t;						\
+#define bbFlips_Left_low(pos, mask) \
+  contig = left_contiguous[(opp_bits_low >> (pos - 6)) & mask];     \
+  fl = (unsigned int)((int)0x80000000 >> contig) >> (32 - pos);     \
+  t = -(int)(my_bits_low & fl) >> 31;                   \
+  my_bits_low |= fl & t;                        \
   flipped = contig & t
 #else
-#define bbFlips_Left_low(pos, mask)	\
-  contig = left_contiguous[(opp_bits_low >> (pos - 6)) & mask];		\
-  fl = left_flip[contig] >> (32 - pos);					\
-  t = -(int)(my_bits_low & fl) >> 31;					\
-  my_bits_low |= fl & t;						\
+#define bbFlips_Left_low(pos, mask) \
+  contig = left_contiguous[(opp_bits_low >> (pos - 6)) & mask];     \
+  fl = left_flip[contig] >> (32 - pos);                 \
+  t = -(int)(my_bits_low & fl) >> 31;                   \
+  my_bits_low |= fl & t;                        \
   flipped = contig & t
 #endif
 
-#define bbFlips_Left_high(pos, mask)	\
-  contig = left_contiguous[(opp_bits_high >> (pos - 6)) & mask];	\
-  fl = (unsigned int)((int)0x80000000 >> contig) >> (32 - pos);		\
-  t = -(int)(my_bits_high & fl) >> 31;					\
-  my_bits_high |= fl & t;						\
+#define bbFlips_Left_high(pos, mask)    \
+  contig = left_contiguous[(opp_bits_high >> (pos - 6)) & mask];    \
+  fl = (unsigned int)((int)0x80000000 >> contig) >> (32 - pos);     \
+  t = -(int)(my_bits_high & fl) >> 31;                  \
+  my_bits_high |= fl & t;                       \
   flipped = contig & t
 
 
-#define bbFlips_Horiz_d_low(pos)	\
-  t = d_frontier[(opp_bits_low >> (pos - 2)) & 0x3B];			\
-  fl = d_flip(t & (my_bits_low >> (pos - 3)));				\
-  my_bits_low |= fl << (pos - 2);					\
+#define bbFlips_Horiz_d_low(pos)    \
+  t = d_frontier[(opp_bits_low >> (pos - 2)) & 0x3B];           \
+  fl = d_flip(t & (my_bits_low >> (pos - 3)));              \
+  my_bits_low |= fl << (pos - 2);                   \
   flipped = pop_count[fl]
 
-#define bbFlips_Horiz_d_high(pos)	\
-  t = d_frontier[(opp_bits_high >> (pos - 2)) & 0x3B];			\
-  fl = d_flip(t & (my_bits_high >> (pos - 3)));				\
-  my_bits_high |= fl << (pos - 2);					\
+#define bbFlips_Horiz_d_high(pos)   \
+  t = d_frontier[(opp_bits_high >> (pos - 2)) & 0x3B];          \
+  fl = d_flip(t & (my_bits_high >> (pos - 3)));             \
+  my_bits_high |= fl << (pos - 2);                  \
   flipped = pop_count[fl]
 
-#define bbFlips_Horiz_e_low(pos)	\
-  t = e_frontier[(opp_bits_low >> (pos - 3)) & 0x37];			\
-  fl = e_flip(t & (my_bits_low >> (pos - 4)));				\
-  my_bits_low |= fl << (pos - 3);					\
+#define bbFlips_Horiz_e_low(pos)    \
+  t = e_frontier[(opp_bits_low >> (pos - 3)) & 0x37];           \
+  fl = e_flip(t & (my_bits_low >> (pos - 4)));              \
+  my_bits_low |= fl << (pos - 3);                   \
   flipped = pop_count[fl]
 
-#define bbFlips_Horiz_e_high(pos)	\
-  t = e_frontier[(opp_bits_high >> (pos - 3)) & 0x37];			\
-  fl = e_flip(t & (my_bits_high >> (pos - 4)));				\
-  my_bits_high |= fl << (pos - 3);					\
+#define bbFlips_Horiz_e_high(pos)   \
+  t = e_frontier[(opp_bits_high >> (pos - 3)) & 0x37];          \
+  fl = e_flip(t & (my_bits_high >> (pos - 4)));             \
+  my_bits_high |= fl << (pos - 3);                  \
   flipped = pop_count[fl]
 
-#define bbFlips_Horiz_c_low(pos)	\
-  t = c_frontier[(opp_bits_low >> (pos - 1)) & 0x3D];			\
-  fl = c_flip(t & (my_bits_low >> (pos - 2)));				\
-  my_bits_low |= fl << (pos - 1);					\
+#define bbFlips_Horiz_c_low(pos)    \
+  t = c_frontier[(opp_bits_low >> (pos - 1)) & 0x3D];           \
+  fl = c_flip(t & (my_bits_low >> (pos - 2)));              \
+  my_bits_low |= fl << (pos - 1);                   \
   flipped = pop_count[fl]
 
-#define bbFlips_Horiz_c_high(pos)	\
-  t = c_frontier[(opp_bits_high >> (pos - 1)) & 0x3D];			\
-  fl = c_flip(t & (my_bits_high >> (pos - 2)));				\
-  my_bits_high |= fl << (pos - 1);					\
+#define bbFlips_Horiz_c_high(pos)   \
+  t = c_frontier[(opp_bits_high >> (pos - 1)) & 0x3D];          \
+  fl = c_flip(t & (my_bits_high >> (pos - 2)));             \
+  my_bits_high |= fl << (pos - 1);                  \
   flipped = pop_count[fl]
 
-#define bbFlips_Horiz_f_low(pos)	\
-  t = f_frontier((opp_bits_low >> (pos - 4)) & 0x2F);			\
-  fl = f_flip[t & (my_bits_low >> (pos - 5))];				\
-  my_bits_low |= fl << (pos - 4);					\
+#define bbFlips_Horiz_f_low(pos)    \
+  t = f_frontier((opp_bits_low >> (pos - 4)) & 0x2F);           \
+  fl = f_flip[t & (my_bits_low >> (pos - 5))];              \
+  my_bits_low |= fl << (pos - 4);                   \
   flipped = pop_count[fl]
 
-#define bbFlips_Horiz_f_high(pos)	\
-  t = f_frontier((opp_bits_high >> (pos - 4)) & 0x2F);			\
-  fl = f_flip[t & (my_bits_high >> (pos - 5))];				\
-  my_bits_high |= fl << (pos - 4);					\
+#define bbFlips_Horiz_f_high(pos)   \
+  t = f_frontier((opp_bits_high >> (pos - 4)) & 0x2F);          \
+  fl = f_flip[t & (my_bits_high >> (pos - 5))];             \
+  my_bits_high |= fl << (pos - 4);                  \
   flipped = pop_count[fl]
 
 
-#define bbFlips_Down_1_low(pos, vec)	\
-  t = opp_bits_low & (my_bits_low >> vec) & (1 << (pos + vec));		\
-  my_bits_low |= t;							\
+#define bbFlips_Down_1_low(pos, vec)    \
+  t = opp_bits_low & (my_bits_low >> vec) & (1 << (pos + vec));     \
+  my_bits_low |= t;                         \
   flipped += t >> (pos + vec)
 
-#define bbFlips_Down_1_high(pos, vec)	\
-  t = opp_bits_high & (my_bits_high >> vec) & (1 << (pos + vec));	\
-  my_bits_high |= t;							\
+#define bbFlips_Down_1_high(pos, vec)   \
+  t = opp_bits_high & (my_bits_high >> vec) & (1 << (pos + vec));   \
+  my_bits_high |= t;                            \
   flipped += t >> (pos + vec)
 
-#define bbFlips_Up_1_low(pos, vec)	\
-  t = opp_bits_low & (my_bits_low << vec) & (1 << (pos - vec));		\
-  my_bits_low |= t;							\
+#define bbFlips_Up_1_low(pos, vec)  \
+  t = opp_bits_low & (my_bits_low << vec) & (1 << (pos - vec));     \
+  my_bits_low |= t;                         \
   flipped += t >> (pos - vec)
 
-#define bbFlips_Up_1_high(pos, vec)	\
-  t = opp_bits_high & (my_bits_high << vec) & (1 << (pos - vec));	\
-  my_bits_high |= t;							\
+#define bbFlips_Up_1_high(pos, vec) \
+  t = opp_bits_high & (my_bits_high << vec) & (1 << (pos - vec));   \
+  my_bits_high |= t;                            \
   flipped += t >> (pos - vec)
 
 
 #if 1
-#define bbFlips_Down_2_low(pos, vec, mask)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    t = opp_bits_low & (my_bits_low >> vec) & mask;			\
-    my_bits_low |= t + (t >> vec);					\
-    flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3;	\
+#define bbFlips_Down_2_low(pos, vec, mask)  \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    t = opp_bits_low & (my_bits_low >> vec) & mask;         \
+    my_bits_low |= t + (t >> vec);                  \
+    flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3;   \
   }
 
-#define bbFlips_Down_2_high(pos, vec, mask)	\
-  if (opp_bits_high & (1 << (pos + vec))) {				\
-    t = opp_bits_high & (my_bits_high >> vec) & mask;			\
-    my_bits_high |= t + (t >> vec);					\
-    flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3;	\
+#define bbFlips_Down_2_high(pos, vec, mask) \
+  if (opp_bits_high & (1 << (pos + vec))) {             \
+    t = opp_bits_high & (my_bits_high >> vec) & mask;           \
+    my_bits_high |= t + (t >> vec);                 \
+    flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3;   \
   }
 
-#define bbFlips_Up_2_low(pos, vec, mask)	\
-  if (opp_bits_low & (1 << (pos - vec))) {				\
-    t = opp_bits_low & (my_bits_low << vec) & mask;			\
-    my_bits_low |= t + (t << vec);					\
-    flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3;	\
+#define bbFlips_Up_2_low(pos, vec, mask)    \
+  if (opp_bits_low & (1 << (pos - vec))) {              \
+    t = opp_bits_low & (my_bits_low << vec) & mask;         \
+    my_bits_low |= t + (t << vec);                  \
+    flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3;   \
   }
 
-#define bbFlips_Up_2_high(pos, vec, mask)	\
-  if (opp_bits_high & (1 << (pos - vec))) {				\
-    t = opp_bits_high & (my_bits_high << vec) & mask;			\
-    my_bits_high |= t + (t << vec);					\
-    flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3;	\
+#define bbFlips_Up_2_high(pos, vec, mask)   \
+  if (opp_bits_high & (1 << (pos - vec))) {             \
+    t = opp_bits_high & (my_bits_high << vec) & mask;           \
+    my_bits_high |= t + (t << vec);                 \
+    flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3;   \
   }
 
 #else
-#define bbFlips_Down_2_low(pos, vec, mask)	\
-  t = opp_bits_low & ((opp_bits_low | (1 << pos)) << vec) & (my_bits_low >> vec) & mask;	\
-  my_bits_low |= t + (t >> vec);					\
+#define bbFlips_Down_2_low(pos, vec, mask)  \
+  t = opp_bits_low & ((opp_bits_low | (1 << pos)) << vec) & (my_bits_low >> vec) & mask;    \
+  my_bits_low |= t + (t >> vec);                    \
   flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3
 
-#define bbFlips_Down_2_high(pos, vec, mask)	\
-  t = opp_bits_high & ((opp_bits_high | (1 << pos)) << vec) & (my_bits_high >> vec) & mask;	\
-  my_bits_high |= t + (t >> vec);					\
+#define bbFlips_Down_2_high(pos, vec, mask) \
+  t = opp_bits_high & ((opp_bits_high | (1 << pos)) << vec) & (my_bits_high >> vec) & mask; \
+  my_bits_high |= t + (t >> vec);                   \
   flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3
 
-#define bbFlips_Up_2_low(pos, vec, mask)	\
-  t = opp_bits_low & ((opp_bits_low | (1 << pos)) >> vec) & (my_bits_low << vec) & mask;	\
-  my_bits_low |= t + (t << vec);					\
+#define bbFlips_Up_2_low(pos, vec, mask)    \
+  t = opp_bits_low & ((opp_bits_low | (1 << pos)) >> vec) & (my_bits_low << vec) & mask;    \
+  my_bits_low |= t + (t << vec);                    \
   flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3
 
-#define bbFlips_Up_2_high(pos, vec, mask)	\
-  t = opp_bits_high & ((opp_bits_high | (1 << pos)) >> vec) & (my_bits_high << vec) & mask;	\
-  my_bits_high |= t + (t << vec);					\
+#define bbFlips_Up_2_high(pos, vec, mask)   \
+  t = opp_bits_high & ((opp_bits_high | (1 << pos)) >> vec) & (my_bits_high << vec) & mask; \
+  my_bits_high |= t + (t << vec);                   \
   flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3
 #endif
 
 
-#define bbFlips_Down_3_3(pos, vec, maskh, maskl)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    if ((~opp_bits_low & maskl) == 0) {					\
-      t = (opp_bits_high >> (pos + vec * 4 - 32)) & 1;			\
-      contig = 3 + t;							\
-      t &= (opp_bits_high >> (pos + vec * 5 - 32));			\
-      contig += t;							\
-      t &= (opp_bits_high >> (pos + vec * 6 - 32));			\
-      contig += t;							\
-      t = lsb_mask[contig - 3] & maskh;					\
-      if (my_bits_high & t) {						\
-        my_bits_high |= t;						\
-        my_bits_low |= maskl;						\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = opp_bits_low & (my_bits_low >> vec) & maskl;			\
-      my_bits_low |= t | (t >> vec);					\
-      flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3;	\
-    }									\
+#define bbFlips_Down_3_3(pos, vec, maskh, maskl)    \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    if ((~opp_bits_low & maskl) == 0) {                 \
+      t = (opp_bits_high >> (pos + vec * 4 - 32)) & 1;          \
+      contig = 3 + t;                           \
+      t &= (opp_bits_high >> (pos + vec * 5 - 32));         \
+      contig += t;                          \
+      t &= (opp_bits_high >> (pos + vec * 6 - 32));         \
+      contig += t;                          \
+      t = lsb_mask[contig - 3] & maskh;                 \
+      if (my_bits_high & t) {                       \
+        my_bits_high |= t;                      \
+        my_bits_low |= maskl;                       \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = opp_bits_low & (my_bits_low >> vec) & maskl;          \
+      my_bits_low |= t | (t >> vec);                    \
+      flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3; \
+    }                                   \
   }
 
-#define bbFlips_Up_3_3(pos, vec, maskh, maskl)	\
-  if (opp_bits_high & (1 << (pos - vec))) {				\
-    if ((~opp_bits_high & maskh) == 0) {				\
-      t = (opp_bits_low >> (pos + 32 - vec * 4)) & 1;			\
-      contig = 3 + t;							\
-      t &= (opp_bits_low >> (pos + 32 - vec * 5));			\
-      contig += t;							\
-      t &= (opp_bits_low >> (pos + 32 - vec * 6));			\
-      contig += t;							\
-      t = msb_mask[contig - 3] & maskl;					\
-      if (my_bits_low & t) {						\
-        my_bits_low |= t;						\
-        my_bits_high |= maskh;						\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = opp_bits_high & (my_bits_high << vec) & maskh;		\
-      my_bits_high |= t | (t << vec);					\
-      flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3;	\
-    }									\
+#define bbFlips_Up_3_3(pos, vec, maskh, maskl)  \
+  if (opp_bits_high & (1 << (pos - vec))) {             \
+    if ((~opp_bits_high & maskh) == 0) {                \
+      t = (opp_bits_low >> (pos + 32 - vec * 4)) & 1;           \
+      contig = 3 + t;                           \
+      t &= (opp_bits_low >> (pos + 32 - vec * 5));          \
+      contig += t;                          \
+      t &= (opp_bits_low >> (pos + 32 - vec * 6));          \
+      contig += t;                          \
+      t = msb_mask[contig - 3] & maskl;                 \
+      if (my_bits_low & t) {                        \
+        my_bits_low |= t;                       \
+        my_bits_high |= maskh;                      \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = opp_bits_high & (my_bits_high << vec) & maskh;        \
+      my_bits_high |= t | (t << vec);                   \
+      flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3; \
+    }                                   \
   }
 
 #if 1
-#define bbFlips_Down_3_2(pos, vec, maskh, maskl)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    if ((~opp_bits_low & maskl) == 0) {					\
-      t = (opp_bits_high >> (pos + vec * 4 - 32)) & 1;			\
-      contig = 3 + t;							\
-      t &= (opp_bits_high >> (pos + vec * 5 - 32));			\
-      contig += t;							\
-      t = lsb_mask[contig - 3] & maskh;					\
-      if (my_bits_high & t) {						\
-        my_bits_high |= t;						\
-        my_bits_low |= maskl;						\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = opp_bits_low & (my_bits_low >> vec) & maskl;			\
-      my_bits_low |= t | (t >> vec);					\
-      flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3;	\
-    }									\
+#define bbFlips_Down_3_2(pos, vec, maskh, maskl)    \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    if ((~opp_bits_low & maskl) == 0) {                 \
+      t = (opp_bits_high >> (pos + vec * 4 - 32)) & 1;          \
+      contig = 3 + t;                           \
+      t &= (opp_bits_high >> (pos + vec * 5 - 32));         \
+      contig += t;                          \
+      t = lsb_mask[contig - 3] & maskh;                 \
+      if (my_bits_high & t) {                       \
+        my_bits_high |= t;                      \
+        my_bits_low |= maskl;                       \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = opp_bits_low & (my_bits_low >> vec) & maskl;          \
+      my_bits_low |= t | (t >> vec);                    \
+      flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3; \
+    }                                   \
   }
 #else
-#define bbFlips_Down_3_2(pos, vec, maskh, maskl)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    if ((~opp_bits_low & maskl) == 0) {					\
-      t = (opp_bits_high >> (pos + vec * 4 - 32)) & 1;			\
-      contig = 3 + t;							\
-      fl = (t << (pos + vec * 5 - 32)) + (1 << (pos + vec * 4 - 32));	\
-      t &= (opp_bits_high >> (pos + vec * 5 - 32));			\
-      contig += t;							\
-      fl += (t << (pos + vec * 6 - 32));				\
-      if (my_bits_high & fl) {						\
-        my_bits_high |= fl;						\
-        my_bits_low |= maskl;						\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = opp_bits_low & (my_bits_low >> vec) & maskl;			\
-      my_bits_low |= t | (t >> vec);					\
-      flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3;	\
-    }									\
+#define bbFlips_Down_3_2(pos, vec, maskh, maskl)    \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    if ((~opp_bits_low & maskl) == 0) {                 \
+      t = (opp_bits_high >> (pos + vec * 4 - 32)) & 1;          \
+      contig = 3 + t;                           \
+      fl = (t << (pos + vec * 5 - 32)) + (1 << (pos + vec * 4 - 32));   \
+      t &= (opp_bits_high >> (pos + vec * 5 - 32));         \
+      contig += t;                          \
+      fl += (t << (pos + vec * 6 - 32));                \
+      if (my_bits_high & fl) {                      \
+        my_bits_high |= fl;                     \
+        my_bits_low |= maskl;                       \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = opp_bits_low & (my_bits_low >> vec) & maskl;          \
+      my_bits_low |= t | (t >> vec);                    \
+      flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3; \
+    }                                   \
   }
 #endif
 
-#define bbFlips_Up_3_2(pos, vec, maskh, maskl)	\
-  if (opp_bits_high & (1 << (pos - vec))) {				\
-    if ((~opp_bits_high & maskh) == 0) {				\
-      t = (opp_bits_low >> (pos + 32 - vec * 4)) & 1;			\
-      contig = 3 + t;							\
-      t &= (opp_bits_low >> (pos + 32 - vec * 5));			\
-      contig += t;							\
-      t = msb_mask[contig - 3] & maskl;					\
-      if (my_bits_low & t) {						\
-        my_bits_low |= t;						\
-        my_bits_high |= maskh;						\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = opp_bits_high & (my_bits_high << vec) & maskh;		\
-      my_bits_high |= t | (t << vec);					\
-      flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3;	\
-    }									\
+#define bbFlips_Up_3_2(pos, vec, maskh, maskl)  \
+  if (opp_bits_high & (1 << (pos - vec))) {             \
+    if ((~opp_bits_high & maskh) == 0) {                \
+      t = (opp_bits_low >> (pos + 32 - vec * 4)) & 1;           \
+      contig = 3 + t;                           \
+      t &= (opp_bits_low >> (pos + 32 - vec * 5));          \
+      contig += t;                          \
+      t = msb_mask[contig - 3] & maskl;                 \
+      if (my_bits_low & t) {                        \
+        my_bits_low |= t;                       \
+        my_bits_high |= maskh;                      \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = opp_bits_high & (my_bits_high << vec) & maskh;        \
+      my_bits_high |= t | (t << vec);                   \
+      flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3; \
+    }                                   \
   }
 
-#define bbFlips_Down_3_1(pos, vec, maskl)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    if ((~opp_bits_low & maskl) == 0) {					\
-      t = (opp_bits_high >> (pos + vec * 4 - 32)) & 1;			\
-      contig = 3 + t;							\
-      t = (t << (pos + vec * 5 - 32)) | (1 << (pos + vec * 4 - 32));	\
-      if (my_bits_high & t) {						\
-        my_bits_high |= t;						\
-        my_bits_low |= maskl;						\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = opp_bits_low & (my_bits_low >> vec) & maskl;			\
-      my_bits_low |= t | (t >> vec);					\
-      flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3;	\
-    }									\
+#define bbFlips_Down_3_1(pos, vec, maskl)   \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    if ((~opp_bits_low & maskl) == 0) {                 \
+      t = (opp_bits_high >> (pos + vec * 4 - 32)) & 1;          \
+      contig = 3 + t;                           \
+      t = (t << (pos + vec * 5 - 32)) | (1 << (pos + vec * 4 - 32));    \
+      if (my_bits_high & t) {                       \
+        my_bits_high |= t;                      \
+        my_bits_low |= maskl;                       \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = opp_bits_low & (my_bits_low >> vec) & maskl;          \
+      my_bits_low |= t | (t >> vec);                    \
+      flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3; \
+    }                                   \
   }
 
-#define bbFlips_Up_3_1(pos, vec, maskh)	\
-  if (opp_bits_high & (1 << (pos - vec))) {				\
-    if ((~opp_bits_high & maskh) == 0) {				\
-      t = (opp_bits_low >> (pos + 32 - vec * 4)) & 1;			\
-      contig = 3 + t;							\
-      t = (t << (pos + 32 - vec * 5)) | (1 << (pos + 32 - vec * 4));	\
-      if (my_bits_low & t) {						\
-        my_bits_low |= t;						\
-        my_bits_high |= maskh;						\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = opp_bits_high & (my_bits_high << vec) & maskh;		\
-      my_bits_high |= t | (t << vec);					\
-      flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3;	\
-    }									\
+#define bbFlips_Up_3_1(pos, vec, maskh) \
+  if (opp_bits_high & (1 << (pos - vec))) {             \
+    if ((~opp_bits_high & maskh) == 0) {                \
+      t = (opp_bits_low >> (pos + 32 - vec * 4)) & 1;           \
+      contig = 3 + t;                           \
+      t = (t << (pos + 32 - vec * 5)) | (1 << (pos + 32 - vec * 4));    \
+      if (my_bits_low & t) {                        \
+        my_bits_low |= t;                       \
+        my_bits_high |= maskh;                      \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = opp_bits_high & (my_bits_high << vec) & maskh;        \
+      my_bits_high |= t | (t << vec);                   \
+      flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3; \
+    }                                   \
   }
 
-#define bbFlips_Down_3_0(pos, vec, maskl)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    if ((~opp_bits_low & maskl) == 0) {					\
-      t = (int)(my_bits_high << (31 - (pos + vec * 4 - 32))) >> 31;	\
-      my_bits_low |= maskl & t;						\
-      flipped += 3 & t;							\
-    } else {								\
-      t = opp_bits_low & (my_bits_low >> vec) & maskl;			\
-      my_bits_low |= t | (t >> vec);					\
-      flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3;	\
-    }									\
+#define bbFlips_Down_3_0(pos, vec, maskl)   \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    if ((~opp_bits_low & maskl) == 0) {                 \
+      t = (int)(my_bits_high << (31 - (pos + vec * 4 - 32))) >> 31; \
+      my_bits_low |= maskl & t;                     \
+      flipped += 3 & t;                         \
+    } else {                                \
+      t = opp_bits_low & (my_bits_low >> vec) & maskl;          \
+      my_bits_low |= t | (t >> vec);                    \
+      flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3; \
+    }                                   \
   }
 
-#define bbFlips_Up_3_0(pos, vec, maskh)	\
-  if (opp_bits_high & (1 << (pos - vec))) {				\
-    if ((~opp_bits_high & maskh) == 0) {				\
-      t = (int)(my_bits_low << (31 - (pos + 32 - vec * 4))) >> 31;	\
-      my_bits_high |= maskh & t;					\
-      flipped += 3 & t;							\
-    } else {								\
-      t = opp_bits_high & (my_bits_high << vec) & maskh;		\
-      my_bits_high |= t | (t << vec);					\
-      flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3;	\
-    }									\
-  }
-
-
-#define bbFlips_Down_2_3(pos, vec, maskh)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    if (opp_bits_low & (1 << (pos + vec * 2))) {			\
-      t = (opp_bits_high >> (pos + vec * 3 - 32)) & 1;			\
-      contig = 2 + t;							\
-      t &= (opp_bits_high >> (pos + vec * 4 - 32));			\
-      contig += t;							\
-      t &= (opp_bits_high >> (pos + vec * 5 - 32));			\
-      contig += t;							\
-      t = lsb_mask[contig - 2] & maskh;					\
-      if (my_bits_high & t) {						\
-        my_bits_high |= t;						\
-        my_bits_low |= (1 << (pos + vec)) | (1 << (pos + vec * 2));	\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = (my_bits_low >> (pos + vec * 2)) & 1;				\
-      my_bits_low |= t << (pos + vec);					\
-      flipped += t;							\
-    }									\
-  }
-
-#define bbFlips_Up_2_3(pos, vec, maskl)	\
-  if (opp_bits_high & (1 << (pos - vec))) {				\
-    if (opp_bits_high & (1 << (pos - vec * 2))) {			\
-      t = (opp_bits_low >> (pos + 32 - vec * 3)) & 1;			\
-      contig = 2 + t;							\
-      t &= (opp_bits_low >> (pos + 32 - vec * 4));			\
-      contig += t;							\
-      t &= (opp_bits_low >> (pos + 32 - vec * 5));			\
-      contig += t;							\
-      t = msb_mask[contig - 2] & maskl;					\
-      if (my_bits_low & t) {						\
-        my_bits_low |= t;						\
-        my_bits_high |= (1 << (pos - vec)) | (1 << (pos - vec * 2));	\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = (my_bits_high >> (pos - vec * 2)) & 1;			\
-      my_bits_high |= t << (pos - vec);					\
-      flipped += t;							\
-    }									\
-  }
-
-#define bbFlips_Down_2_2(pos, vec, maskh)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    if (opp_bits_low & (1 << (pos + vec * 2))) {			\
-      t = (opp_bits_high >> (pos + vec * 3 - 32)) & 1;			\
-      contig = 2 + t;							\
-      t &= (opp_bits_high >> (pos + vec * 4 - 32));			\
-      contig += t;							\
-      t = lsb_mask[contig - 2] & maskh;					\
-      if (my_bits_high & t) {						\
-        my_bits_high |= t;						\
-        my_bits_low |= (1 << (pos + vec)) | (1 << (pos + vec * 2));	\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = (my_bits_low >> (pos + vec * 2)) & 1;				\
-      my_bits_low |= t << (pos + vec);					\
-      flipped += t;							\
-    }									\
-  }
-
-#define bbFlips_Up_2_2(pos, vec, maskl)	\
-  if (opp_bits_high & (1 << (pos - vec))) {				\
-    if (opp_bits_high & (1 << (pos - vec * 2))) {			\
-      t = (opp_bits_low >> (pos + 32 - vec * 3)) & 1;			\
-      contig = 2 + t;							\
-      t &= (opp_bits_low >> (pos + 32 - vec * 4));			\
-      contig += t;							\
-      t = msb_mask[contig - 2] & maskl;					\
-      if (my_bits_low & t) {						\
-        my_bits_low |= t;						\
-        my_bits_high |= (1 << (pos - vec)) | (1 << (pos - vec * 2));	\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = (my_bits_high >> (pos - vec * 2)) & 1;			\
-      my_bits_high |= t << (pos - vec);					\
-      flipped += t;							\
-    }									\
-  }
-
-#define bbFlips_Down_2_1(pos, vec)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    if (opp_bits_low & (1 << (pos + vec * 2))) {			\
-      t = (opp_bits_high >> (pos + vec * 3 - 32)) & 1;			\
-      contig = 2 + t;							\
-      t = (t << (pos + vec * 4 - 32)) | (1 << (pos + vec * 3 - 32));	\
-      if (my_bits_high & t) {						\
-        my_bits_high |= t;						\
-        my_bits_low |= (1 << (pos + vec)) | (1 << (pos + vec * 2));	\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = (my_bits_low >> (pos + vec * 2)) & 1;				\
-      my_bits_low |= t << (pos + vec);					\
-      flipped += t;							\
-    }									\
-  }
-
-#define bbFlips_Up_2_1(pos, vec)	\
-  if (opp_bits_high & (1 << (pos - vec))) {				\
-    if (opp_bits_high & (1 << (pos - vec * 2))) {			\
-      t = (opp_bits_low >> (pos + 32 - vec * 3)) & 1;			\
-      contig = 2 + t;							\
-      t = (t << (pos + 32 - vec * 4)) | (1 << (pos + 32 - vec * 3));	\
-      if (my_bits_low & t) {						\
-        my_bits_low |= t;						\
-        my_bits_high |= (1 << (pos - vec)) | (1 << (pos - vec * 2));	\
-        flipped += contig;						\
-      }									\
-    } else {								\
-      t = (my_bits_high >> (pos - vec * 2)) & 1;			\
-      my_bits_high |= t << (pos - vec);					\
-      flipped += t;							\
-    }									\
-  }
-
-#define bbFlips_Down_2_0(pos, vec, mask)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    t = opp_bits_low & ((my_bits_low >> vec) | (my_bits_high << (32 - vec))) & mask;	\
-    my_bits_low |= t + (t >> vec);					\
-    flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3;	\
-  }
-
-#define bbFlips_Up_2_0(pos, vec, mask)	\
-  if (opp_bits_high & (1 << (pos - vec))) {				\
-    t = opp_bits_high & ((my_bits_high << vec) | (my_bits_low >> (32 - vec))) & mask;	\
-    my_bits_high |= t + (t << vec);					\
-    flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3;	\
+#define bbFlips_Up_3_0(pos, vec, maskh) \
+  if (opp_bits_high & (1 << (pos - vec))) {             \
+    if ((~opp_bits_high & maskh) == 0) {                \
+      t = (int)(my_bits_low << (31 - (pos + 32 - vec * 4))) >> 31;  \
+      my_bits_high |= maskh & t;                    \
+      flipped += 3 & t;                         \
+    } else {                                \
+      t = opp_bits_high & (my_bits_high << vec) & maskh;        \
+      my_bits_high |= t | (t << vec);                   \
+      flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3; \
+    }                                   \
   }
 
 
-#define bbFlips_Down_1_3(pos, vec, maskh)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    t = (opp_bits_high >> (pos + vec * 2 - 32)) & 1;			\
-    contig = 1 + t;							\
-    t &= (opp_bits_high >> (pos + vec * 3 - 32));			\
-    contig += t;							\
-    t &= (opp_bits_high >> (pos + vec * 4 - 32));			\
-    contig += t;							\
-    t = lsb_mask[contig - 1] & maskh;					\
-    if (my_bits_high & t) {						\
-      my_bits_high |= t;						\
-      my_bits_low |= 1 << (pos + vec);					\
-      flipped += contig;						\
-    }									\
+#define bbFlips_Down_2_3(pos, vec, maskh)   \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    if (opp_bits_low & (1 << (pos + vec * 2))) {            \
+      t = (opp_bits_high >> (pos + vec * 3 - 32)) & 1;          \
+      contig = 2 + t;                           \
+      t &= (opp_bits_high >> (pos + vec * 4 - 32));         \
+      contig += t;                          \
+      t &= (opp_bits_high >> (pos + vec * 5 - 32));         \
+      contig += t;                          \
+      t = lsb_mask[contig - 2] & maskh;                 \
+      if (my_bits_high & t) {                       \
+        my_bits_high |= t;                      \
+        my_bits_low |= (1 << (pos + vec)) | (1 << (pos + vec * 2)); \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = (my_bits_low >> (pos + vec * 2)) & 1;             \
+      my_bits_low |= t << (pos + vec);                  \
+      flipped += t;                         \
+    }                                   \
   }
 
-#define bbFlips_Up_1_3(pos, vec, maskl)	\
-  if (opp_bits_high & (1 << (pos - vec))) {				\
-    t = (opp_bits_low >> (pos + 32 - vec * 2)) & 1;			\
-    contig = 1 + t;							\
-    t &= (opp_bits_low >> (pos + 32 - vec * 3));			\
-    contig += t;							\
-    t &= (opp_bits_low >> (pos + 32 - vec * 4));			\
-    contig += t;							\
-    t = msb_mask[contig - 1] & maskl;					\
-    if (my_bits_low & t) {						\
-      my_bits_low |= t;							\
-      my_bits_high |= 1 << (pos - vec);					\
-      flipped += contig;						\
-    }									\
+#define bbFlips_Up_2_3(pos, vec, maskl) \
+  if (opp_bits_high & (1 << (pos - vec))) {             \
+    if (opp_bits_high & (1 << (pos - vec * 2))) {           \
+      t = (opp_bits_low >> (pos + 32 - vec * 3)) & 1;           \
+      contig = 2 + t;                           \
+      t &= (opp_bits_low >> (pos + 32 - vec * 4));          \
+      contig += t;                          \
+      t &= (opp_bits_low >> (pos + 32 - vec * 5));          \
+      contig += t;                          \
+      t = msb_mask[contig - 2] & maskl;                 \
+      if (my_bits_low & t) {                        \
+        my_bits_low |= t;                       \
+        my_bits_high |= (1 << (pos - vec)) | (1 << (pos - vec * 2));    \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = (my_bits_high >> (pos - vec * 2)) & 1;            \
+      my_bits_high |= t << (pos - vec);                 \
+      flipped += t;                         \
+    }                                   \
   }
 
-#define bbFlips_Down_1_2(pos, vec, maskh)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    t = (opp_bits_high >> (pos + vec * 2 - 32)) & 1;			\
-    contig = 1 + t;							\
-    t &= (opp_bits_high >> (pos + vec * 3 - 32));			\
-    contig += t;							\
-    t = lsb_mask[contig - 1] & maskh;					\
-    if (my_bits_high & t) {						\
-      my_bits_high |= t;						\
-      my_bits_low |= 1 << (pos + vec);					\
-      flipped += contig;						\
-    }									\
+#define bbFlips_Down_2_2(pos, vec, maskh)   \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    if (opp_bits_low & (1 << (pos + vec * 2))) {            \
+      t = (opp_bits_high >> (pos + vec * 3 - 32)) & 1;          \
+      contig = 2 + t;                           \
+      t &= (opp_bits_high >> (pos + vec * 4 - 32));         \
+      contig += t;                          \
+      t = lsb_mask[contig - 2] & maskh;                 \
+      if (my_bits_high & t) {                       \
+        my_bits_high |= t;                      \
+        my_bits_low |= (1 << (pos + vec)) | (1 << (pos + vec * 2)); \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = (my_bits_low >> (pos + vec * 2)) & 1;             \
+      my_bits_low |= t << (pos + vec);                  \
+      flipped += t;                         \
+    }                                   \
   }
 
-#define bbFlips_Up_1_2(pos, vec, maskl)	\
-  if (opp_bits_high & (1 << (pos - vec))) {				\
-    t = (opp_bits_low >> (pos + 32 - vec * 2)) & 1;			\
-    contig = 1 + t;							\
-    t &= (opp_bits_low >> (pos + 32 - vec * 3));			\
-    contig += t;							\
-    t = msb_mask[contig - 1] & maskl;					\
-    if (my_bits_low & t) {						\
-      my_bits_low |= t;							\
-      my_bits_high |= 1 << (pos - vec);					\
-      flipped += contig;						\
-    }									\
+#define bbFlips_Up_2_2(pos, vec, maskl) \
+  if (opp_bits_high & (1 << (pos - vec))) {             \
+    if (opp_bits_high & (1 << (pos - vec * 2))) {           \
+      t = (opp_bits_low >> (pos + 32 - vec * 3)) & 1;           \
+      contig = 2 + t;                           \
+      t &= (opp_bits_low >> (pos + 32 - vec * 4));          \
+      contig += t;                          \
+      t = msb_mask[contig - 2] & maskl;                 \
+      if (my_bits_low & t) {                        \
+        my_bits_low |= t;                       \
+        my_bits_high |= (1 << (pos - vec)) | (1 << (pos - vec * 2));    \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = (my_bits_high >> (pos - vec * 2)) & 1;            \
+      my_bits_high |= t << (pos - vec);                 \
+      flipped += t;                         \
+    }                                   \
   }
 
-#define bbFlips_Down_1_1(pos, vec)	\
-  if (opp_bits_low & (1 << (pos + vec))) {				\
-    fl = (my_bits_high << (32 - vec)) & (1 << (pos + vec));		\
-    t = opp_bits_high & (my_bits_high >> vec) & (1 << (pos + vec * 2 - 32));	\
-    my_bits_low |= fl + (t << (32 - vec));				\
-    my_bits_high |= t;							\
-    flipped += ((fl >> (pos + vec)) | (t >> (pos + vec * 2 - 32 - 1)));	\
+#define bbFlips_Down_2_1(pos, vec)  \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    if (opp_bits_low & (1 << (pos + vec * 2))) {            \
+      t = (opp_bits_high >> (pos + vec * 3 - 32)) & 1;          \
+      contig = 2 + t;                           \
+      t = (t << (pos + vec * 4 - 32)) | (1 << (pos + vec * 3 - 32));    \
+      if (my_bits_high & t) {                       \
+        my_bits_high |= t;                      \
+        my_bits_low |= (1 << (pos + vec)) | (1 << (pos + vec * 2)); \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = (my_bits_low >> (pos + vec * 2)) & 1;             \
+      my_bits_low |= t << (pos + vec);                  \
+      flipped += t;                         \
+    }                                   \
   }
 
-#define bbFlips_Up_1_1(pos, vec)	\
-  if (opp_bits_high & (1 << (pos - vec))) {				\
-    fl = (my_bits_low >> (32 - vec)) & (1 << (pos - vec));		\
-    t = opp_bits_low & (my_bits_low << vec) & (1 << (pos + 32 - vec * 2));	\
-    my_bits_high |= fl + (t >> (32 - vec));				\
-    my_bits_low |= t;							\
-    flipped += ((fl >> (pos - vec)) | (t >> (pos + 32 - vec * 2 - 1)));	\
+#define bbFlips_Up_2_1(pos, vec)    \
+  if (opp_bits_high & (1 << (pos - vec))) {             \
+    if (opp_bits_high & (1 << (pos - vec * 2))) {           \
+      t = (opp_bits_low >> (pos + 32 - vec * 3)) & 1;           \
+      contig = 2 + t;                           \
+      t = (t << (pos + 32 - vec * 4)) | (1 << (pos + 32 - vec * 3));    \
+      if (my_bits_low & t) {                        \
+        my_bits_low |= t;                       \
+        my_bits_high |= (1 << (pos - vec)) | (1 << (pos - vec * 2));    \
+        flipped += contig;                      \
+      }                                 \
+    } else {                                \
+      t = (my_bits_high >> (pos - vec * 2)) & 1;            \
+      my_bits_high |= t << (pos - vec);                 \
+      flipped += t;                         \
+    }                                   \
   }
 
-#define bbFlips_Down_1_0(pos, vec)	\
-  t = opp_bits_low & (my_bits_high << (32 - vec)) & (1 << (pos + vec));	\
-  my_bits_low |= t;							\
+#define bbFlips_Down_2_0(pos, vec, mask)    \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    t = opp_bits_low & ((my_bits_low >> vec) | (my_bits_high << (32 - vec))) & mask;    \
+    my_bits_low |= t + (t >> vec);                  \
+    flipped += ((t >> (pos + vec)) | (t >> (pos + vec * 2 - 1))) & 3;   \
+  }
+
+#define bbFlips_Up_2_0(pos, vec, mask)  \
+  if (opp_bits_high & (1 << (pos - vec))) {             \
+    t = opp_bits_high & ((my_bits_high << vec) | (my_bits_low >> (32 - vec))) & mask;   \
+    my_bits_high |= t + (t << vec);                 \
+    flipped += ((t >> (pos - vec)) | (t >> (pos - vec * 2 - 1))) & 3;   \
+  }
+
+
+#define bbFlips_Down_1_3(pos, vec, maskh)   \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    t = (opp_bits_high >> (pos + vec * 2 - 32)) & 1;            \
+    contig = 1 + t;                         \
+    t &= (opp_bits_high >> (pos + vec * 3 - 32));           \
+    contig += t;                            \
+    t &= (opp_bits_high >> (pos + vec * 4 - 32));           \
+    contig += t;                            \
+    t = lsb_mask[contig - 1] & maskh;                   \
+    if (my_bits_high & t) {                     \
+      my_bits_high |= t;                        \
+      my_bits_low |= 1 << (pos + vec);                  \
+      flipped += contig;                        \
+    }                                   \
+  }
+
+#define bbFlips_Up_1_3(pos, vec, maskl) \
+  if (opp_bits_high & (1 << (pos - vec))) {             \
+    t = (opp_bits_low >> (pos + 32 - vec * 2)) & 1;         \
+    contig = 1 + t;                         \
+    t &= (opp_bits_low >> (pos + 32 - vec * 3));            \
+    contig += t;                            \
+    t &= (opp_bits_low >> (pos + 32 - vec * 4));            \
+    contig += t;                            \
+    t = msb_mask[contig - 1] & maskl;                   \
+    if (my_bits_low & t) {                      \
+      my_bits_low |= t;                         \
+      my_bits_high |= 1 << (pos - vec);                 \
+      flipped += contig;                        \
+    }                                   \
+  }
+
+#define bbFlips_Down_1_2(pos, vec, maskh)   \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    t = (opp_bits_high >> (pos + vec * 2 - 32)) & 1;            \
+    contig = 1 + t;                         \
+    t &= (opp_bits_high >> (pos + vec * 3 - 32));           \
+    contig += t;                            \
+    t = lsb_mask[contig - 1] & maskh;                   \
+    if (my_bits_high & t) {                     \
+      my_bits_high |= t;                        \
+      my_bits_low |= 1 << (pos + vec);                  \
+      flipped += contig;                        \
+    }                                   \
+  }
+
+#define bbFlips_Up_1_2(pos, vec, maskl) \
+  if (opp_bits_high & (1 << (pos - vec))) {             \
+    t = (opp_bits_low >> (pos + 32 - vec * 2)) & 1;         \
+    contig = 1 + t;                         \
+    t &= (opp_bits_low >> (pos + 32 - vec * 3));            \
+    contig += t;                            \
+    t = msb_mask[contig - 1] & maskl;                   \
+    if (my_bits_low & t) {                      \
+      my_bits_low |= t;                         \
+      my_bits_high |= 1 << (pos - vec);                 \
+      flipped += contig;                        \
+    }                                   \
+  }
+
+#define bbFlips_Down_1_1(pos, vec)  \
+  if (opp_bits_low & (1 << (pos + vec))) {              \
+    fl = (my_bits_high << (32 - vec)) & (1 << (pos + vec));     \
+    t = opp_bits_high & (my_bits_high >> vec) & (1 << (pos + vec * 2 - 32));    \
+    my_bits_low |= fl + (t << (32 - vec));              \
+    my_bits_high |= t;                          \
+    flipped += ((fl >> (pos + vec)) | (t >> (pos + vec * 2 - 32 - 1))); \
+  }
+
+#define bbFlips_Up_1_1(pos, vec)    \
+  if (opp_bits_high & (1 << (pos - vec))) {             \
+    fl = (my_bits_low >> (32 - vec)) & (1 << (pos - vec));      \
+    t = opp_bits_low & (my_bits_low << vec) & (1 << (pos + 32 - vec * 2));  \
+    my_bits_high |= fl + (t >> (32 - vec));             \
+    my_bits_low |= t;                           \
+    flipped += ((fl >> (pos - vec)) | (t >> (pos + 32 - vec * 2 - 1))); \
+  }
+
+#define bbFlips_Down_1_0(pos, vec)  \
+  t = opp_bits_low & (my_bits_high << (32 - vec)) & (1 << (pos + vec)); \
+  my_bits_low |= t;                         \
   flipped += t >> (pos + vec)
 
-#define bbFlips_Up_1_0(pos, vec)	\
-  t = opp_bits_high & (my_bits_low >> (32 - vec)) & (1 << (pos - vec));	\
-  my_bits_high |= t;							\
+#define bbFlips_Up_1_0(pos, vec)    \
+  t = opp_bits_high & (my_bits_low >> (32 - vec)) & (1 << (pos - vec)); \
+  my_bits_high |= t;                            \
   flipped += t >> (pos - vec)
 
 
 #if 1
-#define bbFlips_Down_0_3(pos, vec, mask)	\
-  if (opp_bits_high & (1 << (pos + vec - 32))) {			\
-    t = (opp_bits_high >> (pos + vec * 2 - 32)) & 1;			\
-    contig = 1 + t;							\
-    t &= (opp_bits_high >> (pos + vec * 3 - 32));			\
-    contig += t;							\
-    fl = lsb_mask[contig] & mask;					\
-    t = -(int)(my_bits_high & fl) >> 31;				\
-    my_bits_high |= fl & t;						\
-    flipped += contig & t;						\
+#define bbFlips_Down_0_3(pos, vec, mask)    \
+  if (opp_bits_high & (1 << (pos + vec - 32))) {            \
+    t = (opp_bits_high >> (pos + vec * 2 - 32)) & 1;            \
+    contig = 1 + t;                         \
+    t &= (opp_bits_high >> (pos + vec * 3 - 32));           \
+    contig += t;                            \
+    fl = lsb_mask[contig] & mask;                   \
+    t = -(int)(my_bits_high & fl) >> 31;                \
+    my_bits_high |= fl & t;                     \
+    flipped += contig & t;                      \
   }
 #else
-#define bbFlips_Down_0_3(pos, vec, mask)	\
-  if (opp_bits_high & (1 << (pos + vec - 32))) {			\
-    t = opp_bits_high & (1 << (pos + vec * 2 - 32));			\
-    fl = t + (1 << (pos + vec - 32));					\
-    contig = 1 + (t >> (pos + vec * 2 - 32));				\
-    t = opp_bits_high & (t << vec);					\
-    fl += t;								\
-    contig += (t >> (pos + vec * 3 - 32));				\
-    t = -(int)(my_bits_high & (fl << vec)) >> 31;			\
-    my_bits_high |= fl & t;						\
-    flipped += contig & t;						\
+#define bbFlips_Down_0_3(pos, vec, mask)    \
+  if (opp_bits_high & (1 << (pos + vec - 32))) {            \
+    t = opp_bits_high & (1 << (pos + vec * 2 - 32));            \
+    fl = t + (1 << (pos + vec - 32));                   \
+    contig = 1 + (t >> (pos + vec * 2 - 32));               \
+    t = opp_bits_high & (t << vec);                 \
+    fl += t;                                \
+    contig += (t >> (pos + vec * 3 - 32));              \
+    t = -(int)(my_bits_high & (fl << vec)) >> 31;           \
+    my_bits_high |= fl & t;                     \
+    flipped += contig & t;                      \
   }
 #endif
 
-#define bbFlips_Up_0_3(pos, vec, mask)	\
-  if (opp_bits_low & (1 << (pos + 32 - vec))) {				\
-    t = (opp_bits_low >> (pos + 32 - vec * 2)) & 1;			\
-    contig = 1 + t;							\
-    t &= (opp_bits_low >> (pos + 32 - vec * 3));			\
-    contig += t;							\
-    fl = msb_mask[contig] & mask;					\
-    t = -(int)(my_bits_low & fl) >> 31;					\
-    my_bits_low |= fl & t;						\
-    flipped += contig & t;						\
+#define bbFlips_Up_0_3(pos, vec, mask)  \
+  if (opp_bits_low & (1 << (pos + 32 - vec))) {             \
+    t = (opp_bits_low >> (pos + 32 - vec * 2)) & 1;         \
+    contig = 1 + t;                         \
+    t &= (opp_bits_low >> (pos + 32 - vec * 3));            \
+    contig += t;                            \
+    fl = msb_mask[contig] & mask;                   \
+    t = -(int)(my_bits_low & fl) >> 31;                 \
+    my_bits_low |= fl & t;                      \
+    flipped += contig & t;                      \
   }
 
-#define bbFlips_Down_0_2(pos, vec, mask)	\
-  t = opp_bits_high & ((opp_bits_high << vec) | (1 << (pos + vec - 32))) & (my_bits_high >> vec) & mask;	\
-  my_bits_high |= t + (t >> vec);					\
+#define bbFlips_Down_0_2(pos, vec, mask)    \
+  t = opp_bits_high & ((opp_bits_high << vec) | (1 << (pos + vec - 32))) & (my_bits_high >> vec) & mask;    \
+  my_bits_high |= t + (t >> vec);                   \
   flipped += ((t >> (pos + vec - 32)) | (t >> (pos + vec * 2 - 32 - 1))) & 3
 
-#define bbFlips_Up_0_2(pos, vec, mask)	\
-  t = opp_bits_low & ((opp_bits_low >> vec) | (1 << (pos + 32 - vec))) & (my_bits_low << vec) & mask;	\
-  my_bits_low |= t + (t << vec);					\
+#define bbFlips_Up_0_2(pos, vec, mask)  \
+  t = opp_bits_low & ((opp_bits_low >> vec) | (1 << (pos + 32 - vec))) & (my_bits_low << vec) & mask;   \
+  my_bits_low |= t + (t << vec);                    \
   flipped += ((t >> (pos + 32 - vec)) | (t >> (pos + 32 - vec * 2 - 1))) & 3
 
-#define bbFlips_Down_0_1(pos, vec)	\
-  t = opp_bits_high & (my_bits_high >> vec) & (1 << (pos + vec - 32));	\
-  my_bits_high |= t;							\
+#define bbFlips_Down_0_1(pos, vec)  \
+  t = opp_bits_high & (my_bits_high >> vec) & (1 << (pos + vec - 32));  \
+  my_bits_high |= t;                            \
   flipped += t >> (pos + vec - 32)
 
-#define bbFlips_Up_0_1(pos, vec)	\
-  t = opp_bits_low & (my_bits_low << vec) & (1 << (pos + 32 - vec));	\
-  my_bits_low |= t;							\
+#define bbFlips_Up_0_1(pos, vec)    \
+  t = opp_bits_low & (my_bits_low << vec) & (1 << (pos + 32 - vec));    \
+  my_bits_low |= t;                         \
   flipped += t >> (pos + 32 - vec)
 
 ////
