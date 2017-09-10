@@ -41,14 +41,14 @@ int flip_direction[100][16];   /* 100 * 9 used */
 int **first_flipped_disc[100];
 int *flipped_disc[100][8];
 const int dir_mask[64] = {
-	81,  81,  87,  87,  87,  87,  22,  22,
-	81,  81,  87,  87,  87,  87,  22,  22,
-	121, 121, 255, 255, 255, 255, 182, 182,
-	121, 121, 255, 255, 255, 255, 182, 182,
-	121, 121, 255, 255, 255, 255, 182, 182,
-	121, 121, 255, 255, 255, 255, 182, 182,
-	41,  41,  171, 171, 171, 171, 162, 162,
-	41,  41,  171, 171, 171, 171, 162, 162
+    81,  81,  87,  87,  87,  87,  22,  22,
+    81,  81,  87,  87,  87,  87,  22,  22,
+    121, 121, 255, 255, 255, 255, 182, 182,
+    121, 121, 255, 255, 255, 255, 182, 182,
+    121, 121, 255, 255, 255, 255, 182, 182,
+    121, 121, 255, 255, 255, 255, 182, 182,
+    41,  41,  171, 171, 171, 171, 162, 162,
+    41,  41,  171, 171, 171, 171, 162, 162
 };
 const int move_offset[8] = { 1, -1, 7, -7, 8, -8, 9, -9 };
 
@@ -65,26 +65,27 @@ static int sweep_status[MAX_SEARCH_DEPTH];
 */
 
 void
-init_moves( void ) {
-	int i, j, k;
-	int pos;
-	int feasible;
+init_moves(void) {
+    int i, j, k;
+    int pos;
+    int feasible;
 
-	for ( i = 0; i < 8; i++ ) {
-		for ( j = 0; j < 8; j++ ) {
-			pos = 8 * i + j;
-			for ( k = 0; k <= 8; k++ )
-				flip_direction[pos][k] = 0;
-			feasible = 0;
-			for ( k = 0; k < 8; k++ ) {
-				if ( dir_mask[pos] & (1 << k) ) {
-					flip_direction[pos][feasible] = move_offset[k];
-					feasible++;
-				}
-			}
-			first_flip_direction[pos] = &flip_direction[pos][0];
-		}
-	}
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+            pos = 8 * i + j;
+            for (k = 0; k <= 8; k++) {
+                flip_direction[pos][k] = 0;
+            }
+            feasible = 0;
+            for (k = 0; k < 8; k++) {
+                if (dir_mask[pos] & (1 << k)) {
+                    flip_direction[pos][feasible] = move_offset[k];
+                    feasible++;
+                }
+            }
+            first_flip_direction[pos] = &flip_direction[pos][0];
+        }
+    }
 }
 
 /*
@@ -92,27 +93,27 @@ init_moves( void ) {
    Calculate the neighborhood masks
 */
 void
-init_neighborhood( void ) {
-	int pos;
-	int dir_shift[8] = {1, -1, 7, -7, 8, -8, 9, -9};
+init_neighborhood(void) {
+    int pos;
+    int dir_shift[8] = {1, -1, 7, -7, 8, -8, 9, -9};
 
-	for ( pos = 0; pos < 64; pos++ ) {
-		/* Create the neighborhood mask for the square POS */
-		unsigned int k;
+    for (pos = 0; pos < 64; pos++) {
+        /* Create the neighborhood mask for the square POS */
+        unsigned int k;
 
-		neighborhood_mask[pos].low = 0;
-		neighborhood_mask[pos].high = 0;
+        neighborhood_mask[pos].low = 0;
+        neighborhood_mask[pos].high = 0;
 
-		for ( k = 0; k < 8; k++ ) {
-			if ( dir_mask[pos] & (1 << k) ) {
-				unsigned int neighbor = pos + dir_shift[k];
-				if ( neighbor < 32 )
-					neighborhood_mask[pos].low |= (1 << neighbor);
-				else
-					neighborhood_mask[pos].high |= (1 << (neighbor - 32));
-			}
-		}
-	}
+        for (k = 0; k < 8; k++) {
+            if (dir_mask[pos] & (1 << k)) {
+                unsigned int neighbor = pos + dir_shift[k];
+                if (neighbor < 32)
+                    neighborhood_mask[pos].low |= (1 << neighbor);
+                else
+                    neighborhood_mask[pos].high |= (1 << (neighbor - 32));
+            }
+        }
+    }
 }
 
 /*
@@ -121,8 +122,8 @@ init_neighborhood( void ) {
 */
 
 INLINE static void
-reset_generation( int color ) {
-	sweep_status[disks_played] = 0;
+reset_generation(int color) {
+    sweep_status[disks_played] = 0;
 }
 
 /*
@@ -131,23 +132,23 @@ reset_generation( int color ) {
 */
 
 int
-game_in_progress( BitBoard my_bits, BitBoard opp_bits, int color ) {
-	int black_count, white_count;
+game_in_progress(BitBoard my_bits, BitBoard opp_bits, int color) {
+    int black_count, white_count;
 
-	if ( color == CHESS_BLACK ) {
-		generate_all( my_bits, opp_bits, CHESS_BLACK );
-		black_count = move_count[disks_played];
-		generate_all( opp_bits, my_bits, CHESS_WHITE );
-		white_count = move_count[disks_played];
-	}
-	else {
-		generate_all( opp_bits, my_bits, CHESS_BLACK );
-		black_count = move_count[disks_played];
-		generate_all( my_bits, opp_bits, CHESS_WHITE );
-		white_count = move_count[disks_played];
-	}
+    if (color == CHESS_BLACK) {
+        generate_all(my_bits, opp_bits, CHESS_BLACK);
+        black_count = move_count[disks_played];
+        generate_all(opp_bits, my_bits, CHESS_WHITE);
+        white_count = move_count[disks_played];
+    }
+    else {
+        generate_all(opp_bits, my_bits, CHESS_BLACK);
+        black_count = move_count[disks_played];
+        generate_all(my_bits, opp_bits, CHESS_WHITE);
+        white_count = move_count[disks_played];
+    }
 
-	return (black_count > 0) || (white_count > 0);
+    return (black_count > 0) || (white_count > 0);
 }
 
 /*
@@ -156,30 +157,30 @@ game_in_progress( BitBoard my_bits, BitBoard opp_bits, int color ) {
 */
 
 INLINE void
-generate_all( const BitBoard my_bits,
-			 const BitBoard opp_bits, int color ) {
-	int count, pos;
-	BitPosition movelist_pos;
-	BitBoard *movelist_bits;
-	movelist_bits = (BitBoard *)ADDR_ALGIN_8BYTES(&movelist_pos);
+generate_all(const BitBoard my_bits,
+             const BitBoard opp_bits, int color) {
+    int count, pos;
+    BitPosition movelist_pos;
+    BitBoard *movelist_bits;
+    movelist_bits = (BitBoard *)ADDR_ALGIN_8BYTES(&movelist_pos);
 
-	reset_generation( color );
-	count = 0;
+    reset_generation(color);
+    count = 0;
 
-	// generate movelist
-	bitboard_gen_movelist(my_bits, opp_bits, movelist_bits);
-	if ( (movelist_bits->low != 0) || (movelist_bits->high != 0) ) {
-		for ( pos = 0; pos < 64; pos++ ) {
-			if ( ((movelist_bits->low & square_mask[pos].low) != 0) ||
-				((movelist_bits->high & square_mask[pos].high) != 0) ) {
-				move_list[disks_played][count] = pos;
-				count++;
-			}
-		}
-	}
+    // generate movelist
+    bitboard_gen_movelist(my_bits, opp_bits, movelist_bits);
+    if ((movelist_bits->low != 0) || (movelist_bits->high != 0)) {
+        for (pos = 0; pos < 64; pos++) {
+            if (((movelist_bits->low & square_mask[pos].low) != 0) ||
+                ((movelist_bits->high & square_mask[pos].high) != 0)) {
+                move_list[disks_played][count] = pos;
+                count++;
+            }
+        }
+    }
 
-	move_list[disks_played][count] = CHESS_ILLEGAL;
-	move_count[disks_played] = count;
+    move_list[disks_played][count] = CHESS_ILLEGAL;
+    move_count[disks_played] = count;
 }
 
 /*
@@ -188,28 +189,26 @@ generate_all( const BitBoard my_bits,
 */
 
 int
-get_move( int color ) {
-	char buffer[255];
-	int ready = 0;
-	int curr_move;
+get_move(int color) {
+    char buffer[255];
+    int ready = 0;
+    int curr_move;
 
-	while ( !ready ) {
-		if ( color == CHESS_BLACK )
-			//printf( "%s: ", BLACK_PROMPT );
-			printf( "%s: ", "Black move" );
-		else
-			//printf( "%s: ", WHITE_PROMPT );
-			printf( "%s: ", "White move" );
-		scanf( "%s", buffer );
-		curr_move = atoi( buffer );
-		ready = move_is_valid2( curr_move, color );
-		if ( !ready ) {
-			curr_move = (buffer[0] - 'a' + 1) + 10 * (buffer[1] - '0');
-			ready = move_is_valid2( curr_move, color );
-		}
-	}
+    while (!ready) {
+        if (color == CHESS_BLACK)
+            printf("%s: ", "Black move");
+        else
+            printf("%s: ", "White move");
+        scanf("%s", buffer);
+        curr_move = atoi(buffer);
+        ready = move_is_valid2(curr_move, color);
+        if (!ready) {
+            curr_move = (buffer[0] - 'a' + 1) + 10 * (buffer[1] - '0');
+            ready = move_is_valid2(curr_move, color);
+        }
+    }
 
-	return curr_move;
+    return curr_move;
 }
 
 /*
@@ -217,30 +216,32 @@ get_move( int color ) {
    Determines if a move is legal.
 */
 INLINE int
-move_is_valid( const BitBoard my_bits,
-					const BitBoard opp_bits,
-					int move ) {
-	int flip_count;
+move_is_valid(const BitBoard my_bits,
+                    const BitBoard opp_bits,
+                    int move) {
+    int flip_count;
 
-	///*
-	if ( (move == D4) || (move > H8) || (move < A1) ||
-		(((square_mask[move].low & my_bits.low) != 0) ||
-			((square_mask[move].high & my_bits.high) != 0) ||
-			((square_mask[move].low & opp_bits.low) != 0) ||
-			((square_mask[move].high & opp_bits.high) != 0)) )
-		return FALSE;
-	//*/
+#if 1
+    if ((move == D4) || (move > H8) || (move < A1) ||
+        (((square_mask[move].low & my_bits.low) != 0) ||
+         ((square_mask[move].high & my_bits.high) != 0) ||
+         ((square_mask[move].low & opp_bits.low) != 0) ||
+         ((square_mask[move].high & opp_bits.high) != 0))) {
+        return FALSE;
+    }
+#endif
 
-	//BitBoard fliplist_bits;
-	if ( ((neighborhood_mask[move].low & opp_bits.low) |
-		(neighborhood_mask[move].high & opp_bits.high)) != 0 ) {
-		flip_count = CheckFlips_wrapper( move, my_bits, opp_bits );
-		//flip_count = GetFlipLists_wrapper( move, my_bits, opp_bits );
-		//flip_count = GetFlipLists_MMX( my_bits, opp_bits, &fliplist_bits, move );
-		return (flip_count > 0);
-	}
-	else
-		return 0;
+    //BitBoard fliplist_bits;
+    if (((neighborhood_mask[move].low & opp_bits.low) |
+        (neighborhood_mask[move].high & opp_bits.high)) != 0) {
+        flip_count = CheckFlips_wrapper(move, my_bits, opp_bits);
+        //flip_count = GetFlipLists_wrapper(move, my_bits, opp_bits);
+        //flip_count = GetFlipLists_MMX(my_bits, opp_bits, &fliplist_bits, move);
+        return (flip_count > 0);
+    }
+    else {
+        return 0;
+    }
 }
 
 /*
@@ -248,25 +249,25 @@ move_is_valid( const BitBoard my_bits,
    Determines if a move is legal.
 */
 INLINE int
-move_is_valid2( int move, int color ) {
-	int i, pos, count;
+move_is_valid2(int move, int color) {
+    int i, pos, count;
 
-	if ( (move < A1) || (move > H8) || (board[move] != CHESS_EMPTY) )
-		return FALSE;
+    if ((move < A1) || (move > H8) || (board[move] != CHESS_EMPTY))
+        return FALSE;
 
-	for ( i = 0; i < 8; i++ ) {
-		if ( dir_mask[move] & (1 << i) ) {
-			for ( pos = move + move_offset[i], count = 0;
-				board[pos] == OPP_COLOR( color ); pos += move_offset[i], count++ )
-				;
-			if ( board[pos] == color ) {
-				if ( count >= 1 )
-					return TRUE;
-			}
-		}
-	}
+    for (i = 0; i < 8; i++) {
+        if (dir_mask[move] & (1 << i)) {
+            for (pos = move + move_offset[i], count = 0;
+                board[pos] == OPP_COLOR(color); pos += move_offset[i], count++)
+                ;
+            if (board[pos] == color) {
+                if (count >= 1)
+                    return TRUE;
+            }
+        }
+    }
 
-	return FALSE;
+    return FALSE;
 }
 
 /*
@@ -277,21 +278,23 @@ move_is_valid2( int move, int color ) {
 */
 
 INLINE int
-CheckFlips_wrapper( int sq,
-				   BitBoard my_bits,
-				   BitBoard opp_bits ) {
-	int flipped;
+CheckFlips_wrapper(int sq,
+                   BitBoard my_bits,
+                   BitBoard opp_bits) {
+    int flipped;
 
-	//flipped = CheckFlips_bitboard[sq]( my_bits, opp_bits );
-	///*
-	if ( ((neighborhood_mask[sq].low & opp_bits.low) |
-		(neighborhood_mask[sq].high & opp_bits.high)) != 0 )
-		flipped = CheckFlips_bitboard[sq]( my_bits, opp_bits );
-	else
-		flipped = 0;
-	//*/
+    //flipped = CheckFlips_bitboard[sq](my_bits, opp_bits);
+#if 1
+    if (((neighborhood_mask[sq].low & opp_bits.low) |
+        (neighborhood_mask[sq].high & opp_bits.high)) != 0) {
+        flipped = CheckFlips_bitboard[sq](my_bits, opp_bits);
+    }
+    else {
+        flipped = 0;
+    }
+#endif
 
-	return flipped;
+    return flipped;
 }
 
 /*
@@ -302,32 +305,33 @@ CheckFlips_wrapper( int sq,
 */
 
 INLINE int
-TestFlips_wrapper( int sq,
-				  BitBoard my_bits,
-				  BitBoard opp_bits ) {
-	int flipped;
+TestFlips_wrapper(int sq,
+                  BitBoard my_bits,
+                  BitBoard opp_bits) {
+    int flipped;
 
-	/*
-	if ( (sq == D4) || (sq > H8) || (sq < A1) ||
-		(((square_mask[sq].low & my_bits.low) != 0) ||
-			((square_mask[sq].high & my_bits.high) != 0) ||
-			((square_mask[sq].low & opp_bits.low) != 0) ||
-			((square_mask[sq].high & opp_bits.high) != 0)) )
-		return 0;
-	//*/
+    /*
+    if ((sq == D4) || (sq > H8) || (sq < A1) ||
+        (((square_mask[sq].low & my_bits.low) != 0) ||
+            ((square_mask[sq].high & my_bits.high) != 0) ||
+            ((square_mask[sq].low & opp_bits.low) != 0) ||
+            ((square_mask[sq].high & opp_bits.high) != 0)))
+        return 0;
+    //*/
 
-	//flipped = TestFlips_bitboard[sq]( my_bits, opp_bits );
-	///*
-	if ( ((neighborhood_mask[sq].low & opp_bits.low) |
-		(neighborhood_mask[sq].high & opp_bits.high)) != 0 ) {
-		//flipped = TestFlips_bitboard4[sq]( my_bits, opp_bits );
-		flipped = TestFlips_bitboard1[sq]( my_bits.high, my_bits.low, opp_bits.high, opp_bits.low );
-	}
-	else
-		flipped = 0;
-	//*/
+    //flipped = TestFlips_bitboard[sq](my_bits, opp_bits);
+#if 1
+    if (((neighborhood_mask[sq].low & opp_bits.low) |
+        (neighborhood_mask[sq].high & opp_bits.high)) != 0) {
+        //flipped = TestFlips_bitboard4[sq](my_bits, opp_bits);
+        flipped = TestFlips_bitboard1[sq](my_bits.high, my_bits.low, opp_bits.high, opp_bits.low);
+    }
+    else {
+        flipped = 0;
+    }
+#endif
 
-	return flipped;
+    return flipped;
 }
 
 /*
@@ -338,23 +342,24 @@ TestFlips_wrapper( int sq,
 */
 
 INLINE int
-GetFlipLists_wrapper( int sq,
-					 BitBoard my_bits,
-					 BitBoard opp_bits ) {
-	int flipped;
+GetFlipLists_wrapper(int sq,
+                     BitBoard my_bits,
+                     BitBoard opp_bits) {
+    int flipped;
 
-	//flipped = TestFlips_bitboard[sq]( my_bits, opp_bits );
-	///*
-	if ( ((neighborhood_mask[sq].low & opp_bits.low) |
-		(neighborhood_mask[sq].high & opp_bits.high)) != 0 ) {
-		//flipped = TestFlips_bitboard4[sq]( my_bits, opp_bits );
-		flipped = TestFlips_bitboard1[sq]( my_bits.high, my_bits.low, opp_bits.high, opp_bits.low );
-	}
-	else
-		flipped = 0;
-	//*/
+    //flipped = TestFlips_bitboard[sq](my_bits, opp_bits);
+#if 1
+    if (((neighborhood_mask[sq].low & opp_bits.low) |
+        (neighborhood_mask[sq].high & opp_bits.high)) != 0) {
+        //flipped = TestFlips_bitboard4[sq](my_bits, opp_bits);
+        flipped = TestFlips_bitboard1[sq](my_bits.high, my_bits.low, opp_bits.high, opp_bits.low);
+    }
+    else {
+        flipped = 0;
+    }
+#endif
 
-	return flipped;
+    return flipped;
 }
 
 /*
@@ -364,41 +369,41 @@ GetFlipLists_wrapper( int sq,
 
 INLINE void
 cal_flip_disc_hash0(const BitBoard fliplist_bits, int color) {
-	register unsigned int flip_low;
-	register unsigned int flip_high;
-	register unsigned long mask;
+    register unsigned int flip_low;
+    register unsigned int flip_high;
+    register unsigned long mask;
 
-	flip_low = fliplist_bits.low;
-	flip_high = fliplist_bits.high;
+    flip_low = fliplist_bits.low;
+    flip_high = fliplist_bits.high;
 
-	g_hash_update_v1 = 0;
-	g_hash_update_v2 = 0;
+    g_hash_update_v1 = 0;
+    g_hash_update_v2 = 0;
 
-	mask = flip_low & 0x0000fffful;
-	if ( mask ) {
-		g_hash_update_v1 ^= hash_two_row_value1[0][mask];
-		g_hash_update_v2 ^= hash_two_row_value2[0][mask];
-	}
+    mask = flip_low & 0x0000fffful;
+    if (mask) {
+        g_hash_update_v1 ^= hash_two_row_value1[0][mask];
+        g_hash_update_v2 ^= hash_two_row_value2[0][mask];
+    }
 
-	mask = (flip_low & 0xffff0000ul);
-	if ( mask ) {
-		mask >>= 16;
-		g_hash_update_v1 ^= hash_two_row_value1[1][mask];
-		g_hash_update_v2 ^= hash_two_row_value2[1][mask];
-	}
+    mask = (flip_low & 0xffff0000ul);
+    if (mask) {
+        mask >>= 16;
+        g_hash_update_v1 ^= hash_two_row_value1[1][mask];
+        g_hash_update_v2 ^= hash_two_row_value2[1][mask];
+    }
 
-	mask = (flip_high & 0x0000fffful);
-	if ( mask ) {
-		g_hash_update_v1 ^= hash_two_row_value1[2][mask];
-		g_hash_update_v2 ^= hash_two_row_value2[2][mask];
-	}
+    mask = (flip_high & 0x0000fffful);
+    if (mask) {
+        g_hash_update_v1 ^= hash_two_row_value1[2][mask];
+        g_hash_update_v2 ^= hash_two_row_value2[2][mask];
+    }
 
-	mask = (flip_high & 0xffff0000ul);
-	if ( mask ) {
-		mask >>= 16;
-		g_hash_update_v1 ^= hash_two_row_value1[3][mask];
-		g_hash_update_v2 ^= hash_two_row_value2[3][mask];
-	}
+    mask = (flip_high & 0xffff0000ul);
+    if (mask) {
+        mask >>= 16;
+        g_hash_update_v1 ^= hash_two_row_value1[3][mask];
+        g_hash_update_v2 ^= hash_two_row_value2[3][mask];
+    }
 }
 
 /*
@@ -408,77 +413,77 @@ cal_flip_disc_hash0(const BitBoard fliplist_bits, int color) {
 
 INLINE void
 cal_flip_disc_hash(const BitBoard fliplist_bits, int color) {
-	register unsigned int flip_low;
-	register unsigned int flip_high;
-	register unsigned long mask;
+    register unsigned int flip_low;
+    register unsigned int flip_high;
+    register unsigned long mask;
 
-	flip_low = fliplist_bits.low;
-	flip_high = fliplist_bits.high;
+    flip_low = fliplist_bits.low;
+    flip_high = fliplist_bits.high;
 
-	g_hash_update_v1 = 0;
-	g_hash_update_v2 = 0;
+    g_hash_update_v1 = 0;
+    g_hash_update_v2 = 0;
 
-	//if ( (flip_low & 0x0000fffful) != 0 ) {
-		mask = flip_low & 0x000000fful;
-		if ( mask ) {
-			g_hash_update_v1 ^= hash_row_value1[0][mask];
-			g_hash_update_v2 ^= hash_row_value2[0][mask];
-		}
+    //if ((flip_low & 0x0000fffful) != 0) {
+        mask = flip_low & 0x000000fful;
+        if (mask) {
+            g_hash_update_v1 ^= hash_row_value1[0][mask];
+            g_hash_update_v2 ^= hash_row_value2[0][mask];
+        }
 
-		mask = (flip_low & 0x0000ff00ul);
-		if ( mask ) {
-			mask >>= 8;
-			g_hash_update_v1 ^= hash_row_value1[1][mask];
-			g_hash_update_v2 ^= hash_row_value2[1][mask];
-		}
-	//}
+        mask = (flip_low & 0x0000ff00ul);
+        if (mask) {
+            mask >>= 8;
+            g_hash_update_v1 ^= hash_row_value1[1][mask];
+            g_hash_update_v2 ^= hash_row_value2[1][mask];
+        }
+    //}
 
-	//if ( (flip_low & 0xffff0000ul) != 0 ) {
-		mask = (flip_low & 0x00ff0000ul);
-		//if ( mask ) {
-			mask >>= 16;
-			g_hash_update_v1 ^= hash_row_value1[2][mask];
-			g_hash_update_v2 ^= hash_row_value2[2][mask];
-		//}
+    //if ((flip_low & 0xffff0000ul) != 0) {
+        mask = (flip_low & 0x00ff0000ul);
+        //if (mask) {
+            mask >>= 16;
+            g_hash_update_v1 ^= hash_row_value1[2][mask];
+            g_hash_update_v2 ^= hash_row_value2[2][mask];
+        //}
 
-		mask = (flip_low & 0xff000000ul);
-		//if ( mask ) {
-			mask >>= 24;
-			g_hash_update_v1 ^= hash_row_value1[3][mask];
-			g_hash_update_v2 ^= hash_row_value2[3][mask];
-		//}
-	//}
+        mask = (flip_low & 0xff000000ul);
+        //if (mask) {
+            mask >>= 24;
+            g_hash_update_v1 ^= hash_row_value1[3][mask];
+            g_hash_update_v2 ^= hash_row_value2[3][mask];
+        //}
+    //}
 
-	//if ( (flip_high & 0x0000fffful) != 0 ) {
-		mask = flip_high & 0x000000fful;
-		//if ( mask ) {
-			g_hash_update_v1 ^= hash_row_value1[4][mask];
-			g_hash_update_v2 ^= hash_row_value2[4][mask];
-		//}
+    //if ((flip_high & 0x0000fffful) != 0) {
+        mask = flip_high & 0x000000fful;
+        //if (mask) {
+            g_hash_update_v1 ^= hash_row_value1[4][mask];
+            g_hash_update_v2 ^= hash_row_value2[4][mask];
+        //}
 
-		mask = (flip_high & 0x0000ff00ul);
-		//if ( mask ) {
-			mask >>= 8;
-			g_hash_update_v1 ^= hash_row_value1[5][mask];
-			g_hash_update_v2 ^= hash_row_value2[5][mask];
-		//}
-	//}
+        mask = (flip_high & 0x0000ff00ul);
+        //if (mask) {
+            mask >>= 8;
+            g_hash_update_v1 ^= hash_row_value1[5][mask];
+            g_hash_update_v2 ^= hash_row_value2[5][mask];
+        //}
+    //}
 
-	//if ( (flip_high & 0xffff0000ul) != 0 ) {
-		mask = (flip_high & 0x00ff0000ul);
-		if ( mask ) {
-			mask >>= 16;
-			g_hash_update_v1 ^= hash_row_value1[6][mask];
-			g_hash_update_v2 ^= hash_row_value2[6][mask];
-		}
+    //if ((flip_high & 0xffff0000ul) != 0) {
+        mask = (flip_high & 0x00ff0000ul);
+        if (mask) {
+            mask >>= 16;
+            g_hash_update_v1 ^= hash_row_value1[6][mask];
+            g_hash_update_v2 ^= hash_row_value2[6][mask];
+        }
 
-		mask = (flip_high & 0xff000000ul);
-		if ( mask ) {
-			mask >>= 24;
-			g_hash_update_v1 ^= hash_row_value1[7][mask];
-			g_hash_update_v2 ^= hash_row_value2[7][mask];
-		}
-	//}
+        mask = (flip_high & 0xff000000ul);
+        if (mask) {
+            mask >>= 24;
+            g_hash_update_v1 ^= hash_row_value1[7][mask];
+            g_hash_update_v2 ^= hash_row_value2[7][mask];
+        }
+    //}
 }
 
 /*
@@ -488,61 +493,61 @@ cal_flip_disc_hash(const BitBoard fliplist_bits, int color) {
 
 INLINE void
 cal_flip_disc_hash_end(const BitBoard fliplist_bits, int color) {
-	register unsigned int flip_low;
-	register unsigned int flip_high;
-	register unsigned long mask;
+    register unsigned int flip_low;
+    register unsigned int flip_high;
+    register unsigned long mask;
 
-	flip_low = fliplist_bits.low;
-	flip_high = fliplist_bits.high;
+    flip_low = fliplist_bits.low;
+    flip_high = fliplist_bits.high;
 
-	g_hash_update_v1 = 0;
-	g_hash_update_v2 = 0;
+    g_hash_update_v1 = 0;
+    g_hash_update_v2 = 0;
 
-	//if ( (flip_low & 0x0000fffful) != 0 ) {
-		mask = flip_low & 0x000000fful;
-		g_hash_update_v1 ^= hash_row_value1[0][mask];
-		g_hash_update_v2 ^= hash_row_value2[0][mask];
+    //if ((flip_low & 0x0000fffful) != 0) {
+        mask = flip_low & 0x000000fful;
+        g_hash_update_v1 ^= hash_row_value1[0][mask];
+        g_hash_update_v2 ^= hash_row_value2[0][mask];
 
-		mask = (flip_low & 0x0000ff00ul);
-		mask >>= 8;
-		g_hash_update_v1 ^= hash_row_value1[1][mask];
-		g_hash_update_v2 ^= hash_row_value2[1][mask];
-	//}
+        mask = (flip_low & 0x0000ff00ul);
+        mask >>= 8;
+        g_hash_update_v1 ^= hash_row_value1[1][mask];
+        g_hash_update_v2 ^= hash_row_value2[1][mask];
+    //}
 
-	//if ( (flip_low & 0xffff0000ul) != 0 ) {
-		mask = (flip_low & 0x00ff0000ul);
-		mask >>= 16;
-		g_hash_update_v1 ^= hash_row_value1[2][mask];
-		g_hash_update_v2 ^= hash_row_value2[2][mask];
+    //if ((flip_low & 0xffff0000ul) != 0) {
+        mask = (flip_low & 0x00ff0000ul);
+        mask >>= 16;
+        g_hash_update_v1 ^= hash_row_value1[2][mask];
+        g_hash_update_v2 ^= hash_row_value2[2][mask];
 
-		mask = (flip_low & 0xff000000ul);
-		mask >>= 24;
-		g_hash_update_v1 ^= hash_row_value1[3][mask];
-		g_hash_update_v2 ^= hash_row_value2[3][mask];
-	//}
+        mask = (flip_low & 0xff000000ul);
+        mask >>= 24;
+        g_hash_update_v1 ^= hash_row_value1[3][mask];
+        g_hash_update_v2 ^= hash_row_value2[3][mask];
+    //}
 
-	//if ( (flip_high & 0x0000fffful) != 0 ) {
-		mask = flip_high & 0x000000fful;
-		g_hash_update_v1 ^= hash_row_value1[4][mask];
-		g_hash_update_v2 ^= hash_row_value2[4][mask];
+    //if ((flip_high & 0x0000fffful) != 0) {
+        mask = flip_high & 0x000000fful;
+        g_hash_update_v1 ^= hash_row_value1[4][mask];
+        g_hash_update_v2 ^= hash_row_value2[4][mask];
 
-		mask = (flip_high & 0x0000ff00ul);
-		mask >>= 8;
-		g_hash_update_v1 ^= hash_row_value1[5][mask];
-		g_hash_update_v2 ^= hash_row_value2[5][mask];
-	//}
+        mask = (flip_high & 0x0000ff00ul);
+        mask >>= 8;
+        g_hash_update_v1 ^= hash_row_value1[5][mask];
+        g_hash_update_v2 ^= hash_row_value2[5][mask];
+    //}
 
-	//if ( (flip_high & 0xffff0000ul) != 0 ) {
-		mask = (flip_high & 0x00ff0000ul);
-		mask >>= 16;
-		g_hash_update_v1 ^= hash_row_value1[6][mask];
-		g_hash_update_v2 ^= hash_row_value2[6][mask];
+    //if ((flip_high & 0xffff0000ul) != 0) {
+        mask = (flip_high & 0x00ff0000ul);
+        mask >>= 16;
+        g_hash_update_v1 ^= hash_row_value1[6][mask];
+        g_hash_update_v2 ^= hash_row_value2[6][mask];
 
-		mask = (flip_high & 0xff000000ul);
-		mask >>= 24;
-		g_hash_update_v1 ^= hash_row_value1[7][mask];
-		g_hash_update_v2 ^= hash_row_value2[7][mask];
-	//}
+        mask = (flip_high & 0xff000000ul);
+        mask >>= 24;
+        g_hash_update_v1 ^= hash_row_value1[7][mask];
+        g_hash_update_v2 ^= hash_row_value2[7][mask];
+    //}
 }
 
 /*
@@ -553,114 +558,114 @@ cal_flip_disc_hash_end(const BitBoard fliplist_bits, int color) {
 INLINE void
 cal_flip_disc_hash2(const BitBoard fliplist_bits, int color) {
 
-	//register unsigned long flip_low;
-	//register unsigned long flip_high;
-	int i;
-	unsigned long mask;
+    //register unsigned long flip_low;
+    //register unsigned long flip_high;
+    int i;
+    unsigned long mask;
 
-	//flip_low = fliplist_bits.low;
-	//flip_high = fliplist_bits.high;
+    //flip_low = fliplist_bits.low;
+    //flip_high = fliplist_bits.high;
 
-	g_hash_update_v1 = 0;
-	g_hash_update_v2 = 0;
+    g_hash_update_v1 = 0;
+    g_hash_update_v2 = 0;
 
-	if ( fliplist_bits.low != 0 ) {
-		// bits 0-15
-		//if ( (fliplist_bits.low & 0x0000fffful) != 0 ) {
-			// bits 0-7
-			if ( (fliplist_bits.low & 0x000000fful) != 0 ) {
-				mask = 0x00000001ul;
-				for ( i = 0; i < 8; i++, mask <<= 1 ) {
-					if ( fliplist_bits.low & mask ) {
-						g_hash_update_v1 ^= hash_flip1[i];
-						g_hash_update_v2 ^= hash_flip2[i];
-					}
-				}
-			}
-			// bits 8-15
-			if ( (fliplist_bits.low & 0x0000ff00ul) != 0 ) {
-				mask = 0x00000100ul;
-				for ( i = 8; i < 16; i++, mask <<= 1 ) {
-					if ( fliplist_bits.low & mask ) {
-						g_hash_update_v1 ^= hash_flip1[i];
-						g_hash_update_v2 ^= hash_flip2[i];
-					}
-				}
-			}
-		//}
-		// bits 16-31
-		//if ( (fliplist_bits.low & 0xffff0000ul) != 0 ) {
-			// bits 16-23
-			if ( (fliplist_bits.low & 0x00ff0000ul) != 0 ) {
-				mask = 0x00010000ul;
-				for ( i = 16; i < 24; i++, mask <<= 1 ) {
-					if ( fliplist_bits.low & mask ) {
-						g_hash_update_v1 ^= hash_flip1[i];
-						g_hash_update_v2 ^= hash_flip2[i];
-					}
-				}
-			}
-			// bits 24-31
-			if ( (fliplist_bits.low & 0xff000000ul) != 0 ) {
-				mask = 0x01000000ul;
-				for ( i = 24; i < 32; i++, mask <<= 1 ) {
-					if ( fliplist_bits.low & mask ) {
-						g_hash_update_v1 ^= hash_flip1[i];
-						g_hash_update_v2 ^= hash_flip2[i];
-					}
-				}
-			}
-		//}
-	}
+    if (fliplist_bits.low != 0) {
+        // bits 0-15
+        //if ((fliplist_bits.low & 0x0000fffful) != 0) {
+            // bits 0-7
+            if ((fliplist_bits.low & 0x000000fful) != 0) {
+                mask = 0x00000001ul;
+                for (i = 0; i < 8; i++, mask <<= 1) {
+                    if (fliplist_bits.low & mask) {
+                        g_hash_update_v1 ^= hash_flip1[i];
+                        g_hash_update_v2 ^= hash_flip2[i];
+                    }
+                }
+            }
+            // bits 8-15
+            if ((fliplist_bits.low & 0x0000ff00ul) != 0) {
+                mask = 0x00000100ul;
+                for (i = 8; i < 16; i++, mask <<= 1) {
+                    if (fliplist_bits.low & mask) {
+                        g_hash_update_v1 ^= hash_flip1[i];
+                        g_hash_update_v2 ^= hash_flip2[i];
+                    }
+                }
+            }
+        //}
+        // bits 16-31
+        //if ((fliplist_bits.low & 0xffff0000ul) != 0) {
+            // bits 16-23
+            if ((fliplist_bits.low & 0x00ff0000ul) != 0) {
+                mask = 0x00010000ul;
+                for (i = 16; i < 24; i++, mask <<= 1) {
+                    if (fliplist_bits.low & mask) {
+                        g_hash_update_v1 ^= hash_flip1[i];
+                        g_hash_update_v2 ^= hash_flip2[i];
+                    }
+                }
+            }
+            // bits 24-31
+            if ((fliplist_bits.low & 0xff000000ul) != 0) {
+                mask = 0x01000000ul;
+                for (i = 24; i < 32; i++, mask <<= 1) {
+                    if (fliplist_bits.low & mask) {
+                        g_hash_update_v1 ^= hash_flip1[i];
+                        g_hash_update_v2 ^= hash_flip2[i];
+                    }
+                }
+            }
+        //}
+    }
 
-	if ( fliplist_bits.high != 0 ) {
-		// bits 32-47
-		//if ( (fliplist_bits.high & 0x0000fffful) != 0 ) {
-			// bits 32-39
-			if ( (fliplist_bits.high & 0x000000fful) != 0 ) {
-				mask = 0x00000001ul;
-				for ( i = 32; i < 40; i++, mask <<= 1 ) {
-					if ( fliplist_bits.high & mask ) {
-						g_hash_update_v1 ^= hash_flip1[i];
-						g_hash_update_v2 ^= hash_flip2[i];
-					}
-				}
-			}
-			// bits 40-47
-			if ( (fliplist_bits.high & 0x0000ff00ul) != 0 ) {
-				mask = 0x00000100ul;
-				for ( i = 40; i < 48; i++, mask <<= 1 ) {
-					if ( fliplist_bits.high & mask ) {
-						g_hash_update_v1 ^= hash_flip1[i];
-						g_hash_update_v2 ^= hash_flip2[i];
-					}
-				}
-			}
-		//}
-		// bits 48-63
-		//if ( (fliplist_bits.high & 0xffff0000ul) != 0 ) {
-			// bits 48-55
-			if ( (fliplist_bits.high & 0x00ff0000ul) != 0 ) {
-				mask = 0x00010000ul;
-				for ( i = 48; i < 56; i++, mask <<= 1 ) {
-					if ( fliplist_bits.high & mask ) {
-						g_hash_update_v1 ^= hash_flip1[i];
-						g_hash_update_v2 ^= hash_flip2[i];
-					}
-				}
-			}
-			// bits 56-63
-			if ( (fliplist_bits.high & 0xff000000ul) != 0 ) {
-				mask = 0x01000000ul;
-				for ( i = 56; i < 64; i++, mask <<= 1 ) {
-					if ( fliplist_bits.high & mask ) {
-						g_hash_update_v1 ^= hash_flip1[i];
-						g_hash_update_v2 ^= hash_flip2[i];
-					}
-				}
-			}
-		//}
-	}
+    if (fliplist_bits.high != 0) {
+        // bits 32-47
+        //if ((fliplist_bits.high & 0x0000fffful) != 0) {
+            // bits 32-39
+            if ((fliplist_bits.high & 0x000000fful) != 0) {
+                mask = 0x00000001ul;
+                for (i = 32; i < 40; i++, mask <<= 1) {
+                    if (fliplist_bits.high & mask) {
+                        g_hash_update_v1 ^= hash_flip1[i];
+                        g_hash_update_v2 ^= hash_flip2[i];
+                    }
+                }
+            }
+            // bits 40-47
+            if ((fliplist_bits.high & 0x0000ff00ul) != 0) {
+                mask = 0x00000100ul;
+                for (i = 40; i < 48; i++, mask <<= 1) {
+                    if (fliplist_bits.high & mask) {
+                        g_hash_update_v1 ^= hash_flip1[i];
+                        g_hash_update_v2 ^= hash_flip2[i];
+                    }
+                }
+            }
+        //}
+        // bits 48-63
+        //if ((fliplist_bits.high & 0xffff0000ul) != 0) {
+            // bits 48-55
+            if ((fliplist_bits.high & 0x00ff0000ul) != 0) {
+                mask = 0x00010000ul;
+                for (i = 48; i < 56; i++, mask <<= 1) {
+                    if (fliplist_bits.high & mask) {
+                        g_hash_update_v1 ^= hash_flip1[i];
+                        g_hash_update_v2 ^= hash_flip2[i];
+                    }
+                }
+            }
+            // bits 56-63
+            if ((fliplist_bits.high & 0xff000000ul) != 0) {
+                mask = 0x01000000ul;
+                for (i = 56; i < 64; i++, mask <<= 1) {
+                    if (fliplist_bits.high & mask) {
+                        g_hash_update_v1 ^= hash_flip1[i];
+                        g_hash_update_v2 ^= hash_flip2[i];
+                    }
+                }
+            }
+        //}
+    }
 }
 
 /*
@@ -671,30 +676,30 @@ cal_flip_disc_hash2(const BitBoard fliplist_bits, int color) {
 INLINE void
 cal_flip_disc_hash3(const BitBoard fliplist_bits, int color) {
 
-	int i;
-	unsigned long mask;
+    int i;
+    unsigned long mask;
 
-	g_hash_update_v1 = 0;
-	g_hash_update_v2 = 0;
+    g_hash_update_v1 = 0;
+    g_hash_update_v2 = 0;
 
-	if ( fliplist_bits.low != 0 ) {
-		mask = 0x00000001ul;
-		for ( i = 0; i < 32; i++, mask <<= 1 ) {
-			if ( fliplist_bits.low & mask ) {
-				g_hash_update_v1 ^= hash_flip1[i];
-				g_hash_update_v2 ^= hash_flip2[i];
-			}
-		}
-	}
-	if ( fliplist_bits.high != 0 ) {
-		mask = 0x00000001ul;
-		for ( i = 32; i < 64; i++, mask <<= 1 ) {
-			if ( fliplist_bits.high & mask ) {
-				g_hash_update_v1 ^= hash_flip1[i];
-				g_hash_update_v2 ^= hash_flip2[i];
-			}
-		}
-	}
+    if (fliplist_bits.low != 0) {
+        mask = 0x00000001ul;
+        for (i = 0; i < 32; i++, mask <<= 1) {
+            if (fliplist_bits.low & mask) {
+                g_hash_update_v1 ^= hash_flip1[i];
+                g_hash_update_v2 ^= hash_flip2[i];
+            }
+        }
+    }
+    if (fliplist_bits.high != 0) {
+        mask = 0x00000001ul;
+        for (i = 32; i < 64; i++, mask <<= 1) {
+            if (fliplist_bits.high & mask) {
+                g_hash_update_v1 ^= hash_flip1[i];
+                g_hash_update_v2 ^= hash_flip2[i];
+            }
+        }
+    }
 }
 
 /*
@@ -703,21 +708,22 @@ cal_flip_disc_hash3(const BitBoard fliplist_bits, int color) {
 */
 
 INLINE int
-prepare_movelist_pv( const BitBoard my_bits,
-				 const BitBoard opp_bits,
-				 int move) {
+prepare_movelist_pv(const BitBoard my_bits,
+                 const BitBoard opp_bits,
+                 int move) {
 
-	BitPosition movelist_pos;
-	BitBoard *movelist_bits;
-	movelist_bits = (BitBoard *)ADDR_ALGIN_8BYTES(&movelist_pos);
+    BitPosition movelist_pos;
+    BitBoard *movelist_bits;
+    movelist_bits = (BitBoard *)ADDR_ALGIN_8BYTES(&movelist_pos);
 
-	bitboard_gen_movelist(my_bits, opp_bits, movelist_bits);
+    bitboard_gen_movelist(my_bits, opp_bits, movelist_bits);
 
-	if ( ((movelist_bits->low & square_mask[move].low) == 0) &&
-		((movelist_bits->high & square_mask[move].high) == 0) )
-		return FALSE;
+    if (((movelist_bits->low & square_mask[move].low) == 0) &&
+        ((movelist_bits->high & square_mask[move].high) == 0)) {
+        return FALSE;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 /*
@@ -726,32 +732,33 @@ prepare_movelist_pv( const BitBoard my_bits,
 */
 
 INLINE int
-prepare_movelist( const BitBoard my_bits,
-				 const BitBoard opp_bits,
-				 BitBoard *movelist_bits,
-				 int move,
-				 int *need_gen_movelist ) {
+prepare_movelist(const BitBoard my_bits,
+                 const BitBoard opp_bits,
+                 BitBoard *movelist_bits,
+                 int move,
+                 int *need_gen_movelist) {
 
-	//return TRUE;
-	// generate movelist
-	if ( *need_gen_movelist ) {
-		bitboard_gen_movelist(my_bits, opp_bits, movelist_bits);
-		/*
-		BitBoard movelist;
-		bitboard_gen_movelist2(my_bits, opp_bits, &movelist);
-		if ( ( movelist.low != movelist_bits->low ) ||
-			( movelist.high != movelist_bits->high ) ) {
-			*movelist_bits = movelist;
-		}
-		//*/
-		*need_gen_movelist = FALSE;
-	}
+    //return TRUE;
+    // generate movelist
+    if (*need_gen_movelist) {
+        bitboard_gen_movelist(my_bits, opp_bits, movelist_bits);
+        /*
+        BitBoard movelist;
+        bitboard_gen_movelist2(my_bits, opp_bits, &movelist);
+        if ((movelist.low != movelist_bits->low) ||
+            (movelist.high != movelist_bits->high)) {
+            *movelist_bits = movelist;
+        }
+        //*/
+        *need_gen_movelist = FALSE;
+    }
 
-	if ( ((movelist_bits->low & square_mask[move].low) == 0) &&
-		((movelist_bits->high & square_mask[move].high) == 0) )
-		return FALSE;
+    if (((movelist_bits->low & square_mask[move].low) == 0) &&
+        ((movelist_bits->high & square_mask[move].high) == 0)) {
+        return FALSE;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 /*
@@ -761,34 +768,34 @@ prepare_movelist( const BitBoard my_bits,
 
 INLINE int
 prepare_movelist_adv(const BitBoard my_bits,
-				 const BitBoard opp_bits,
-				 BitBoard *movelist_bits,
-				 int move,
-				 int *need_gen_movelist,
-				 int is_best_move) {
+                 const BitBoard opp_bits,
+                 BitBoard *movelist_bits,
+                 int move,
+                 int *need_gen_movelist,
+                 int is_best_move) {
 
-	//return TRUE;
-	if ( !is_best_move ) {
-		// generate movelist
-		if ( *need_gen_movelist ) {
-			bitboard_gen_movelist(my_bits, opp_bits, movelist_bits);
-			*need_gen_movelist = FALSE;
-			//if ( (movelist_bits->low == 0) && (movelist_bits->high == 0) )
-			//	return FALSE;
-		}
+    //return TRUE;
+    if (!is_best_move) {
+        // generate movelist
+        if (*need_gen_movelist) {
+            bitboard_gen_movelist(my_bits, opp_bits, movelist_bits);
+            *need_gen_movelist = FALSE;
+            //if ((movelist_bits->low == 0) && (movelist_bits->high == 0))
+            //  return FALSE;
+        }
 
-		/*
-		if ( ((movelist_bits->low & square_mask[move].low) != 0) ||
-			((movelist_bits->high & square_mask[move].high) != 0) )
-			return TRUE;
-		else {
-			if ( is_best_move )
-				is_best_move = is_best_move;
-			return FALSE;
-		}
-		//*/
-	}
-	return TRUE;
+        /*
+        if (((movelist_bits->low & square_mask[move].low) != 0) ||
+            ((movelist_bits->high & square_mask[move].high) != 0))
+            return TRUE;
+        else {
+            if (is_best_move)
+                is_best_move = is_best_move;
+            return FALSE;
+        }
+        //*/
+    }
+    return TRUE;
 }
 
 //#define USE_SIMD_FLIPFUNC
@@ -804,63 +811,63 @@ prepare_movelist_adv(const BitBoard my_bits,
 */
 
 INLINE int
-make_move( BitBoard *my_bits, BitBoard *opp_bits,
-		  int color, int move, int update_hash ) {
-	int flipped;
-	unsigned int diff1, diff2;
-	BitBoard flip_bits;
+make_move(BitBoard *my_bits, BitBoard *opp_bits,
+          int color, int move, int update_hash) {
+    int flipped;
+    unsigned int diff1, diff2;
+    BitBoard flip_bits;
 
-	if ( update_hash ) {
-		flipped = GetFlipLists_wrapper( move, *my_bits, *opp_bits );
-		if ( flipped <= 0 )
-			return 0;
+    if (update_hash) {
+        flipped = GetFlipLists_wrapper(move, *my_bits, *opp_bits);
+        if (flipped <= 0)
+            return 0;
 
-		// cal flip disc hash
-		flip_bits.high = bb_flips.high ^ my_bits->high ^ square_mask[move].high;
-		flip_bits.low = bb_flips.low ^ my_bits->low ^ square_mask[move].low;
-		cal_flip_disc_hash(flip_bits, color);
+        // cal flip disc hash
+        flip_bits.high = bb_flips.high ^ my_bits->high ^ square_mask[move].high;
+        flip_bits.low = bb_flips.low ^ my_bits->low ^ square_mask[move].low;
+        cal_flip_disc_hash(flip_bits, color);
 
-		diff1 = g_hash_update_v1 ^ hash_put_value1[color][move];
-		diff2 = g_hash_update_v2 ^ hash_put_value2[color][move];
-		hash_stored1[disks_played] = g_hash1;
-		hash_stored2[disks_played] = g_hash2;
-		g_hash1 ^= diff1;
-		g_hash2 ^= diff2;
-	}
-	else {
-		flipped = GetFlipLists_wrapper( move, *my_bits, *opp_bits );
-		if ( flipped <= 0 )
-			return 0;
-		hash_stored1[disks_played] = g_hash1;
-		hash_stored2[disks_played] = g_hash2;
-	}
+        diff1 = g_hash_update_v1 ^ hash_put_value1[color][move];
+        diff2 = g_hash_update_v2 ^ hash_put_value2[color][move];
+        hash_stored1[disks_played] = g_hash1;
+        hash_stored2[disks_played] = g_hash2;
+        g_hash1 ^= diff1;
+        g_hash2 ^= diff2;
+    }
+    else {
+        flipped = GetFlipLists_wrapper(move, *my_bits, *opp_bits);
+        if (flipped <= 0)
+            return 0;
+        hash_stored1[disks_played] = g_hash1;
+        hash_stored2[disks_played] = g_hash2;
+    }
 
-	//flip_count[disks_played] = flipped;
+    //flip_count[disks_played] = flipped;
 
-	/*
-	BITBOARD_ANDNOT( (*opp_bits), bb_flips );
-	BITBOARD_OR( (*my_bits), bb_flips );
-	bitboard_or_bit( my_bits, move );
-	//*/
-	BITBOARD_ANDNOT( (*opp_bits), bb_flips );
-	*my_bits = bb_flips;
+    /*
+    BITBOARD_ANDNOT((*opp_bits), bb_flips);
+    BITBOARD_OR((*my_bits), bb_flips);
+    bitboard_or_bit(my_bits, move);
+    //*/
+    BITBOARD_ANDNOT((*opp_bits), bb_flips);
+    *my_bits = bb_flips;
 
-	if ( color == CHESS_BLACK ) {
-		piece_count[CHESS_BLACK][disks_played + 1] =
-			piece_count[CHESS_BLACK][disks_played] + flipped + 1;
-		piece_count[CHESS_WHITE][disks_played + 1] =
-			piece_count[CHESS_WHITE][disks_played] - flipped;
-	}
-	else {  /* color == WHITE */
-		piece_count[CHESS_WHITE][disks_played + 1] =
-			piece_count[CHESS_WHITE][disks_played] + flipped + 1;
-		piece_count[CHESS_BLACK][disks_played + 1] =
-			piece_count[CHESS_BLACK][disks_played] - flipped;
-	}
+    if (color == CHESS_BLACK) {
+        piece_count[CHESS_BLACK][disks_played + 1] =
+            piece_count[CHESS_BLACK][disks_played] + flipped + 1;
+        piece_count[CHESS_WHITE][disks_played + 1] =
+            piece_count[CHESS_WHITE][disks_played] - flipped;
+    }
+    else {  /* color == WHITE */
+        piece_count[CHESS_WHITE][disks_played + 1] =
+            piece_count[CHESS_WHITE][disks_played] + flipped + 1;
+        piece_count[CHESS_BLACK][disks_played + 1] =
+            piece_count[CHESS_BLACK][disks_played] - flipped;
+    }
 
-	disks_played++;
+    disks_played++;
 
-	return flipped;
+    return flipped;
 }
 
 /*
@@ -869,15 +876,15 @@ make_move( BitBoard *my_bits, BitBoard *opp_bits,
 */
 
 INLINE void
-unmake_move( int color, int move ) {
-	//board[move] = CHESS_EMPTY;
+unmake_move(int color, int move) {
+    //board[move] = CHESS_EMPTY;
 
-	disks_played--;
+    disks_played--;
 
-	g_hash1 = hash_stored1[disks_played];
-	g_hash2 = hash_stored2[disks_played];
+    g_hash1 = hash_stored1[disks_played];
+    g_hash2 = hash_stored2[disks_played];
 
-	//UndoFlips_inlined( flip_count[disks_played], OPP_COLOR( color ) );
+    //UndoFlips_inlined(flip_count[disks_played], OPP_COLOR(color));
 }
 
 /*
@@ -890,40 +897,40 @@ unmake_move( int color, int move ) {
 */
 
 INLINE int
-make_move_no_hash( BitBoard *my_bits, BitBoard *opp_bits,
-				  int color, int move ) {
-	int flipped;
+make_move_no_hash(BitBoard *my_bits, BitBoard *opp_bits,
+                  int color, int move) {
+    int flipped;
 
-	flipped = GetFlipLists_wrapper( move, *my_bits, *opp_bits );
-	if ( flipped <= 0 )
-		return 0;
+    flipped = GetFlipLists_wrapper(move, *my_bits, *opp_bits);
+    if (flipped <= 0)
+        return 0;
 
-	//flip_count[disks_played] = flipped;
+    //flip_count[disks_played] = flipped;
 
     /*
-	BITBOARD_ANDNOT( (*opp_bits), bb_flips );
-	BITBOARD_OR( (*my_bits), bb_flips );
-	bitboard_or_bit( my_bits, move );
-	//*/
-	BITBOARD_ANDNOT( (*opp_bits), bb_flips );
-	*my_bits = bb_flips;
+    BITBOARD_ANDNOT((*opp_bits), bb_flips);
+    BITBOARD_OR((*my_bits), bb_flips);
+    bitboard_or_bit(my_bits, move);
+    //*/
+    BITBOARD_ANDNOT((*opp_bits), bb_flips);
+    *my_bits = bb_flips;
 
-	if ( color == CHESS_BLACK ) {
-		piece_count[CHESS_BLACK][disks_played + 1] =
-			piece_count[CHESS_BLACK][disks_played] + flipped + 1;
-		piece_count[CHESS_WHITE][disks_played + 1] =
-			piece_count[CHESS_WHITE][disks_played] - flipped;
-	}
-	else {  /* color == WHITE */
-		piece_count[CHESS_WHITE][disks_played + 1] =
-			piece_count[CHESS_WHITE][disks_played] + flipped + 1;
-		piece_count[CHESS_BLACK][disks_played + 1] =
-			piece_count[CHESS_BLACK][disks_played] - flipped;
-	}
+    if (color == CHESS_BLACK) {
+        piece_count[CHESS_BLACK][disks_played + 1] =
+            piece_count[CHESS_BLACK][disks_played] + flipped + 1;
+        piece_count[CHESS_WHITE][disks_played + 1] =
+            piece_count[CHESS_WHITE][disks_played] - flipped;
+    }
+    else {  /* color == WHITE */
+        piece_count[CHESS_WHITE][disks_played + 1] =
+            piece_count[CHESS_WHITE][disks_played] + flipped + 1;
+        piece_count[CHESS_BLACK][disks_played + 1] =
+            piece_count[CHESS_BLACK][disks_played] - flipped;
+    }
 
-	disks_played++;
+    disks_played++;
 
-	return flipped;
+    return flipped;
 }
 
 /*
@@ -933,12 +940,12 @@ make_move_no_hash( BitBoard *my_bits, BitBoard *opp_bits,
 */
 
 INLINE void
-unmake_move_no_hash( int color, int move ) {
-	//board[move] = CHESS_EMPTY;
+unmake_move_no_hash(int color, int move) {
+    //board[move] = CHESS_EMPTY;
 
-	disks_played--;
+    disks_played--;
 
-	//UndoFlips_inlined( flip_count[disks_played], OPP_COLOR( color ) );
+    //UndoFlips_inlined(flip_count[disks_played], OPP_COLOR(color));
 }
 
 /*
@@ -951,46 +958,46 @@ unmake_move_no_hash( int color, int move ) {
 */
 
 INLINE void
-make_move_end( int color, int move,
-			  //int flipped,
-			  int update_hash ) {
-	unsigned int diff1, diff2;
+make_move_end(int color, int move,
+              //int flipped,
+              int update_hash) {
+    unsigned int diff1, diff2;
 
-	//if (flipped > 0) {
+    //if (flipped > 0) {
 
-		if ( update_hash ) {
-			// cal flip disc hash
-			cal_flip_disc_hash_end(bb_flip_bits, color);
+        if (update_hash) {
+            // cal flip disc hash
+            cal_flip_disc_hash_end(bb_flip_bits, color);
 
-			diff1 = g_hash_update_v1 ^ hash_put_value1[color][move];
-			diff2 = g_hash_update_v2 ^ hash_put_value2[color][move];
-			hash_stored1[disks_played] = g_hash1;
-			hash_stored2[disks_played] = g_hash2;
-			g_hash1 ^= diff1;
-			g_hash2 ^= diff2;
-		}
-		else {
-			hash_stored1[disks_played] = g_hash1;
-			hash_stored2[disks_played] = g_hash2;
-		}
+            diff1 = g_hash_update_v1 ^ hash_put_value1[color][move];
+            diff2 = g_hash_update_v2 ^ hash_put_value2[color][move];
+            hash_stored1[disks_played] = g_hash1;
+            hash_stored2[disks_played] = g_hash2;
+            g_hash1 ^= diff1;
+            g_hash2 ^= diff2;
+        }
+        else {
+            hash_stored1[disks_played] = g_hash1;
+            hash_stored2[disks_played] = g_hash2;
+        }
 
-		/*
-		if ( color == CHESS_BLACK ) {
-			piece_count[CHESS_BLACK][disks_played + 1] =
-				piece_count[CHESS_BLACK][disks_played] + flipped + 1;
-			piece_count[CHESS_WHITE][disks_played + 1] =
-				piece_count[CHESS_WHITE][disks_played] - flipped;
-		}
-		else {  // color == WHITE
-			piece_count[CHESS_WHITE][disks_played + 1] =
-				piece_count[CHESS_WHITE][disks_played] + flipped + 1;
-			piece_count[CHESS_BLACK][disks_played + 1] =
-				piece_count[CHESS_BLACK][disks_played] - flipped;
-		}
-		//*/
+        /*
+        if (color == CHESS_BLACK) {
+            piece_count[CHESS_BLACK][disks_played + 1] =
+                piece_count[CHESS_BLACK][disks_played] + flipped + 1;
+            piece_count[CHESS_WHITE][disks_played + 1] =
+                piece_count[CHESS_WHITE][disks_played] - flipped;
+        }
+        else {  // color == WHITE
+            piece_count[CHESS_WHITE][disks_played + 1] =
+                piece_count[CHESS_WHITE][disks_played] + flipped + 1;
+            piece_count[CHESS_BLACK][disks_played + 1] =
+                piece_count[CHESS_BLACK][disks_played] - flipped;
+        }
+        //*/
 
-		disks_played++;
-	//}
+        disks_played++;
+    //}
 }
 
 /*
@@ -1003,50 +1010,50 @@ make_move_end( int color, int move,
 */
 
 INLINE void
-make_move_end2( int color, int move,
-			  int flipped,
-			  int update_hash ) {
-	unsigned int diff1, diff2;
+make_move_end2(int color, int move,
+              int flipped,
+              int update_hash) {
+    unsigned int diff1, diff2;
 
-	//if (flipped > 0) {
-		if ( update_hash ) {
-			// cal flip disc hash
-			cal_flip_disc_hash_end(bb_flip_bits, color);
+    //if (flipped > 0) {
+        if (update_hash) {
+            // cal flip disc hash
+            cal_flip_disc_hash_end(bb_flip_bits, color);
 
-			diff1 = g_hash_update_v1 ^ hash_put_value1[color][move];
-			diff2 = g_hash_update_v2 ^ hash_put_value2[color][move];
-			hash_stored1[disks_played] = g_hash1;
-			hash_stored2[disks_played] = g_hash2;
-			g_hash1 ^= diff1;
-			g_hash2 ^= diff2;
-		}
-		else {
-			hash_stored1[disks_played] = g_hash1;
-			hash_stored2[disks_played] = g_hash2;
-		}
+            diff1 = g_hash_update_v1 ^ hash_put_value1[color][move];
+            diff2 = g_hash_update_v2 ^ hash_put_value2[color][move];
+            hash_stored1[disks_played] = g_hash1;
+            hash_stored2[disks_played] = g_hash2;
+            g_hash1 ^= diff1;
+            g_hash2 ^= diff2;
+        }
+        else {
+            hash_stored1[disks_played] = g_hash1;
+            hash_stored2[disks_played] = g_hash2;
+        }
 
-		if ( color == CHESS_BLACK ) {
-			piece_count[CHESS_BLACK][disks_played + 1] =
-				piece_count[CHESS_BLACK][disks_played] + flipped + 1;
-			piece_count[CHESS_WHITE][disks_played + 1] =
-				piece_count[CHESS_WHITE][disks_played] - flipped;
-		}
-		else {  // color == WHITE
-			piece_count[CHESS_WHITE][disks_played + 1] =
-				piece_count[CHESS_WHITE][disks_played] + flipped + 1;
-			piece_count[CHESS_BLACK][disks_played + 1] =
-				piece_count[CHESS_BLACK][disks_played] - flipped;
-		}
+        if (color == CHESS_BLACK) {
+            piece_count[CHESS_BLACK][disks_played + 1] =
+                piece_count[CHESS_BLACK][disks_played] + flipped + 1;
+            piece_count[CHESS_WHITE][disks_played + 1] =
+                piece_count[CHESS_WHITE][disks_played] - flipped;
+        }
+        else {  // color == WHITE
+            piece_count[CHESS_WHITE][disks_played + 1] =
+                piece_count[CHESS_WHITE][disks_played] + flipped + 1;
+            piece_count[CHESS_BLACK][disks_played + 1] =
+                piece_count[CHESS_BLACK][disks_played] - flipped;
+        }
 
-		disks_played++;
-	/*
-	}
-	else {
-		hash_stored1[disks_played] = g_hash1;
-		hash_stored2[disks_played] = g_hash2;
-		disks_played++;
-	}
-	//*/
+        disks_played++;
+    /*
+    }
+    else {
+        hash_stored1[disks_played] = g_hash1;
+        hash_stored2[disks_played] = g_hash2;
+        disks_played++;
+    }
+    //*/
 }
 
 /*
@@ -1055,11 +1062,11 @@ make_move_end2( int color, int move,
 */
 
 INLINE void
-unmake_move_end( int color, int move ) {
-	//board[move] = CHESS_EMPTY;
+unmake_move_end(int color, int move) {
+    //board[move] = CHESS_EMPTY;
 
-	disks_played--;
+    disks_played--;
 
-	g_hash1 = hash_stored1[disks_played];
-	g_hash2 = hash_stored2[disks_played];
+    g_hash1 = hash_stored1[disks_played];
+    g_hash2 = hash_stored2[disks_played];
 }
