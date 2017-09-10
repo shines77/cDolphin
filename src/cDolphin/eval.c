@@ -31,8 +31,8 @@ static int use_experimental;
 */
 
 INLINE void
-toggle_experimental( int use ) {
-	use_experimental = use;
+toggle_experimental(int use) {
+    use_experimental = use;
 }
 
 /*
@@ -42,8 +42,8 @@ toggle_experimental( int use ) {
 */
 
 INLINE int
-experimental_eval( void ) {
-	return use_experimental;
+experimental_eval(void) {
+    return use_experimental;
 }
 
 /*
@@ -52,33 +52,33 @@ experimental_eval( void ) {
 */
 
 void
-init_eval( void ) {
+init_eval(void) {
 }
 
 #if 0
 
 #ifdef _WIN32
 static __int64
-rdtsc( void ) {
-	__int64 iCounter;
-	__asm {
-		rdtsc
-		mov DWORD PTR iCounter, EAX
-		mov DWORD PTR [iCounter+4], EDX
-	}
-	return iCounter;
-	//__asm RDTSC
-	//return 0;
+rdtsc(void) {
+    __int64 iCounter;
+    __asm {
+        rdtsc
+        mov DWORD PTR iCounter, EAX
+        mov DWORD PTR[iCounter + 4], EDX
+    }
+    return iCounter;
+    //__asm RDTSC
+    //return 0;
 }
 #else
 static long long int
-rdtsc( void ) {
+rdtsc(void) {
 #if defined(__GNUC__)
-	long long a;
-	asm volatile("rdtsc":"=A" (a));
-	return a;
+    long long a;
+    asm volatile("rdtsc":"=A" (a));
+    return a;
 #else
-	return 0;
+    return 0;
 #endif
 }
 #endif
@@ -91,28 +91,28 @@ rdtsc( void ) {
 */
 
 INLINE int
-terminal_evaluation( int color ) {
-	int disc_diff;
-	int my_discs, opp_discs;
+terminal_evaluation(int color) {
+    int disc_diff;
+    int my_discs, opp_discs;
 
-	INCREMENT_COUNTER( leaf_nodes );
+    INCREMENT_COUNTER(leaf_nodes);
 
-	my_discs = piece_count[color][disks_played];
-	opp_discs = piece_count[OPP_COLOR( color )][disks_played];
+    my_discs = piece_count[color][disks_played];
+    opp_discs = piece_count[OPP_COLOR(color)][disks_played];
 
-	if ( my_discs > opp_discs )
-		disc_diff = 64 - 2 * opp_discs;
-	else if ( opp_discs > my_discs )
-		disc_diff = 2 * my_discs - 64;
-	else
-		disc_diff = 0;
+    if (my_discs > opp_discs)
+        disc_diff = 64 - 2 * opp_discs;
+    else if (opp_discs > my_discs)
+        disc_diff = 2 * my_discs - 64;
+    else
+        disc_diff = 0;
 
-	if ( disc_diff > 0 )
-		return +MIDGAME_WIN + disc_diff;
-	else if ( disc_diff == 0 )
-		return 0;
-	else
-		return -MIDGAME_WIN + disc_diff;
+    if (disc_diff > 0)
+        return +MIDGAME_WIN + disc_diff;
+    else if (disc_diff == 0)
+        return 0;
+    else
+        return -MIDGAME_WIN + disc_diff;
 }
 
 /*
@@ -123,11 +123,11 @@ terminal_evaluation( int color ) {
 */
 INLINE int
 evaluate_position(int color,
-				  const BitBoard my_bits,
-				  const BitBoard opp_bits)
+    const BitBoard my_bits,
+    const BitBoard opp_bits)
 {
-	if ( disks_played >= 60 )
-		return terminal_evaluation( color );
-	else
-		return pattern_evaluation( color, my_bits, opp_bits );
+    if (disks_played >= 60)
+        return terminal_evaluation(color);
+    else
+        return pattern_evaluation(color, my_bits, opp_bits);
 }
