@@ -25,32 +25,86 @@
 *.exe
 *.lib
 
-# For Visual Studio files on Windows
-*.user
-*.ncb
+# Ignore files build by Visual Studio
 *.aps
-*.opt
-*.plg
-*.idb
-*.pdb
+*.bak
 *.dep
-*.obj
+*.idb
 *.ilk
-*.tlb
-*.tli
-*.tlh
-*.tmp
-*.rsp
-*.pgc
-*.pgd
+*.intermediate.manifest
+*.iobj
+*.ipdb
 *.meta
 *.manifest
-*.intermediate.manifest
-*.suo
-*.sdf
+*.ncb
+*.obj
 *.opensdf
+*.pdb
+*.pch
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.sdf
+*.sln.old
+*.sln_old
+*.suo
+*.tlb
+*.tlh
+*.tli
+*.tmp
+*.user
+*.vspscc
+# *.vcxproj.user
+
+# Ignore folders create by Visual Studio 2015
+/.vs/
+
+# Ignore intellisense files by Visual Studio 2015 Update 3
+*.VC.db
+*.VC.opendb
+
+# *.vcxproj.user
+# *_i.c
+# *_p.c
+
+# For Visual Studio Update File
+UpgradeLog.XML
+UpgradeLog.htm
+/[Bb]ackup
+
+# Ignore CodeBlocks project layout/depend files
 *.layout
 *.depend
+
+# For log file
+*.log
+
+# Ignore Intel C++ Compiler Log File & Project File
+IcUpdateLog.htm
+*.icproj
+
+# Ignore AStyle backup file
+*.orig
+
+# Ignore Code::Blocks backup file
+*.sav
+
+# Ignore Sublime Text 2 dump file
+*.dump
+
+# Ignore Visual Studio 2013 temp files on Windows
+*.tlog
+
+# Ignore Visual Studio C# files on Windows
+*.cache
+
+# Zip or Rar files
+*.zip
+*.rar
+
+/obj
+/tmp
 /Debug
 /Release
 
@@ -63,7 +117,6 @@ Thumbs.db
 # Other files
 /.metadata
 /169.254.0.1
-/tmp
 /ipch
 /cmake
 /Simulator

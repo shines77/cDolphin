@@ -24,8 +24,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)..\..\..\lib\vc2008\x86\"
-			IntermediateDirectory="$(SolutionDir)..\..\..\obj\vc2008\x86-$(ConfigurationName)\$(ProjectName)"
+			OutputDirectory="$(SolutionDir)..\..\..\lib\windows\x86\vc2008"
+			IntermediateDirectory="$(SolutionDir)..\..\..\tmp\windows\x86\vc2008\$(ConfigurationName)\$(ProjectName)"
 			ConfigurationType="4"
 			CharacterSet="2"
 			>
@@ -93,10 +93,10 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(SolutionDir)..\..\..\lib\vc2008\x64\"
-			IntermediateDirectory="$(SolutionDir)..\..\..\obj\vc2008\x64-$(ConfigurationName)\$(ProjectName)"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="2"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -161,8 +161,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)..\..\..\lib\vc2008\x86\"
-			IntermediateDirectory="$(SolutionDir)..\..\..\obj\vc2008\x86-$(ConfigurationName)\$(ProjectName)"
+			OutputDirectory="$(SolutionDir)..\..\..\lib\windows\x86\vc2008"
+			IntermediateDirectory="$(SolutionDir)..\..\..\tmp\windows\x86\vc2008\$(ConfigurationName)\$(ProjectName)"
 			ConfigurationType="4"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -231,10 +231,10 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(SolutionDir)..\..\..\lib\vc2008\x64\"
-			IntermediateDirectory="$(SolutionDir)..\..\..\obj\vc2008\x64-$(ConfigurationName)\$(ProjectName)"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="2"
+			CharacterSet="0"
 			WholeProgramOptimization="1"
 			>
 			<Tool

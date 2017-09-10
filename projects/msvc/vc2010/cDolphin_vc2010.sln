@@ -1,22 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cDolphin_lib", "cDolphin_lib\cDolphin_lib.vcproj", "{5FA9D1FC-44D6-43D2-BB44-2ACA4E7B1B46}"
-	ProjectSection(ProjectDependencies) = postProject
-		{15B4DEB7-6827-43BB-8A09-E8309BDCC78C} = {15B4DEB7-6827-43BB-8A09-E8309BDCC78C}
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cDolphin_lib", "cDolphin_lib\cDolphin_lib.vcxproj", "{5FA9D1FC-44D6-43D2-BB44-2ACA4E7B1B46}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cDolphin", "cDolphin\cDolphin.vcproj", "{BB0C49C8-13D2-4939-BD6A-EE4D5D28701C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5FA9D1FC-44D6-43D2-BB44-2ACA4E7B1B46} = {5FA9D1FC-44D6-43D2-BB44-2ACA4E7B1B46}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cDolphin", "cDolphin\cDolphin.vcxproj", "{BB0C49C8-13D2-4939-BD6A-EE4D5D28701C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcproj", "{15B4DEB7-6827-43BB-8A09-E8309BDCC78C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcxproj", "{15B4DEB7-6827-43BB-8A09-E8309BDCC78C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cScrDolphin", "cScrDolphin\cScrDolphin.vcproj", "{9E2FFDB7-7B67-4DBE-B1C6-EC16A6EDB618}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5FA9D1FC-44D6-43D2-BB44-2ACA4E7B1B46} = {5FA9D1FC-44D6-43D2-BB44-2ACA4E7B1B46}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cScrDolphin", "cScrDolphin\cScrDolphin.vcxproj", "{9E2FFDB7-7B67-4DBE-B1C6-EC16A6EDB618}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
