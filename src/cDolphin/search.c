@@ -39,16 +39,16 @@ ALIGN_PREFIX(8) CounterType evaluations, total_evaluations ALIGN_SUFFIX(8);
 /* When no other information is available, JCW's endgame
    priority order is used also in the midgame. */
 int position_list[64] = {
-  /*A1*/        A1 , H8 , A8 , H1 ,
-  /*C1*/        C1 , F1 , A3 , H3 , A6 , H6 , C8 , F8 ,
-  /*C3*/        C3 , F3 , C6 , F6 ,
-  /*D1*/        D1 , E1 , A4 , H4 , A5 , H5 , D8 , E8 ,
-  /*D3*/        D3 , E3 , C4 , F4 , C5 , F5 , D6 , E6 ,   // E3Ð´³ÉE5!!!
-  /*D2*/        D2 , E2 , B4 , G4 , B5 , G5 , D7 , E7 ,
-  /*C2*/        C2 , F2 , B3 , G3 , B6 , G6 , C7 , F7 ,
-  /*B1*/        B1 , G1 , A2 , H2 , A7 , H7 , B8 , G8 ,
-  /*B2*/        B2 , G2 , B7 , G7 ,
-  /*D4*/        D4 , E4 , D5 , E5
+    /* A1 */    A1 , H8 , A8 , H1 ,
+    /* C1 */    C1 , F1 , A3 , H3 , A6 , H6 , C8 , F8 ,
+    /* C3 */    C3 , F3 , C6 , F6 ,
+    /* D1 */    D1 , E1 , A4 , H4 , A5 , H5 , D8 , E8 ,
+    /* D3 */    D3 , E3 , C4 , F4 , C5 , F5 , D6 , E6 ,   // Bugfix: E3 wrong write to E5 !!!
+    /* D2 */    D2 , E2 , B4 , G4 , B5 , G5 , D7 , E7 ,
+    /* C2 */    C2 , F2 , B3 , G3 , B6 , G6 , C7 , F7 ,
+    /* B1 */    B1 , G1 , A2 , H2 , A7 , H7 , B8 , G8 ,
+    /* B2 */    B2 , G2 , B7 , G7 ,
+    /* D4 */    D4 , E4 , D5 , E5
 };
 
 /* Local variables */
@@ -63,15 +63,15 @@ static EvaluationType last_eval;
 */
 
 static void
-init_move_lists( void ) {
-	int i, j;
+init_move_lists(void) {
+    int i, j;
 
-	for ( i = 0; i <= 60; i++ ) {
-		for ( j = 0; j < MOVE_ORDER_SIZE; j++ )
-			sorted_move_order[i][j] = position_list[j];
-	}
-	for ( i = 0; i <= 60; i++ )
-		list_inherited[i] = FALSE;
+    for (i = 0; i <= 60; i++) {
+        for (j = 0; j < MOVE_ORDER_SIZE; j++)
+            sorted_move_order[i][j] = position_list[j];
+    }
+    for (i = 0; i <= 60; i++)
+        list_inherited[i] = FALSE;
 }
 
 /*
@@ -82,22 +82,22 @@ init_move_lists( void ) {
 */
 
 void
-inherit_move_lists( int stage ) {
-	int i;
-	int last;
+inherit_move_lists(int stage) {
+    int i;
+    int last;
 
-	if ( list_inherited[stage] )
-		return;
-	list_inherited[stage] = TRUE;
-	if ( stage == 0 )
-		return;
-	last = stage - 2;
-	while ( (last >= 0) && (!list_inherited[last]) )
-		last -= 2;
-	if ( last < 0 )
-		return;
-	for ( i = 0; i < MOVE_ORDER_SIZE; i++ )
-		sorted_move_order[stage][i] = sorted_move_order[last][i];
+    if (list_inherited[stage])
+        return;
+    list_inherited[stage] = TRUE;
+    if (stage == 0)
+        return;
+    last = stage - 2;
+    while ((last >= 0) && (!list_inherited[last]))
+        last -= 2;
+    if (last < 0)
+        return;
+    for (i = 0; i < MOVE_ORDER_SIZE; i++)
+        sorted_move_order[stage][i] = sorted_move_order[last][i];
 }
 
 /*
@@ -108,45 +108,45 @@ inherit_move_lists( int stage ) {
 */
 
 void
-reorder_move_list( const BitBoard my_bits,
-				  const BitBoard opp_bits,
-				  int stage ) {
-	const int dont_touch = 24;
-	int i;
-	int move;
-	int empty_pos;
-	int nonempty_pos;
-	int empty_buffer[MOVE_ORDER_SIZE];
-	int nonempty_buffer[MOVE_ORDER_SIZE];
+reorder_move_list(const BitBoard my_bits,
+    const BitBoard opp_bits,
+    int stage) {
+    const int dont_touch = 24;
+    int i;
+    int move;
+    int empty_pos;
+    int nonempty_pos;
+    int empty_buffer[MOVE_ORDER_SIZE];
+    int nonempty_buffer[MOVE_ORDER_SIZE];
 
-	empty_pos = 0;
-	for ( i = 0; i < MOVE_ORDER_SIZE; i++ ) {
-		move = sorted_move_order[stage][i];
-		if ( ( (((my_bits.low & square_mask[move].low) == 0) &&
-			((my_bits.high & square_mask[move].high) == 0) &&
-			((opp_bits.low & square_mask[move].low) == 0) &&
-			((opp_bits.high & square_mask[move].high) == 0)) ) ||
-			( i < dont_touch ) ) {
-			empty_buffer[empty_pos] = move;
-			empty_pos++;
-		}
-	}
-	nonempty_pos = MOVE_ORDER_SIZE - 1;
-	for ( i = MOVE_ORDER_SIZE - 1; i >= 0; i-- ) {
-		move = sorted_move_order[stage][i];
-		if ( ( (((my_bits.low & square_mask[move].low) != 0) ||
-			((my_bits.high & square_mask[move].high) != 0) ||
-			((opp_bits.low & square_mask[move].low) != 0) ||
-			((opp_bits.high & square_mask[move].high) != 0)) ) &&
-			( i >= dont_touch ) ) {
-			nonempty_buffer[nonempty_pos] = move;
-			nonempty_pos--;
-		}
-	}
-	for ( i = 0; i < empty_pos; i++ )
-		sorted_move_order[stage][i] = empty_buffer[i];
-	for ( i = empty_pos; i < MOVE_ORDER_SIZE; i++ )
-		sorted_move_order[stage][i] = nonempty_buffer[i];
+    empty_pos = 0;
+    for (i = 0; i < MOVE_ORDER_SIZE; i++) {
+        move = sorted_move_order[stage][i];
+        if (((((my_bits.low & square_mask[move].low) == 0) &&
+            ((my_bits.high & square_mask[move].high) == 0) &&
+            ((opp_bits.low & square_mask[move].low) == 0) &&
+            ((opp_bits.high & square_mask[move].high) == 0))) ||
+            (i < dont_touch)) {
+            empty_buffer[empty_pos] = move;
+            empty_pos++;
+        }
+    }
+    nonempty_pos = MOVE_ORDER_SIZE - 1;
+    for (i = MOVE_ORDER_SIZE - 1; i >= 0; i--) {
+        move = sorted_move_order[stage][i];
+        if (((((my_bits.low & square_mask[move].low) != 0) ||
+            ((my_bits.high & square_mask[move].high) != 0) ||
+            ((opp_bits.low & square_mask[move].low) != 0) ||
+            ((opp_bits.high & square_mask[move].high) != 0))) &&
+            (i >= dont_touch)) {
+            nonempty_buffer[nonempty_pos] = move;
+            nonempty_pos--;
+        }
+    }
+    for (i = 0; i < empty_pos; i++)
+        sorted_move_order[stage][i] = empty_buffer[i];
+    for (i = empty_pos; i < MOVE_ORDER_SIZE; i++)
+        sorted_move_order[stage][i] = nonempty_buffer[i];
 }
 
 /*
@@ -155,10 +155,10 @@ reorder_move_list( const BitBoard my_bits,
 */
 
 void
-setup_search( void ) {
-	init_move_lists();
-	create_eval_info( UNINITIALIZED_EVAL, UNSOLVED_POSITION, 0, 0.0, 0, FALSE );
-	negate_eval = FALSE;
+setup_search(void) {
+    init_move_lists();
+    create_eval_info(UNINITIALIZED_EVAL, UNSOLVED_POSITION, 0, 0.0, 0, FALSE);
+    negate_eval = FALSE;
 }
 
 /*
@@ -171,22 +171,22 @@ setup_search( void ) {
 #define m2      0x33333333
 
 INLINE unsigned int
-non_iterative_popcount2( BitBoard b ) {
-	unsigned int a, n1, n2;
+non_iterative_popcount2(BitBoard b) {
+    unsigned int a, n1, n2;
 
-	a = b.high - ((b.high >> 1) & m1);
-	n1 = (a & m2) + ((a >> 2) & m2);
-	n1 = (n1 & 0x0F0F0F0F) + ((n1 >> 4) & 0x0F0F0F0F);
-	n1 = (n1 & 0xFFFF) + (n1 >> 16);
-	n1 = (n1 & 0xFF) + (n1 >> 8);
+    a = b.high - ((b.high >> 1) & m1);
+    n1 = (a & m2) + ((a >> 2) & m2);
+    n1 = (n1 & 0x0F0F0F0F) + ((n1 >> 4) & 0x0F0F0F0F);
+    n1 = (n1 & 0xFFFF) + (n1 >> 16);
+    n1 = (n1 & 0xFF) + (n1 >> 8);
 
-	a = b.low - ((b.low >> 1) & m1);
-	n2 = (a & m2) + ((a >> 2) & m2);
-	n2 = (n2 & 0x0F0F0F0F) + ((n2 >> 4) & 0x0F0F0F0F);
-	n2 = (n2 & 0xFFFF) + (n2 >> 16);
-	n2 = (n2 & 0xFF) + (n2 >> 8);
+    a = b.low - ((b.low >> 1) & m1);
+    n2 = (a & m2) + ((a >> 2) & m2);
+    n2 = (n2 & 0x0F0F0F0F) + ((n2 >> 4) & 0x0F0F0F0F);
+    n2 = (n2 & 0xFFFF) + (n2 >> 16);
+    n2 = (n2 & 0xFF) + (n2 >> 8);
 
-	return n1 + n2;
+    return n1 + n2;
 }
 
 /*
@@ -195,20 +195,20 @@ non_iterative_popcount2( BitBoard b ) {
 */
 
 INLINE int
-pop_count_loop( BitBoard bits ) {
-	unsigned int count = 0;
+pop_count_loop(BitBoard bits) {
+    unsigned int count = 0;
 
-	while ( bits.high ) {
-		bits.high &= (bits.high - 1);
-		count++;
-	}
+    while (bits.high) {
+        bits.high &= (bits.high - 1);
+        count++;
+    }
 
-	while ( bits.low ) {
-		bits.low &= (bits.low - 1);
-		count++;
-	}
+    while (bits.low) {
+        bits.low &= (bits.low - 1);
+        count++;
+    }
 
-	return count;
+    return count;
 }
 
 /*
@@ -218,12 +218,11 @@ pop_count_loop( BitBoard bits ) {
 */
 
 INLINE int
-disc_count( BitBoard my_bits, BitBoard opp_bits,
-		   int is_my_color) {
-	if (is_my_color)
-		return non_iterative_popcount2(my_bits);
-	else
-		return non_iterative_popcount2(opp_bits);
+disc_count(BitBoard my_bits, BitBoard opp_bits, int is_my_color) {
+    if (is_my_color)
+        return non_iterative_popcount2(my_bits);
+    else
+        return non_iterative_popcount2(opp_bits);
 }
 
 /*
@@ -233,15 +232,16 @@ disc_count( BitBoard my_bits, BitBoard opp_bits,
 */
 
 INLINE int
-disc_count2( int color ) {
-	int i, sum;
+disc_count2(int color) {
+    int i, sum;
 
-	sum = 0;
-	for ( i = 0; i < 64; i++ )
-		if ( board[i] == color )
-			sum++;
+    sum = 0;
+    for (i = 0; i < 64; i++) {
+        if (board[i] == color)
+            sum++;
+    }
 
-	return sum;
+    return sum;
 }
 
 /*
@@ -254,18 +254,18 @@ disc_count2( int color ) {
 */
 
 INLINE void
-set_ponder_move( int move ) {
-	pondered_move = move;
+set_ponder_move(int move) {
+    pondered_move = move;
 }
 
 INLINE void
-clear_ponder_move( void ) {
-	pondered_move = _NULL_MOVE;
+clear_ponder_move(void) {
+    pondered_move = _NULL_MOVE;
 }
 
 INLINE int
-get_ponder_move( void ) {
-	return pondered_move;
+get_ponder_move(void) {
+    return pondered_move;
 }
 
 /*
@@ -275,26 +275,26 @@ get_ponder_move( void ) {
 */
 
 INLINE int
-select_move( int first, int list_size ) {
-	int i;
-	int temp_move;
-	int best, best_eval;
+select_move(int first, int list_size) {
+    int i;
+    int temp_move;
+    int best, best_eval;
 
-	best = first;
-	best_eval = evals[disks_played][move_list[disks_played][first]];
-	for ( i = first + 1; i < list_size; i++ ) {
-		if ( evals[disks_played][move_list[disks_played][i]] > best_eval ) {
-			best = i;
-			best_eval = evals[disks_played][move_list[disks_played][i]];
-		}
-	}
-	if ( best != first ) {
-		temp_move = move_list[disks_played][first];
-		move_list[disks_played][first] = move_list[disks_played][best];
-		move_list[disks_played][best] = temp_move;
-	}
+    best = first;
+    best_eval = evals[disks_played][move_list[disks_played][first]];
+    for (i = first + 1; i < list_size; i++) {
+        if (evals[disks_played][move_list[disks_played][i]] > best_eval) {
+            best = i;
+            best_eval = evals[disks_played][move_list[disks_played][i]];
+        }
+    }
+    if (best != first) {
+        temp_move = move_list[disks_played][first];
+        move_list[disks_played][first] = move_list[disks_played][best];
+        move_list[disks_played][best] = temp_move;
+    }
 
-	return move_list[disks_played][first];
+    return move_list[disks_played][first];
 }
 
 /*
@@ -304,19 +304,19 @@ select_move( int first, int list_size ) {
 */
 
 EvaluationType
-create_eval_info( EvalType in_type, EvalResult in_res,
-				 int in_score, double in_conf,
-				 int in_depth, int in_book ) {
-	EvaluationType out;
+create_eval_info(EvalType in_type, EvalResult in_res,
+                 int in_score, double in_conf,
+                 int in_depth, int in_book) {
+    EvaluationType out;
 
-	out.type = in_type;
-	out.res = in_res;
-	out.score = in_score;
-	out.confidence = in_conf;
-	out.search_depth = in_depth;
-	out.is_book = in_book;
+    out.type = in_type;
+    out.res = in_res;
+    out.score = in_score;
+    out.confidence = in_conf;
+    out.search_depth = in_depth;
+    out.is_book = in_book;
 
-	return out;
+    return out;
 }
 
 /*
@@ -325,67 +325,75 @@ create_eval_info( EvalType in_type, EvalResult in_res,
 */
 
 void
-adjust_wld_eval( EvaluationType *eval_info ) {
-	double eval;
-	int need_adjust;
-	need_adjust = FALSE;
+adjust_wld_eval(EvaluationType *eval_info) {
+    double eval;
+    int need_adjust;
+    need_adjust = FALSE;
 
-	switch ( eval_info->type ) {
+    switch (eval_info->type) {
 
-	case WLD_EVAL:
-		switch ( eval_info->res ) {
-		case WON_POSITION:
-			if ( eval_info->score > 2 * 128 )  /* Win by more than 2 */
-				eval = (eval_info->score / 128.0) - 0.001;
-			else
-				eval = 2.0;
-		case DRAWN_POSITION:
-			eval = 0.0;
-		case LOST_POSITION:
-			if ( eval_info->score < -2 * 128 )  /* Loss by more than 2 */
-				eval = (eval_info->score / 128.0) + 0.001;
-			else
-				eval = -2.0;
-		case UNSOLVED_POSITION:
-			eval = 0.0;
-		}
-		need_adjust = TRUE;
+    case WLD_EVAL:
+        switch (eval_info->res) {
+        case WON_POSITION:
+            if (eval_info->score > 2 * 128)  /* Win by more than 2 */
+                eval = (eval_info->score / 128.0) - 0.001;
+            else
+                eval = 2.0;
+            break;
+        case DRAWN_POSITION:
+            eval = 0.0;
+            break;
+        case LOST_POSITION:
+            if (eval_info->score < -2 * 128)  /* Loss by more than 2 */
+                eval = (eval_info->score / 128.0) + 0.001;
+            else
+                eval = -2.0;
+            break;
+        case UNSOLVED_POSITION:
+            eval = 0.0;
+            break;
+        }
+        need_adjust = TRUE;
 
-	case SELECTIVE_EVAL:
-		switch ( eval_info->res ) {
-		case WON_POSITION:
-			eval = 1.0 + eval_info->confidence;
-		case DRAWN_POSITION:
-			eval = -1.0 + eval_info->confidence;
-		case LOST_POSITION:
-			eval = -1.0 - eval_info->confidence;
-		case UNSOLVED_POSITION:
-			eval = eval_info->score / 128.0;
-			if ( eval > 0.0 && eval <= 1.01 )
-				eval = 2.0;
-			else if ( eval < 0.0 && eval >= -1.01 )
-				eval = -2.0;
-		}
-		need_adjust = TRUE;
+    case SELECTIVE_EVAL:
+        switch (eval_info->res) {
+        case WON_POSITION:
+            eval = 1.0 + eval_info->confidence;
+            break;
+        case DRAWN_POSITION:
+            eval = -1.0 + eval_info->confidence;
+            break;
+        case LOST_POSITION:
+            eval = -1.0 - eval_info->confidence;
+            break;
+        case UNSOLVED_POSITION:
+            eval = eval_info->score / 128.0;
+            if (eval > 0.0 && eval <= 1.01)
+                eval = 2.0;
+            else if (eval < 0.0 && eval >= -1.01)
+                eval = -2.0;
+            break;
+        }
+        need_adjust = TRUE;
 
-	case FORCED_EVAL:
-	case PASS_EVAL:
-	case INTERRUPTED_EVAL:
-	case UNDEFINED_EVAL:
-	case UNINITIALIZED_EVAL:
-		break;
+    case FORCED_EVAL:
+    case PASS_EVAL:
+    case INTERRUPTED_EVAL:
+    case UNDEFINED_EVAL:
+    case UNINITIALIZED_EVAL:
+        break;
 
-	default:
-		break;
+    default:
+        break;
 
-	}
+    }
 
-	if ( need_adjust ) {
-		if ( eval >= 0.0 )
-			eval_info->score = (int)floor(eval * 128.0 + 0.0001);
-		else
-			eval_info->score = (int)floor(eval * 128.0 - 0.0001);
-	}
+    if (need_adjust) {
+        if (eval >= 0.0)
+            eval_info->score = (int)floor(eval * 128.0 + 0.0001);
+        else
+            eval_info->score = (int)floor(eval * 128.0 - 0.0001);
+    }
 }
 
 /*
@@ -394,63 +402,63 @@ adjust_wld_eval( EvaluationType *eval_info ) {
 */
 
 double
-produce_compact_eval( EvaluationType eval_info ) {
-	double eval;
+produce_compact_eval(EvaluationType eval_info) {
+    double eval;
 
-	switch ( eval_info.type ) {
+    switch (eval_info.type) {
 
-	case MIDGAME_EVAL:
-		/*
-		eval = eval_info.search_depth + logistic_map( eval_info.score );
-		if ( eval_info.is_book )
-			eval = -eval;
-		*/
-		eval = eval_info.score / 128.0;
-		return eval;
+    case MIDGAME_EVAL:
+        /*
+        eval = eval_info.search_depth + logistic_map( eval_info.score );
+        if ( eval_info.is_book )
+            eval = -eval;
+        */
+        eval = eval_info.score / 128.0;
+        return eval;
 
-	case EXACT_EVAL:
-		return eval_info.score / 128.0;
+    case EXACT_EVAL:
+        return eval_info.score / 128.0;
 
-	case WLD_EVAL:
-		switch ( eval_info.res ) {
-		case WON_POSITION:
-			if ( eval_info.score > 2 * 128 )  /* Win by more than 2 */
-				return (eval_info.score / 128.0) - 0.01;
-			else
-				return 1.99;
-		case DRAWN_POSITION:
-			return 0.0;
-		case LOST_POSITION:
-			if ( eval_info.score < -2 * 128 )  /* Loss by more than 2 */
-				return (eval_info.score / 128.0) + 0.01;
-			else
-				return -1.99;
-		case UNSOLVED_POSITION:
-			return 0.0;
-		}
+    case WLD_EVAL:
+        switch (eval_info.res) {
+        case WON_POSITION:
+            if (eval_info.score > 2 * 128)  /* Win by more than 2 */
+                return (eval_info.score / 128.0) - 0.01;
+            else
+                return 1.99;
+        case DRAWN_POSITION:
+            return 0.0;
+        case LOST_POSITION:
+            if (eval_info.score < -2 * 128)  /* Loss by more than 2 */
+                return (eval_info.score / 128.0) + 0.01;
+            else
+                return -1.99;
+        case UNSOLVED_POSITION:
+            return 0.0;
+        }
 
-	case SELECTIVE_EVAL:
-		switch ( eval_info.res ) {
-		case WON_POSITION:
-			return 1.0 + eval_info.confidence;
-		case DRAWN_POSITION:
-			return -1.0 + eval_info.confidence;
-		case LOST_POSITION:
-			return -1.0 - eval_info.confidence;
-		case UNSOLVED_POSITION:
-			return eval_info.score / 128.0;
-		}
+    case SELECTIVE_EVAL:
+        switch (eval_info.res) {
+        case WON_POSITION:
+            return 1.0 + eval_info.confidence;
+        case DRAWN_POSITION:
+            return -1.0 + eval_info.confidence;
+        case LOST_POSITION:
+            return -1.0 - eval_info.confidence;
+        case UNSOLVED_POSITION:
+            return eval_info.score / 128.0;
+        }
 
-	case FORCED_EVAL:
-	case PASS_EVAL:
-	case INTERRUPTED_EVAL:
-	case UNDEFINED_EVAL:
-	case UNINITIALIZED_EVAL:
-		return 0.0;
+    case FORCED_EVAL:
+    case PASS_EVAL:
+    case INTERRUPTED_EVAL:
+    case UNDEFINED_EVAL:
+    case UNINITIALIZED_EVAL:
+        return 0.0;
 
-	}
+    }
 
-	return 0.0;  /* This statement shouldn't be reached */
+    return 0.0;  /* This statement shouldn't be reached */
 }
 
 /*
@@ -462,23 +470,23 @@ produce_compact_eval( EvaluationType eval_info ) {
 */
 
 void
-set_current_eval( EvaluationType eval ) {
-	last_eval = eval;
-	if ( negate_eval ) {
-		last_eval.score = -last_eval.score;
-		if ( last_eval.res == WON_POSITION )
-			last_eval.res = LOST_POSITION;
-		else if ( last_eval.res == LOST_POSITION )
-			last_eval.res = WON_POSITION;
-	}
+set_current_eval(EvaluationType eval) {
+    last_eval = eval;
+    if (negate_eval) {
+        last_eval.score = -last_eval.score;
+        if (last_eval.res == WON_POSITION)
+            last_eval.res = LOST_POSITION;
+        else if (last_eval.res == LOST_POSITION)
+            last_eval.res = WON_POSITION;
+    }
 }
 
 INLINE EvaluationType
-get_current_eval( void ) {
-	return last_eval;
+get_current_eval(void) {
+    return last_eval;
 }
 
 INLINE void
-negate_current_eval( int negate ) {
-	negate_eval = negate;
+negate_current_eval(int negate) {
+    negate_eval = negate;
 }
