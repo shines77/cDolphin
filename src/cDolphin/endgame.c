@@ -173,13 +173,14 @@ setup_end(void) {
         }
     }
     for (j = MAX_END_CORR_DEPTH + 1; j < 64; j++) {
-        for (i = 0; i <= 60; i++)
+        for (i = 0; i <= 60; i++) {
             prelim_threshold[i][j] = prelim_threshold[i][MAX_END_CORR_DEPTH];
+        }
     }
     for (i = 0; i <= 60; i++) {
-        for (j = 0; j < 64; j++)
-            fast_first_threshold[i][j] =
-            (int)ceil(prelim_threshold[i][j] * 128.0);
+        for (j = 0; j < 64; j++) {
+            fast_first_threshold[i][j] = (int)ceil(prelim_threshold[i][j] * 128.0);
+        }
     }
 }
 
@@ -357,8 +358,7 @@ send_solve_status(int empties,
     send_status_pv(pv[0], empties);
     send_status_time(get_elapsed_time());
     if (get_elapsed_time() > 0.0001) {
-        send_status("%6.0f %s  ", node_val / (get_elapsed_time() + 0.0001),
-                    "nps");
+        send_status("%6.0f %s  ", node_val / (get_elapsed_time() + 0.0001), "nps");
     }
 }
 
@@ -654,9 +654,10 @@ solve_three_empty(BitBoard my_bits,
                 return disc_diff - 3;
             return 0;  /* Can't reach this code, only keep it for symmetry */
         }
-        else
+        else {
             return -solve_three_empty(opp_bits, my_bits, sq1, sq2, sq3,
                                       -beta, -alpha, -disc_diff, FALSE);
+        }
     }
 
     return score;
@@ -1338,12 +1339,14 @@ solve_parity_hash_high(BitBoard my_bits,
 
         new_disc_diff = -disc_diff - 2 * flipped - 1;
 
-        if (empties <= LOW_LEVEL_DEPTH)  /* Fail-high for opp is likely. */
+        if (empties <= LOW_LEVEL_DEPTH) {  /* Fail-high for opp is likely. */
             ev = -solve_parity_hash(new_opp_bits, bb_flips, -beta, -alpha,
                                     opp_col, empties - 1, new_disc_diff, TRUE);
-        else
+        }
+        else {
             ev = -solve_parity_hash_high(new_opp_bits, bb_flips, -beta, -alpha,
                                          opp_col, empties - 1, new_disc_diff, TRUE);
+        }
 
         region_parity ^= quadrant_mask[sq];
 
@@ -2424,18 +2427,16 @@ end_game(BitBoard my_bits,
                     flags = EXACT_VALUE;
                 else
                     flags = UPPER_BOUND | LOWER_BOUND;
-                *eval_info =
-                    create_eval_info(WLD_EVAL, res, root_eval * 128, 0.0,
-                                     empties, FALSE);
+                *eval_info = create_eval_info(WLD_EVAL, res, root_eval * 128, 0.0,
+                                              empties, FALSE);
                 if (full_output_mode) {
                     hash_expand_pv(my_bits, opp_bits, color, ENDGAME_MODE, flags, 0);
                     send_solve_status(empties, color, eval_info);
                 }
             }
             else {
-                *eval_info =
-                    create_eval_info(EXACT_EVAL, res, root_eval * 128, 0.0,
-                                     empties, FALSE);
+                *eval_info = create_eval_info(EXACT_EVAL, res, root_eval * 128, 0.0,
+                                              empties, FALSE);
                 if (full_output_mode) {
                     hash_expand_pv(my_bits, opp_bits, color, ENDGAME_MODE, EXACT_VALUE, 0);
                     send_solve_status(empties, color, eval_info);
@@ -2476,9 +2477,10 @@ end_game(BitBoard my_bits,
         else {
 #ifdef TEXT_BASED
             /*
-            if (echo)
+            if (echo) {
                 printf("%s %.1f %c %s\n", PANIC_ABORT_TEXT,
-                get_elapsed_time(), SECOND_ABBREV, WLD_SEARCH_TEXT);
+                       get_elapsed_time(), SECOND_ABBREV, WLD_SEARCH_TEXT);
+            }
             //*/
 #endif
             root_eval = SEARCH_ABORT;
@@ -2546,8 +2548,7 @@ end_game(BitBoard my_bits,
         display_status(stdout, FALSE);
     }
 
-    /* For shallow endgames, we can afford to compute the entire PV
-        move by move. */
+    /* For shallow endgames, we can afford to compute the entire PV move by move. */
 
     /*
     if (!wld && !incomplete_search && !force_return && (empties <= PV_EXPANSION)) {

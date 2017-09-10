@@ -12,8 +12,7 @@
 
 #include "epcstat.h"
 
-float end_mean[61][MAX_END_CORR_DEPTH+1] = 
-{
+float end_mean[61][MAX_END_CORR_DEPTH + 1] = {
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
@@ -77,8 +76,7 @@ float end_mean[61][MAX_END_CORR_DEPTH+1] =
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-float end_sigma[61][MAX_END_CORR_DEPTH+1] = 
-{
+float end_sigma[61][MAX_END_CORR_DEPTH + 1] = {
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
@@ -142,8 +140,7 @@ float end_sigma[61][MAX_END_CORR_DEPTH+1] =
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-short end_stats_available[61][MAX_END_CORR_DEPTH+1] = 
-{
+short end_stats_available[61][MAX_END_CORR_DEPTH + 1] = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0, 0},
