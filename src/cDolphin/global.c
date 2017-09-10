@@ -16,21 +16,21 @@
 
 int score_sheet_row;
 ALIGN_PREFIX(64) int piece_count[3][MAX_SEARCH_DEPTH] ALIGN_SUFFIX(64);
-int black_moves[60+4];
-int white_moves[60+4];
+int black_moves[60 + 4];
+int white_moves[60 + 4];
 
 #ifdef DOLPHIN_GGS
 
 CODKStream *g_odk_stream = NULL;
 
 CODKStream *odk_stream_init(CODKStream *gs) {
-	CODKStream *old_gs = g_odk_stream;
-	g_odk_stream = gs;
-	return old_gs;
+    CODKStream *old_gs = g_odk_stream;
+    g_odk_stream = gs;
+    return old_gs;
 }
 
-void odk_stream_release( void ) {
-	g_odk_stream = NULL;
+void odk_stream_release(void) {
+    g_odk_stream = NULL;
 }
 
 #endif  // DOLPHIN_GGS
