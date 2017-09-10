@@ -25,6 +25,9 @@
 *.exe
 *.lib
 
+# cScrDolphin Position files
+*.pos
+
 # Ignore files build by Visual Studio
 *.aps
 *.bak
