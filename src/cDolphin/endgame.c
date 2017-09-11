@@ -57,8 +57,15 @@
 #define EVENT_CHECK_INTERVAL         250000.0
 #endif
 
+#define INTEL_HIGH_PERF_CPU          1
+
+#if INTEL_HIGH_PERF_CPU
 #define LOW_LEVEL_DEPTH              8
 #define FASTEST_FIRST_DEPTH          12
+#else
+#define LOW_LEVEL_DEPTH              8
+#define FASTEST_FIRST_DEPTH          12
+#endif
 #define HASH_DEPTH                   (LOW_LEVEL_DEPTH + 1)
 
 #define VERY_HIGH_EVAL               1000000
@@ -1482,8 +1489,9 @@ end_tree_search(int depth,
             return alpha;
         }
         stability_bound = 64 - 2 * count_stable(OPP_COLOR(color), opp_bits, my_bits);
-        if (stability_bound < beta)
+        if (stability_bound < beta) {
             beta = stability_bound + 1;
+        }
         if (stability_bound <= alpha) {
             pv_depth[depth] = depth;
             return alpha;
@@ -1606,9 +1614,8 @@ end_tree_search(int depth,
                                        end_percentile[selectivity] * 128.0);
             int beta_bound = 128 * beta + mpc_bias + mpc_window;
             int alpha_bound = 128 * alpha + mpc_bias - mpc_window;
-            int shallow_val =
-                tree_search(my_bits, opp_bits, depth, depth + shallow_remains,
-                            alpha_bound, beta_bound, color, use_hash, FALSE, void_legal);
+            int shallow_val = tree_search(my_bits, opp_bits, depth, depth + shallow_remains,
+                                          alpha_bound, beta_bound, color, use_hash, FALSE, void_legal);
             if (shallow_val >= beta_bound) {
                 if (use_hash) {
                     hash_add(ENDGAME_MODE, alpha, pv[depth][depth],
