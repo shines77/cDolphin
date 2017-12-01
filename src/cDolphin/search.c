@@ -37,13 +37,13 @@ ALIGN_PREFIX(8) CounterType leaf_nodes, tree_nodes, total_nodes ALIGN_SUFFIX(8);
 ALIGN_PREFIX(8) CounterType evaluations, total_evaluations ALIGN_SUFFIX(8);
 
 /* When no other information is available, JCW's endgame
-   priority order is used also in the midgame. */
+   priority order is used also in the mid-game. */
 int position_list[64] = {
     /* A1 */    A1 , H8 , A8 , H1 ,
     /* C1 */    C1 , F1 , A3 , H3 , A6 , H6 , C8 , F8 ,
     /* C3 */    C3 , F3 , C6 , F6 ,
     /* D1 */    D1 , E1 , A4 , H4 , A5 , H5 , D8 , E8 ,
-    /* D3 */    D3 , E3 , C4 , F4 , C5 , F5 , D6 , E6 ,   // Bugfix: E3 wrong write to E5 !!!
+    /* D3 */    D3 , E3 , C4 , F4 , C5 , F5 , D6 , E6 ,   // Bug fixed: E3 wrong write to E5 !!!
     /* D2 */    D2 , E2 , B4 , G4 , B5 , G5 , D7 , E7 ,
     /* C2 */    C2 , F2 , B3 , G3 , B6 , G6 , C7 , F7 ,
     /* B1 */    B1 , G1 , A2 , H2 , A7 , H7 , B8 , G8 ,

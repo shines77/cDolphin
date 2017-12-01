@@ -90,14 +90,14 @@ static time_t init_time;
 */
 
 void
-reset_real_timer( void ) {
+reset_real_timer(void) {
 #ifdef CRON_SUPPORTED
-	getitimer( ITIMER_REAL, &saved_real_timer );
+    getitimer(ITIMER_REAL, &saved_real_timer);
 #else
 #ifdef GTC_SUPPORTED
-	init_ticks = GetTickCount();
+    init_ticks = GetTickCount();
 #else
-	time( &init_time);
+    time(&init_time);
 #endif
 #endif
 }
@@ -110,20 +110,19 @@ reset_real_timer( void ) {
 */
 
 void
-init_timer( void ) {
+init_timer(void) {
 #ifdef CRON_SUPPORTED
-	struct itimerval t;
+    struct itimerval t;
 
-	t.it_value.tv_sec  = 1000000;
-	t.it_value.tv_usec = 0;
-	t.it_interval.tv_sec  = 0;
-	t.it_interval.tv_usec = 0;
-	saved_real_timer = t;
-	setitimer( ITIMER_REAL, &t, NULL );
+    t.it_value.tv_sec = 1000000;
+    t.it_value.tv_usec = 0;
+    t.it_interval.tv_sec = 0;
+    t.it_interval.tv_usec = 0;
+    saved_real_timer = t;
+    setitimer(ITIMER_REAL, &t, NULL);
 #endif
-	reset_real_timer();
+    reset_real_timer();
 }
-
 
 /*
   GET_REAL_TIMER
@@ -131,29 +130,28 @@ init_timer( void ) {
 */
 
 double
-get_real_timer( void ) {
+get_real_timer(void) {
 #ifdef CRON_SUPPORTED
-	struct itimerval t;
+    struct itimerval t;
 
-	getitimer( ITIMER_REAL, &t );
-	return (saved_real_timer.it_value.tv_sec  - t.it_value.tv_sec)
-		+ (saved_real_timer.it_value.tv_usec - t.it_value.tv_usec) / 1000000.0;
+    getitimer(ITIMER_REAL, &t);
+    return (saved_real_timer.it_value.tv_sec - t.it_value.tv_sec)
+        + (saved_real_timer.it_value.tv_usec - t.it_value.tv_usec) / 1000000.0;
 #else
 #ifdef GTC_SUPPORTED
-	int ticks;
+    int ticks;
 
-	ticks = GetTickCount();
+    ticks = GetTickCount();
 
-	return (ticks - init_ticks) / ((double) CLK_TCK);
+    return (ticks - init_ticks) / ((double)CLK_TCK);
 #else
-	time_t curr_time;
+    time_t curr_time;
 
-	time( &curr_time );
-	return (double) (curr_time - init_time);
+    time(&curr_time);
+    return (double)(curr_time - init_time);
 #endif
 #endif
 }
-
 
 /*
   SET_DEFAULT_PANIC
@@ -161,8 +159,8 @@ get_real_timer( void ) {
 */
 
 void
-set_default_panic( void ) {
-	panic_value = time_per_move * PANIC_FACTOR / total_move_time;
+set_default_panic(void) {
+    panic_value = time_per_move * PANIC_FACTOR / total_move_time;
 }
 
 /*
@@ -171,53 +169,53 @@ set_default_panic( void ) {
 */
 
 void
-determine_move_time( double time_left, double incr, int discs ) {
-	double time_available;
-	double div_coffe;
-	double moves_left;
+determine_move_time(double time_left, double incr, int discs) {
+    double time_available;
+    double div_coffe;
+    double moves_left;
 
-	frozen_ponder_time = current_ponder_time;
-	frozen_ponder_depth = current_ponder_depth;
-	if ( discs < 10 )
-		moves_left = MAX( ((64 - discs) / 2) + 3, 2 );
-	if ( discs < 18 )
-		moves_left = MAX( ((64 - discs) / 2) + 0, 2 );
-	else if ( discs < 24 )
-		moves_left = MAX( ((64 - discs) / 2) - 6, 2 );
-	else if ( discs < 30 )
-		moves_left = MAX( ((64 - discs) / 2) - 5, 2 );
-	else if ( discs >= 30 && discs <= 35 )
-		moves_left = MAX( ((64 - discs) / 2) - 7, 2 );
-	else if ( discs >= 36 && discs <= 39 )
-		moves_left = MAX( ((64.0 - (double)discs) / 2.0) - 13.0, 0.0 );
-	else
-		moves_left = MAX( ((64 - discs) / 2) - 12, 0 );
-	time_available = time_left + frozen_ponder_time +
-		moves_left * incr - SAFETY_MARGIN;
-	if ( time_available < 1.0 )
-		time_available = 1.0;
-	time_per_move = (time_available / (moves_left + 1)) * DEFAULT_SEARCH;
-	if ( (64 - discs) == 26 || (64 - discs) == 25 )
-		time_per_move = (time_available / (0.0 + 0.8)) * DEFAULT_SEARCH;
-	if ( discs < 20 )
-		div_coffe = 4.0;
-	else if ( discs < 28 )
-		div_coffe = 3.0;
-	else if ( discs >= 32 && discs <= 36 )
-		div_coffe = 2.0;
-	else if ( discs >= 37 && discs <= 39 )
-		div_coffe = 1.111;
-	else if ( discs <= 48)
-		div_coffe = 2.0;
-	else
-		div_coffe = 4.0;
-	if ( time_per_move > time_left / div_coffe )
-		time_per_move = time_left / div_coffe;
-	if ( time_per_move > time_left + frozen_ponder_time )
-		time_per_move = time_left / div_coffe;
-	if ( time_per_move == 0 )
-		time_per_move = 1;
-	set_default_panic();
+    frozen_ponder_time = current_ponder_time;
+    frozen_ponder_depth = current_ponder_depth;
+    if (discs < 10)
+        moves_left = MAX(((64 - discs) / 2) + 3, 2);
+    if (discs < 18)
+        moves_left = MAX(((64 - discs) / 2) + 0, 2);
+    else if (discs < 24)
+        moves_left = MAX(((64 - discs) / 2) - 6, 2);
+    else if (discs < 30)
+        moves_left = MAX(((64 - discs) / 2) - 5, 2);
+    else if (discs >= 30 && discs <= 35)
+        moves_left = MAX(((64 - discs) / 2) - 7, 2);
+    else if (discs >= 36 && discs <= 39)
+        moves_left = MAX(((64.0 - (double)discs) / 2.0) - 13.0, 0.0);
+    else
+        moves_left = MAX(((64 - discs) / 2) - 12, 0);
+    time_available = time_left + frozen_ponder_time +
+        moves_left * incr - SAFETY_MARGIN;
+    if (time_available < 1.0)
+        time_available = 1.0;
+    time_per_move = (time_available / (moves_left + 1)) * DEFAULT_SEARCH;
+    if ((64 - discs) == 26 || (64 - discs) == 25)
+        time_per_move = (time_available / (0.0 + 0.8)) * DEFAULT_SEARCH;
+    if (discs < 20)
+        div_coffe = 4.0;
+    else if (discs < 28)
+        div_coffe = 3.0;
+    else if (discs >= 32 && discs <= 36)
+        div_coffe = 2.0;
+    else if (discs >= 37 && discs <= 39)
+        div_coffe = 1.111;
+    else if (discs <= 48)
+        div_coffe = 2.0;
+    else
+        div_coffe = 4.0;
+    if (time_per_move > time_left / div_coffe)
+        time_per_move = time_left / div_coffe;
+    if (time_per_move > time_left + frozen_ponder_time)
+        time_per_move = time_left / div_coffe;
+    if (time_per_move == 0)
+        time_per_move = 1;
+    set_default_panic();
 }
 
 /*
@@ -227,8 +225,8 @@ determine_move_time( double time_left, double incr, int discs ) {
 */
 
 INLINE double
-get_elapsed_time( void ) {
-	return fabs( get_real_timer() - start_time );
+get_elapsed_time(void) {
+    return fabs(get_real_timer() - start_time);
 }
 
 /*
@@ -236,18 +234,18 @@ get_elapsed_time( void ) {
 */
 
 INLINE void
-start_move( double in_total_time, double increment, int discs ) {
+start_move(double in_total_time, double increment, int discs) {
     /*
       This is a possible approach in time control games with increment:
         available_time = in_total_time + increment * (65 - discs) / 2.0;
       Some correction might be necessary anyway, so let's skip it for now.
     */
 
-	/* This won't work well in games with time increment, but never mind */
+    /* This won't work well in games with time increment, but never mind */
 
-	total_move_time = MAX( in_total_time - SAFETY_MARGIN, 0.1 );
-	panic_abort = FALSE;
-	start_time = get_real_timer();
+    total_move_time = MAX(in_total_time - SAFETY_MARGIN, 0.1);
+    panic_abort = FALSE;
+    start_time = get_real_timer();
 }
 
 /*
@@ -257,8 +255,8 @@ start_move( double in_total_time, double increment, int discs ) {
 */
 
 void
-set_panic_threshold( double value ) {
-	panic_value = value;
+set_panic_threshold(double value) {
+    panic_value = value;
 }
 
 /*
@@ -268,17 +266,18 @@ set_panic_threshold( double value ) {
 */
 
 void
-check_panic_abort( void ) {
-	double curr_time;
-	double adjusted_total_time;
+check_panic_abort(void) {
+    double curr_time;
+    double adjusted_total_time;
 
-	curr_time = get_elapsed_time();
-	adjusted_total_time = total_move_time;
+    curr_time = get_elapsed_time();
+    adjusted_total_time = total_move_time;
 
 #ifndef _WIN32_WCE
-	if ( do_check_abort &&
-		(curr_time >= panic_value * adjusted_total_time ) )
-		panic_abort = TRUE;
+    if (do_check_abort &&
+        (curr_time >= panic_value * adjusted_total_time)) {
+        panic_abort = TRUE;
+    }
 #endif
 }
 
@@ -288,14 +287,14 @@ check_panic_abort( void ) {
 */
 
 int
-check_threshold( double threshold ) {
-	double curr_time;
-	double adjusted_total_time;
+check_threshold(double threshold) {
+    double curr_time;
+    double adjusted_total_time;
 
-	curr_time = get_elapsed_time();
-	adjusted_total_time = total_move_time;
-	return do_check_abort &&
-		(curr_time >= panic_value * threshold * adjusted_total_time);
+    curr_time = get_elapsed_time();
+    adjusted_total_time = total_move_time;
+    return do_check_abort &&
+        (curr_time >= panic_value * threshold * adjusted_total_time);
 }
 
 /*
@@ -304,8 +303,8 @@ check_threshold( double threshold ) {
 */
 
 void
-toggle_abort_check( int enable ) {
-	do_check_abort = enable;
+toggle_abort_check(int enable) {
+    do_check_abort = enable;
 }
 
 /*
@@ -315,8 +314,8 @@ toggle_abort_check( int enable ) {
 
 INLINE
 void
-clear_panic_abort( void ) {
-	panic_abort = FALSE;
+clear_panic_abort(void) {
+    panic_abort = FALSE;
 }
 
 /*
@@ -325,9 +324,9 @@ clear_panic_abort( void ) {
 */
 
 INLINE int
-is_panic_abort( void ) {
-	//return FALSE;
-	return panic_abort;
+is_panic_abort(void) {
+    //return FALSE;
+    return panic_abort;
 }
 
 /*
@@ -337,15 +336,15 @@ is_panic_abort( void ) {
 */
 
 void
-clear_ponder_times( void ) {
-	int i;
+clear_ponder_times(void) {
+    int i;
 
-	for (i = 0; i < 100; i++) {
-		ponder_time[i] = 0.0;
-		ponder_depth[i] = 0;
-	}
-	current_ponder_time = 0.0;
-	current_ponder_depth = 0;
+    for (i = 0; i < 100; i++) {
+        ponder_time[i] = 0.0;
+        ponder_depth[i] = 0;
+    }
+    current_ponder_time = 0.0;
+    current_ponder_depth = 0;
 }
 
 /*
@@ -355,8 +354,8 @@ clear_ponder_times( void ) {
 */
 
 void
-add_ponder_time( int move, double time ) {
-	ponder_time[move] += time;
+add_ponder_time(int move, double time) {
+    ponder_time[move] += time;
 }
 
 /*
@@ -366,12 +365,12 @@ add_ponder_time( int move, double time ) {
 */
 
 void
-adjust_current_ponder_time( int move ) {
-	current_ponder_time = ponder_time[move];
-	current_ponder_depth = ponder_depth[move];
+adjust_current_ponder_time(int move) {
+    current_ponder_time = ponder_time[move];
+    current_ponder_depth = ponder_depth[move];
 #ifdef TEXT_BASED
-	printf( "Ponder time: %.1f s\n", current_ponder_time );
-	printf( "Ponder depth: %d\n", current_ponder_depth );
+    printf("Ponder time: %.1f s\n", current_ponder_time);
+    printf("Ponder depth: %d\n", current_ponder_depth);
 #endif
 }
 
@@ -384,12 +383,12 @@ adjust_current_ponder_time( int move ) {
 */
 
 INLINE int
-above_recommended( void ) {
-	return (get_elapsed_time() >= time_per_move);
+above_recommended(void) {
+    return (get_elapsed_time() >= time_per_move);
 }
 
 INLINE int
 extended_above_recommended(void) {
-	return (get_elapsed_time() + frozen_ponder_time >=
-		PONDER_FACTOR * time_per_move);
+    return (get_elapsed_time() + frozen_ponder_time >=
+        PONDER_FACTOR * time_per_move);
 }

@@ -17,17 +17,9 @@
 #include "utils.h"
 
 INLINE Boolean Eqv(Boolean bArg1, Boolean bArg2) {
-	return bArg1 ? bArg2 : !bArg2;
+    return bArg1 ? bArg2 : !bArg2;
 }
 
 INLINE Boolean Xor(Boolean bArg1, Boolean bArg2) {
-	return bArg1 ? !bArg2 : bArg2;
+    return bArg1 ? !bArg2 : bArg2;
 }
-
-/*
-int main(int argc, char **argv)
-{
-	//
-	return 0;
-}
-//*/

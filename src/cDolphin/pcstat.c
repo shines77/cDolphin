@@ -13,7 +13,7 @@
 #include "pcstat.h"
 
 #ifdef _MSC_VER
-#pragma warning( disable : 4305 )
+#pragma warning(disable : 4305)
 #endif
 
 Correlation mid_corr[61][MAX_SHALLOW_DEPTH + 1] =
@@ -569,5 +569,5 @@ Correlation mid_corr[61][MAX_SHALLOW_DEPTH + 1] =
 };
 
 #ifdef _MSC_VER
-#pragma warning( default : 4705 )
+#pragma warning(default : 4705)
 #endif

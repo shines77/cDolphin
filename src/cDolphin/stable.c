@@ -570,7 +570,6 @@ recursive_find_stable(int pattern) {
     for (i = 0; i < 8; i++) {
 
         /* Make sure we work with the original configuration */
-
         for (j = 0; j < 8; j++)
             row[j] = stored_row[j];
 

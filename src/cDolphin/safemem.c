@@ -17,23 +17,25 @@
 #include "safemem.h"
 
 INLINE void *
-safe_malloc( size_t size ) {
-	void * block;
+safe_malloc(size_t size) {
+    void * block;
 
-	block = malloc( size );
-	if ( block == NULL )
-		fatal_error( "%s %d\n", SAFEMEM_FAILURE, size );
+    block = malloc(size);
+    if (block == NULL) {
+        fatal_error("%s %d\n", SAFEMEM_FAILURE, size);
+    }
 
-	return block;
+    return block;
 }
 
 INLINE void *
-safe_realloc( void *ptr, size_t size ) {
-	void * block;
+safe_realloc(void *ptr, size_t size) {
+    void * block;
 
-	block = realloc( ptr, size );
-	if ( block == NULL )
-		fatal_error( "%s %d\n", SAFEMEM_FAILURE, size );
+    block = realloc(ptr, size);
+    if (block == NULL) {
+        fatal_error("%s %d\n", SAFEMEM_FAILURE, size);
+    }
 
-	return block;
+    return block;
 }
